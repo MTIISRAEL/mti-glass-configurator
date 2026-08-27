@@ -45,26 +45,41 @@
         </select>
       </div>
 
-      <!-- שלב 3: מידות -->
+      <!-- שלב 3: מידות דינמיות (חזיתי = מידה אחת, פינתי = 2 צלעות) -->
       <div id="dimensionsSection" class="border-t pt-4 space-y-4 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-sm font-bold text-slate-800">3. מידות (ס"מ)</h3>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-xs font-semibold text-slate-500">רוחב / אורך</span>
-              <span id="wDisplay" class="text-sm font-bold text-blue-600">--</span>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="dimGrid">
+          
+          <!-- צלע א' / רוחב חזית -->
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60" id="dimBox1">
+            <div class="flex justify-between items-center mb-1.5">
+              <span id="dimLabel1" class="text-xs font-semibold text-slate-500">רוחב חזית</span>
+              <span id="wDisplay1" class="text-xs font-bold text-blue-600">--</span>
             </div>
-            <select id="widthSelect" onchange="calculatePrice()" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="" disabled selected>-- בחר רוחב --</option>
+            <select id="widthSelect1" onchange="calculatePrice()" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="" disabled selected>-- בחר --</option>
             </select>
           </div>
 
-          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-xs font-semibold text-slate-500">גובה</span>
-              <span id="hDisplay" class="text-sm font-bold text-blue-600">--</span>
+          <!-- צלע ב' (מוצג רק בפינתי) -->
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60 hidden" id="dimBox2">
+            <div class="flex justify-between items-center mb-1.5">
+              <span class="text-xs font-semibold text-slate-500">עומק (צלע ב')</span>
+              <span id="wDisplay2" class="text-xs font-bold text-blue-600">--</span>
             </div>
-            <select id="heightSelect" onchange="calculatePrice()" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="widthSelect2" onchange="calculatePrice()" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="" disabled selected>-- בחר --</option>
+            </select>
+          </div>
+
+          <!-- גובה -->
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60" id="heightBox">
+            <div class="flex justify-between items-center mb-1.5">
+              <span class="text-xs font-semibold text-slate-500">גובה</span>
+              <span id="hDisplay" class="text-xs font-bold text-blue-600">--</span>
+            </div>
+            <select id="heightSelect" onchange="calculatePrice()" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold outline-none focus:ring-2 focus:ring-blue-500">
               <option value="140">140 ס"מ</option>
               <option value="150">150 ס"מ</option>
               <option value="160">160 ס"מ</option>
@@ -76,6 +91,7 @@
               <option value="220">220 ס"מ</option>
             </select>
           </div>
+
         </div>
       </div>
 
@@ -176,16 +192,16 @@
   <script>
     const CATALOG_DATA = {
       categories: [
-        { id: "front", name: "מקלחון חזיתי" },
-        { id: "corner", name: "מקלחון פינתי" },
-        { id: "bath_partial", name: "אמבטיון סגירה חלקית" },
-        { id: "bath_full_front", name: "אמבטיון סגירה מלאה חזיתי" },
-        { id: "bath_full_corner", name: "אמבטיון סגירה מלאה פינתי" },
-        { id: "slide_pipe_front", name: "מקלחון הזזה צינור חזיתי" },
-        { id: "slide_hidden_front", name: "מקלחון הזזה מסילה מוסתרת חזיתי" },
-        { id: "slide_hidden_corner", name: "מקלחון הזזה מסילה מוסתרת פינתי" },
-        { id: "slide_cnc_front", name: "מקלחון הזזה CNC חזיתי" },
-        { id: "slide_cnc_corner", name: "מקלחון הזזה CNC פינתי" }
+        { id: "front", name: "מקלחון חזיתי", isCorner: false },
+        { id: "corner", name: "מקלחון פינתי", isCorner: true },
+        { id: "bath_partial", name: "אמבטיון סגירה חלקית", isCorner: false },
+        { id: "bath_full_front", name: "אמבטיון סגירה מלאה חזיתי", isCorner: false },
+        { id: "bath_full_corner", name: "אמבטיון סגירה מלאה פינתי", isCorner: true },
+        { id: "slide_pipe_front", name: "מקלחון הזזה צינור חזיתי", isCorner: false },
+        { id: "slide_hidden_front", name: "מקלחון הזזה מסילה מוסתרת חזיתי", isCorner: false },
+        { id: "slide_hidden_corner", name: "מקלחון הזזה מסילה מוסתרת פינתי", isCorner: true },
+        { id: "slide_cnc_front", name: "מקלחון הזזה CNC חזיתי", isCorner: false },
+        { id: "slide_cnc_corner", name: "מקלחון הזזה CNC פינתי", isCorner: true }
       ],
       models: [
         // חזיתי
@@ -254,7 +270,8 @@
       ]
     };
 
-    let selectedColor = null; // ברירת מחדל: ללא צבע נבחר
+    let selectedColor = null;
+    let isCurrentCorner = false;
 
     function init() {
       const catSelect = document.getElementById('categorySelect');
@@ -271,9 +288,12 @@
     }
 
     function onCategoryChange() {
-      const selectedCat = document.getElementById('categorySelect').value;
+      const selectedCatName = document.getElementById('categorySelect').value;
+      const catObj = CATALOG_DATA.categories.find(c => c.name === selectedCatName);
+      isCurrentCorner = catObj ? catObj.isCorner : false;
+
       const modelSelect = document.getElementById('modelSelect');
-      const filteredModels = CATALOG_DATA.models.filter(m => m.cat === selectedCat);
+      const filteredModels = CATALOG_DATA.models.filter(m => m.cat === selectedCatName);
       
       modelSelect.disabled = false;
       modelSelect.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
@@ -290,10 +310,22 @@
         b.classList.add('border-slate-200');
       });
 
+      // התאמת תצוגת שדות המידות (פינתי מול חזיתי)
+      const dimBox2 = document.getElementById('dimBox2');
+      const dimLabel1 = document.getElementById('dimLabel1');
+      if (isCurrentCorner) {
+        dimBox2.classList.remove('hidden');
+        dimLabel1.innerText = 'רוחב (צלע א\')';
+      } else {
+        dimBox2.classList.add('hidden');
+        dimLabel1.innerText = 'רוחב חזית';
+      }
+
       document.getElementById('dimensionsSection').classList.add('opacity-50', 'pointer-events-none');
       document.getElementById('optionsSection').classList.add('opacity-50', 'pointer-events-none');
       document.getElementById('currentModelBadge').innerText = 'טרם נבחר דגם';
-      document.getElementById('wDisplay').innerText = '--';
+      document.getElementById('wDisplay1').innerText = '--';
+      document.getElementById('wDisplay2').innerText = '--';
       document.getElementById('hDisplay').innerText = '--';
       document.getElementById('finalPriceDisplay').innerText = '0 ₪';
       document.getElementById('subTotalDisplay').innerText = '0 ₪';
@@ -318,8 +350,15 @@
       document.getElementById('dimensionsSection').classList.remove('opacity-50', 'pointer-events-none');
       document.getElementById('optionsSection').classList.remove('opacity-50', 'pointer-events-none');
 
-      const widthSelect = document.getElementById('widthSelect');
-      widthSelect.innerHTML = model.widths.map((w, idx) => `<option value="${w}" ${idx === 0 ? 'selected' : ''}>${w} ס"מ</option>`).join('');
+      // מילוי צלע א'
+      const widthSelect1 = document.getElementById('widthSelect1');
+      widthSelect1.innerHTML = model.widths.map((w, idx) => `<option value="${w}" ${idx === 0 ? 'selected' : ''}>${w} ס"מ</option>`).join('');
+
+      // מילוי צלע ב' (במקרה של פינתי)
+      const widthSelect2 = document.getElementById('widthSelect2');
+      if (isCurrentCorner) {
+        widthSelect2.innerHTML = model.widths.map((w, idx) => `<option value="${w}" ${idx === 0 ? 'selected' : ''}>${w} ס"מ</option>`).join('');
+      }
       
       const heightSelect = document.getElementById('heightSelect');
       heightSelect.value = "190";
@@ -373,18 +412,23 @@
       const model = CATALOG_DATA.models.find(m => m.id === modelId);
       if (!model) return;
 
-      const width = parseFloat(document.getElementById('widthSelect').value) || 80;
+      const width1 = parseFloat(document.getElementById('widthSelect1').value) || 80;
+      const width2 = isCurrentCorner ? (parseFloat(document.getElementById('widthSelect2').value) || 80) : 0;
       const height = parseFloat(document.getElementById('heightSelect').value) || 190;
       const glassExtra = parseFloat(document.getElementById('glassSelect').value) || 0;
       const nanoExtra = parseFloat(document.getElementById('nanoSelect').value) || 0;
       const hasInstall = document.getElementById('installCheck').checked;
 
-      document.getElementById('wDisplay').innerText = width + ' ס"מ';
+      document.getElementById('wDisplay1').innerText = width1 + ' ס"מ';
+      if (isCurrentCorner) {
+        document.getElementById('wDisplay2').innerText = width2 + ' ס"מ';
+      }
       document.getElementById('hDisplay').innerText = height + ' ס"מ';
 
-      let basePrice = (model.base * 10) + ((width - 60) * 8);
+      // חישוב מחירון מותאם לחזיתי / פינתי
+      let sizeFactor = isCurrentCorner ? ((width1 + width2 - 160) * 6) : ((width1 - 60) * 8);
+      let basePrice = (model.base * 10) + sizeFactor;
       
-      // אם לא נבחר צבע, המקדם הוא 1.0 (בסיס)
       let colorMult = selectedColor ? selectedColor.mult : 1.0;
       let hardwareMarkup = basePrice * (colorMult - 1);
       
@@ -399,13 +443,18 @@
 
     function sendOrderWhatsApp() {
       const modelName = document.getElementById('currentModelBadge').innerText;
-      const width = document.getElementById('widthSelect').value;
+      const width1 = document.getElementById('widthSelect1').value;
+      const width2 = document.getElementById('widthSelect2').value;
       const height = document.getElementById('heightSelect').value;
       const glass = document.getElementById('glassSelect').options[document.getElementById('glassSelect').selectedIndex].text;
       const colorName = selectedColor ? selectedColor.name : 'טרם נבחר (בסיס ניקל)';
       const price = document.getElementById('finalPriceDisplay').innerText;
 
-      const msg = `שלום MTI, ברצוני לקבל הצעת מחיר עבור:\n*דגם:* ${modelName}\n*מידות:* ${width}x${height} ס"מ\n*פרזול:* ${colorName}\n*זכוכית:* ${glass}\n*סה"כ משוער:* ${price}`;
+      const dimText = isCurrentCorner 
+        ? `רוחב ${width1} ס"מ, עומק ${width2} ס"מ, גובה ${height} ס"מ`
+        : `רוחב ${width1} ס"מ, גובה ${height} ס"מ`;
+
+      const msg = `שלום MTI, ברצוני לקבל הצעת מחיר עבור:\n*דגם:* ${modelName}\n*מידות:* ${dimText}\n*פרזול:* ${colorName}\n*זכוכית:* ${glass}\n*סה"כ משוער:* ${price}`;
       window.open(`https://wa.me/972500000000?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
