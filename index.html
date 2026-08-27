@@ -111,13 +111,13 @@
       <div id="optionsSection" class="border-t pt-4 space-y-4 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-sm font-bold text-slate-800">4. מפרט פרזול וזכוכית</h3>
         
-        <!-- גוון פרזול -->
+        <!-- בחירת גוון פרזול עם תמונות הצירים שהעלית -->
         <div>
           <div class="flex justify-between items-center mb-2">
             <label class="block text-xs font-semibold text-slate-600">גוון פרזול</label>
             <span id="selectedColorBadge" class="text-xs font-bold text-slate-400">טרם נבחר גוון</span>
           </div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="colorContainer"></div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="colorContainer"></div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -125,7 +125,7 @@
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">סוג זכוכית (8 מ"מ)</label>
             <select id="glassSelect" onchange="calculatePrice()" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
-              <!-- נטען דינמית לפי טבלת העלויות -->
+              <!-- נטען דינמית -->
             </select>
           </div>
 
@@ -182,7 +182,7 @@
           <div id="finalPriceDisplay" class="text-3xl font-extrabold text-blue-400 mt-1">0 ₪</div>
         </div>
 
-        <!-- הערת התקנה מופרדת לחלוטין -->
+        <!-- הערת התקנה מופרדת -->
         <div class="bg-slate-800/80 border border-slate-700/80 p-3.5 rounded-2xl space-y-1">
           <div class="flex items-center justify-between text-xs font-bold text-amber-400">
             <span>מדידה והתקנה מקצועית:</span>
@@ -200,7 +200,6 @@
   </main>
 
   <script>
-    // מאגר הנתונים המדויק מתוך הטבלאות שלך
     const CATALOG_DATA = {
       categories: [
         { id: "front", name: "מקלחון חזיתי", isCorner: false },
@@ -215,7 +214,7 @@
         { id: "slide_hidden_corner", name: "מקלחון הזזה מסילה מוסתרת פינתי", isCorner: true }
       ],
       models: [
-        // מקלחון חזיתי
+        // חזיתי
         { cat: "מקלחון חזיתי", id: "718", name: "MTI-718 - דלת", cost: 138, file: "MTI_718_animated.gif", widths: [50,55,60,65,70,75,80,85,90] },
         { cat: "מקלחון חזיתי", id: "719", name: "MTI-719 - קבוע WALK-IN", cost: 160, file: "MTI-720 - top view-1.jpg", widths: [80,85,90,95,100,105,110,115,120] },
         { cat: "מקלחון חזיתי", id: "720", name: "MTI-720 - קבוע", cost: 122, file: "MTI-720 - top view-1.jpg", widths: [40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120] },
@@ -286,15 +285,14 @@
         { name: "גלינה שקופה", cost: 320 },
         { name: "גלינה אקסטרה קליר", cost: 380 }
       ],
+      // שמות הקבצים שהעלית בעברית
       colors: [
-        { name: "ניקל", mult: 1.0, hex: "#cbd5e1" },
-        { name: "ניקל מוברש", mult: 1.2, hex: "#94a3b8" },
-        { name: "שחור", mult: 1.2, hex: "#0f172a" },
-        { name: "ברונזה אדומה", mult: 1.35, hex: "#b45309" },
-        { name: "זהב מוברש", mult: 1.35, hex: "#f59e0b" },
-        { name: "גרפיט", mult: 1.35, hex: "#475569" },
-        { name: "לבן", mult: 1.4, hex: "#f8fafc" },
-        { name: "זהב מושחר", mult: 1.4, hex: "#78350f" }
+        { name: "ניקל", mult: 1.0, file: "ניקל.png" },
+        { name: "ניקל מוברש", mult: 1.2, file: "ניקל מוברש.png" },
+        { name: "שחור", mult: 1.2, file: "שחור.png" },
+        { name: "ברונזה אדומה", mult: 1.35, file: "ברונזה אדומה.png" },
+        { name: "זהב מוברש", mult: 1.35, file: "זהב מוברש.png" },
+        { name: "גרפיט", mult: 1.35, file: "גרפיט.png" }
       ]
     };
 
@@ -307,12 +305,14 @@
       catSelect.innerHTML = '<option value="" disabled selected>-- בחר סוג מקלחון --</option>' + 
         CATALOG_DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
 
-      // טעינת כפתורי צבעים
+      // טעינת כרטיסי תמונות הצירים שהעלית
       const colorBox = document.getElementById('colorContainer');
       colorBox.innerHTML = CATALOG_DATA.colors.map((col, idx) => `
-        <button type="button" onclick="selectColor(${idx})" class="color-btn border-slate-200 p-2 border rounded-xl flex items-center gap-2 text-right transition">
-          <span class="w-3.5 h-3.5 rounded-full border shadow-sm flex-shrink-0" style="background-color: ${col.hex}"></span>
-          <span class="text-xs font-semibold text-slate-700 truncate">${col.name}</span>
+        <button type="button" onclick="selectColor(${idx})" class="color-btn bg-white border border-slate-200 p-2 rounded-2xl flex flex-col items-center justify-between hover:border-blue-400 active:scale-95 transition shadow-sm group">
+          <div class="w-full h-14 bg-slate-50 rounded-xl mb-1.5 flex items-center justify-center p-1 overflow-hidden">
+            <img src="./${encodeURIComponent(col.file)}" alt="${col.name}" class="max-h-full max-w-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-200" />
+          </div>
+          <span class="text-xs font-bold text-slate-700 truncate w-full text-center">${col.name}</span>
         </button>
       `).join('');
 
@@ -340,11 +340,11 @@
       selectedColor = null;
       document.getElementById('selectedColorBadge').innerText = 'טרם נבחר גוון';
       document.querySelectorAll('.color-btn').forEach(b => {
-        b.classList.remove('border-blue-600', 'bg-blue-50/50');
-        b.classList.add('border-slate-200');
+        b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+        b.classList.add('border-slate-200', 'bg-white');
       });
 
-      // התאמת תצוגת שדות המידות
+      // התאמת שדות המידות
       const dimBox2 = document.getElementById('dimBox2');
       const dimLabel1 = document.getElementById('dimLabel1');
       if (isCurrentCorner) {
@@ -406,7 +406,7 @@
       const placeholder = document.getElementById('gifPlaceholder');
       
       if (model.file) {
-        img.src = `./${model.file}`;
+        img.src = `./${encodeURIComponent(model.file)}`;
         img.classList.remove('hidden');
         placeholder.classList.add('hidden');
         
@@ -427,17 +427,17 @@
       const buttons = document.querySelectorAll('.color-btn');
       buttons.forEach((btn, idx) => {
         if (idx === index) {
-          btn.classList.add('border-blue-600', 'bg-blue-50/50');
-          btn.classList.remove('border-slate-200');
+          btn.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          btn.classList.remove('border-slate-200', 'bg-white');
         } else {
-          btn.classList.remove('border-blue-600', 'bg-blue-50/50');
-          btn.classList.add('border-slate-200');
+          btn.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          btn.classList.add('border-slate-200', 'bg-white');
         }
       });
       calculatePrice();
     }
 
-    // מנוע חישוב המחיר המלא
+    // מנוע חישוב המחיר
     function calculatePrice() {
       const modelId = document.getElementById('modelSelect').value;
       const model = CATALOG_DATA.models.find(m => m.id === modelId);
@@ -457,23 +457,18 @@
       }
       document.getElementById('hDisplay').innerText = height + ' ס"מ';
 
-      // 1. עלות זכוכית (לפי שטח במ"ר)
-      let areaM2 = 0;
-      if (isCurrentCorner) {
-        areaM2 = ((width1 + width2) * height) / 10000;
-      } else {
-        areaM2 = (width1 * height) / 10000;
-      }
+      // 1. עלות זכוכית (מ"ר)
+      let areaM2 = isCurrentCorner ? (((width1 + width2) * height) / 10000) : ((width1 * height) / 10000);
       let glassCost = areaM2 * glassCostPerM2;
 
-      // 2. עלות פרזול ודגם
+      // 2. עלות פרזול
       let colorMult = selectedColor ? selectedColor.mult : 1.0;
       let hardwareCost = model.cost * colorMult;
 
       // 3. עלות כוללת
       let totalCost = hardwareCost + glassCost + nanoCost + cutCost;
 
-      // 4. המרה למחיר מחירון לצרכן (כפול 2.1 חלקי 0.4 = כפול 5.25)
+      // 4. מחיר מחירון לצרכן (עלות * 2.1 / 0.4)
       let catalogRetailPrice = Math.round(totalCost * (2.1 / 0.4));
       document.getElementById('finalPriceDisplay').innerText = catalogRetailPrice.toLocaleString() + ' ₪';
 
