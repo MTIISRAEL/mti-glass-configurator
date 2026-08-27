@@ -6,56 +6,7 @@
   <title>קונפיגורטור מקלחונים - MTI Bath Gallery</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Assistant', sans-serif; }
-    
-    /* תצוגת איזומטרי 45 מעלות */
-    .iso-container {
-      perspective: 900px;
-      perspective-origin: 50% 15%;
-    }
-    .iso-world {
-      transform: rotateX(55deg) rotateZ(-35deg);
-      transform-style: preserve-3d;
-      transition: transform 0.6s ease;
-    }
-
-    .iso-door-swing-left {
-      transform-origin: left center;
-      animation: isoSwingLeft 4s ease-in-out infinite alternate;
-      transform-style: preserve-3d;
-    }
-
-    .iso-door-swing-right {
-      transform-origin: right center;
-      animation: isoSwingRight 4s ease-in-out infinite alternate;
-      transform-style: preserve-3d;
-    }
-
-    .iso-door-slide {
-      animation: isoSlide 3.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes isoSwingLeft {
-      0%, 20% { transform: rotateY(0deg); }
-      70%, 100% { transform: rotateY(85deg); }
-    }
-
-    @keyframes isoSwingRight {
-      0%, 20% { transform: rotateY(0deg); }
-      70%, 100% { transform: rotateY(-85deg); }
-    }
-
-    @keyframes isoSlide {
-      0%, 20% { transform: translateX(0px); }
-      70%, 100% { transform: translateX(50px); }
-    }
-
-    .glass-3d {
-      backdrop-filter: blur(1px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15), inset 0 0 10px rgba(255,255,255,0.8);
-    }
-  </style>
+  <style>body { font-family: 'Assistant', sans-serif; }</style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
   <header class="bg-white shadow-sm border-b sticky top-0 z-50">
@@ -64,11 +15,11 @@
         <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-inner">M</div>
         <div>
           <h1 class="text-xl font-bold text-slate-900 leading-tight">MTI Bath Gallery</h1>
-          <p class="text-xs text-slate-500 font-medium">הדמיית מקלחונים דו-מבטית (על + 45°)</p>
+          <p class="text-xs text-slate-500 font-medium">מחירון מקלחונים ומחיצות 2025</p>
         </div>
       </div>
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full border border-blue-200">
-        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span> הדמיה חיה
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full border border-slate-200">
+        התאמה אישית
       </span>
     </div>
   </header>
@@ -76,9 +27,9 @@
   <main class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
     
     <!-- פנל הגדרות מוצר -->
-    <section class="lg:col-span-6 bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-6">
+    <section class="lg:col-span-7 bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-6">
       
-      <!-- שלב 1: סוג מקלחון -->
+      <!-- שלב 1: סוג מקלחון ראשי -->
       <div>
         <label class="block text-sm font-bold text-slate-800 mb-2">1. סוג מקלחון</label>
         <select id="categorySelect" onchange="onCategoryChange()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm transition">
@@ -111,7 +62,7 @@
           <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60">
             <div class="flex justify-between items-center mb-2">
               <span class="text-xs font-semibold text-slate-500">גובה</span>
-              <span id="hDisplay" class="text-sm font-bold text-blue-600">190 ס"מ</span>
+              <span id="hDisplay" class="text-sm font-bold text-blue-600">--</span>
             </div>
             <select id="heightSelect" onchange="calculatePrice()" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
               <option value="140">140 ס"מ</option>
@@ -144,9 +95,11 @@
               <option value="0">שקופה (בסיס)</option>
               <option value="220">אקסטרה קליר (+220 ₪)</option>
               <option value="185">גרניט (+185 ₪)</option>
+              <option value="190">פפיטה (+190 ₪)</option>
               <option value="250">אנטי סאן (+250 ₪)</option>
-              <option value="220">אסיד חלבי (+220 ₪)</option>
+              <option value="220">אסיד (+220 ₪)</option>
               <option value="230">פסים בהתזת חול (+230 ₪)</option>
+              <option value="320">גלינה שקופה (+320 ₪)</option>
             </select>
           </div>
 
@@ -168,44 +121,27 @@
       </div>
     </section>
 
-    <!-- פנל הדמיות כפולות (מבט על + איזומטרי 45) -->
-    <section class="lg:col-span-6 flex flex-col gap-6">
+    <!-- פנל תצוגת GIF וסיכום מחיר -->
+    <section class="lg:col-span-5 flex flex-col gap-6">
       
-      <!-- כרטיס הדמיות מפוצל -->
-      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-4">
+      <!-- הדמיית GIF מתוך המאגר המקומי ב-GitHub -->
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
+        <div class="w-full flex justify-between items-center mb-4">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">הדמיית פתיחה</span>
+          <span id="currentModelBadge" class="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 font-bold rounded-lg truncate max-w-[200px]">טרם נבחר דגם</span>
+        </div>
         
-        <div class="flex justify-between items-center border-b pb-3">
-          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">הדמיית מפרט הנדסית</span>
-          <span id="currentModelBadge" class="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 font-bold rounded-lg truncate max-w-[220px]">טרם נבחר דגם</span>
-        </div>
-
-        <!-- 1. מבט על (Top View) -->
-        <div>
-          <div class="flex justify-between items-center mb-1.5">
-            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-blue-500"></span> מבט על (תכנית פריסה)
-            </span>
-          </div>
-          <div class="w-full h-40 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 relative overflow-hidden">
-            <svg id="topViewSvg" viewBox="0 0 320 140" class="w-full h-full max-h-36"></svg>
+        <div class="w-full h-64 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center p-2 relative overflow-hidden">
+          <img id="showerGif" src="" alt="הדמיית מקלחון" class="max-h-full max-w-full object-contain hidden" />
+          <div id="gifPlaceholder" class="flex flex-col items-center justify-center text-slate-400 gap-2">
+            <svg class="w-10 h-10 stroke-current opacity-40" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            <span class="text-xs font-semibold">בחר דגם לצפייה בהנפשה</span>
           </div>
         </div>
-
-        <!-- 2. מבט איזומטרי 45 מעלות מלמעלה -->
-        <div>
-          <div class="flex justify-between items-center mb-1.5">
-            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> מבט צד 45° מלמעלה (אינטראקטיבי)
-            </span>
-            <span id="hardwareTag" class="text-[11px] font-bold text-slate-600">גוון פרזול: ניקל</span>
-          </div>
-          <div class="iso-container w-full h-56 bg-gradient-to-b from-slate-100 to-slate-200 rounded-2xl border border-slate-300 flex items-center justify-center relative overflow-hidden shadow-inner">
-            <div id="isoScene" class="iso-world relative w-48 h-48 flex items-center justify-center">
-              <div id="isoPlaceholder" class="text-xs text-slate-400 font-semibold rotate-45">בחר דגם להצגת תלת-ממד</div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <!-- פירוט מחיר סופי -->
@@ -241,28 +177,77 @@
         { id: "corner", name: "מקלחון פינתי" },
         { id: "bath_partial", name: "אמבטיון סגירה חלקית" },
         { id: "bath_full_front", name: "אמבטיון סגירה מלאה חזיתי" },
+        { id: "bath_full_corner", name: "אמבטיון סגירה מלאה פינתי" },
         { id: "slide_pipe_front", name: "מקלחון הזזה צינור חזיתי" },
-        { id: "slide_cnc_front", name: "מקלחון הזזה CNC חזיתי" }
+        { id: "slide_hidden_front", name: "מקלחון הזזה מסילה מוסתרת חזיתי" },
+        { id: "slide_hidden_corner", name: "מקלחון הזזה מסילה מוסתרת פינתי" },
+        { id: "slide_cnc_front", name: "מקלחון הזזה CNC חזיתי" },
+        { id: "slide_cnc_corner", name: "מקלחון הזזה CNC פינתי" }
       ],
       models: [
-        { cat: "מקלחון חזיתי", id: "718", name: "MTI-718 - דלת", base: 138, type: "single_door", widths: [50,55,60,65,70,75,80,85,90] },
-        { cat: "מקלחון חזיתי", id: "719", name: "MTI-719 - קבוע WALK-IN", base: 160, type: "walkin", widths: [80,85,90,95,100,105,110,115,120] },
-        { cat: "מקלחון חזיתי", id: "721", name: "MTI-721 - קבוע ודלת", base: 241, type: "fixed_door", widths: [70,75,80,85,90,95,100,110,120,130,140,150,160,170,180,190] },
-        { cat: "מקלחון חזיתי", id: "722", name: "MTI-722 - שתי דלתות", base: 275, type: "double_door", widths: [60,65,70,75,80,85,90,95,100,110,120,130,140,150,160,170,180] },
-        { cat: "מקלחון פינתי", id: "740", name: "MTI-740 - פינתי שתי דלתות", base: 275, type: "corner_2d", widths: [60,65,70,75,80,85,90,95,100] },
-        { cat: "מקלחון פינתי", id: "741", name: "MTI-741 - פינתי קבוע ודלת", base: 241, type: "corner_fd", widths: [55,60,65,70,75,80,85,90,95,100] },
-        { cat: "מקלחון הזזה צינור חזיתי", id: "800", name: "MTI-800 - הזזה צינור", base: 450, type: "slide_single", widths: [100,110,120,130,140,150,160,170,180] },
-        { cat: "מקלחון הזזה CNC חזיתי", id: "830", name: "MTI-830 - הזזה CNC", base: 270, type: "slide_single", widths: [100,110,120,130,140,150,160,170,180] }
+        // חזיתי
+        { cat: "מקלחון חזיתי", id: "718", name: "MTI-718 - דלת", base: 138, file: "MTI_718_animated.gif", widths: [50,55,60,65,70,75,80,85,90] },
+        { cat: "מקלחון חזיתי", id: "719", name: "MTI-719 - קבוע WALK-IN", base: 160, file: "MTI-720 - top view-1.jpg", widths: [80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "720", name: "MTI-720 - קבוע", base: 122, file: "MTI-720 - top view-1.jpg", widths: [40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "721", name: "MTI-721 - קבוע ודלת", base: 241, file: "MTI_721_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190] },
+        { cat: "מקלחון חזיתי", id: "722", name: "MTI-722 - שתי דלתות", base: 275, file: "MTI_722_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "מקלחון חזיתי", id: "723", name: "MTI-723 - הרמוניקה שתי דלתות", base: 282, file: "MTI_723_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "724", name: "MTI-724 - שני קבועים ודלת", base: 385, file: "MTI_724_animated_fix1.gif", widths: [80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220] },
+        { cat: "מקלחון חזיתי", id: "725", name: "MTI-725 - קבוע ושתי דלתות", base: 419, file: "MTI_725_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "מקלחון חזיתי", id: "726", name: "MTI-726 - קבוע והרמוניקה 2 דלתות", base: 369, file: "MTI_726_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "מקלחון חזיתי", id: "727", name: "MTI-727 - שני קבועים ושתי דלתות", base: 563, file: "MTI_727_animated.gif", widths: [90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,240,245,250,255,260] },
+        { cat: "מקלחון חזיתי", id: "728", name: "MTI-728 - הרמוניקה ארבע דלתות", base: 531, file: "MTI_728_animated.gif", widths: [120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "מקלחון חזיתי", id: "729", name: "MTI-729 - קבוע דלת ודלת הרמוניקה", base: 547, file: "MTI_729_animated.gif", widths: [100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230] },
+        { cat: "מקלחון חזיתי", id: "730", name: "MTI-730 - דלת ודלת הרמוניקה", base: 403, file: "MTI_730_animated.gif", widths: [90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190] },
+
+        // פינתי
+        { cat: "מקלחון פינתי", id: "740", name: "MTI-740 - שתי דלתות", base: 275, file: "MTI_740_animated.gif", widths: [60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "741", name: "MTI-741 - קבוע ודלת", base: 241, file: "MTI_741_animated_fix1.gif", widths: [55,60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "742", name: "MTI-742 - קבוע ושתי דלתות", base: 419, file: "MTI_742.gif", widths: [55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "743", name: "MTI-743 - שני קבועים ודלת", base: 385, file: "MTI_743_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "744", name: "MTI-744 - קבוע והרמוניקה 2 דלתות", base: 369, file: "MTI_744_animated_fix1.gif", widths: [60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "745", name: "MTI-745 - דלת ודלת הרמוניקה", base: 403, file: "MTI_745_animated_fix1.gif", widths: [50,55,60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "746", name: "MTI-746 - שני קבועים ושתי דלתות", base: 563, file: "MTI_746_animated_fix1.gif", widths: [50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140] },
+        { cat: "מקלחון פינתי", id: "747", name: "MTI-747 - שתי דלתות הרמוניקה מתקפלות", base: 531, file: "MTI_747_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110] },
+        { cat: "מקלחון פינתי", id: "748", name: "MTI-748 - קבוע ודלת ודלת הרמוניקה", base: 547, file: "MTI_748_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "749", name: "MTI-749 - קבוע ושתי דלתות בחזית", base: 453, file: "MTI_749_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "750", name: "MTI-750 - קבוע וקבוע ושתי דלתות בחזית", base: 551, file: "MTI_750_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195] },
+
+        // אמבטיון
+        { cat: "אמבטיון סגירה חלקית", id: "760", name: "MTI-760 - דלת", base: 130, file: "MTI_760_animated_fix1.gif", widths: [30,35,40,45,50,55,60,65,70,75,80,85,90] },
+        { cat: "אמבטיון סגירה חלקית", id: "761", name: "MTI-761 - קבוע", base: 122, file: "MTI-761 - top view-1.jpg", widths: [30,35,40,45,50,55,60,65,70,75,80,85,90,95,100] },
+        { cat: "אמבטיון סגירה חלקית", id: "762", name: "MTI-762 - קבוע ודלת", base: 274, file: "MTI_762_animated_fix1.gif", widths: [45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "763", name: "MTI-763 - שתי דלתות", base: 275, file: "MTI_763_animated_fix1.gif", widths: [110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "אמבטיון סגירה חלקית", id: "764", name: "MTI-764 - הרמוניקה שתי דלתות", base: 274, file: "MTI_764_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "765", name: "MTI-765 - שני קבועים ודלת", base: 385, file: "MTI_765_animated_fix1.gif", widths: [105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "766", name: "MTI-766 - קבוע ושתי דלתות", base: 419, file: "MTI_766_animated_fix1.gif", widths: [120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "767", name: "MTI-767 - קבוע והרמוניקה 2 דלתות", base: 369, file: "MTI_767_animated.gif", widths: [115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "768", name: "MTI-768 - שני קבועים שתי דלתות", base: 563, file: "MTI_768_animated_fix1.gif", widths: [140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "769", name: "MTI-769 - הרמוניקה ארבע דלתות", base: 531, file: "MTI_769_animated.gif", widths: [120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "770", name: "MTI-770 - קבוע דלת ודלת הרמוניקה", base: 547, file: "MTI_770_animated.gif", widths: [145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "771", name: "MTI-771 - דלת ודלת הרמוניקה", base: 403, file: "MTI_771_animated.gif", widths: [100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "772", name: "MTI-772 - קבוע ודלת", base: 275, file: "MTI_772_animated.gif", widths: [95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "אמבטיון סגירה מלאה פינתי", id: "781", name: "MTI-781 - שני קבועים ודלת", base: 385, file: "MTI_781_animated_fix1.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "אמבטיון סגירה מלאה פינתי", id: "782", name: "MTI-782 - שני קבועים ושתי דלתות", base: 563, file: "MTI_782_animated_fix1.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140] },
+
+        // הזזה
+        { cat: "מקלחון הזזה צינור חזיתי", id: "800", name: "MTI-800 - קבוע ודלת", base: 450, file: "MTI_800_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "801", name: "MTI-801 - שני קבועים ודלת", base: 550, file: "MTI_801_animated.gif", widths: [140,150,160,170,180,190,200] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "840", name: "MTI-840 - אמבטיון קבוע ודלת", base: 450, file: "MTI_840_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "841", name: "MTI-841 - אמבטיון 2 קבועים ודלת", base: 550, file: "MTI_841_animated.gif", widths: [140,150,160,170,180,190,200] },
+        { cat: "מקלחון הזזה מסילה מוסתרת חזיתי", id: "880", name: "MTI-880 - חזית קבוע ודלת", base: 380, file: "MTI_820_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "881", name: "MTI-881 - פינתי 2 קבועים ודלת", base: 244, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] },
+        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "882", name: "MTI-882 - פינתי 2 קבועים ו-2 דלתות", base: 380, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] }
       ],
       colors: [
-        { name: "ניקל", mult: 1.0, hex: "#cbd5e1", borderHex: "#94a3b8" },
-        { name: "שחור מט", mult: 1.2, hex: "#0f172a", borderHex: "#020617" },
-        { name: "ניקל מוברש", mult: 1.2, hex: "#94a3b8", borderHex: "#64748b" },
-        { name: "זהב מוברש", mult: 1.35, hex: "#f59e0b", borderHex: "#d97706" },
-        { name: "גרפיט", mult: 1.35, hex: "#475569", borderHex: "#334155" },
-        { name: "ברונזה אדומה", mult: 1.35, hex: "#b45309", borderHex: "#92400e" },
-        { name: "לבן", mult: 1.4, hex: "#ffffff", borderHex: "#cbd5e1" },
-        { name: "זהב מושחר", mult: 1.4, hex: "#78350f", borderHex: "#451a03" }
+        { name: "ניקל", mult: 1.0, hex: "#cbd5e1" },
+        { name: "שחור מט", mult: 1.2, hex: "#0f172a" },
+        { name: "ניקל מוברש", mult: 1.2, hex: "#94a3b8" },
+        { name: "זהב מוברש", mult: 1.35, hex: "#f59e0b" },
+        { name: "גרפיט", mult: 1.35, hex: "#475569" },
+        { name: "ברונזה אדומה", mult: 1.35, hex: "#b45309" },
+        { name: "לבן", mult: 1.4, hex: "#f8fafc" },
+        { name: "זהב מושחר", mult: 1.4, hex: "#78350f" }
       ]
     };
 
@@ -285,14 +270,14 @@
     function onCategoryChange() {
       const selectedCat = document.getElementById('categorySelect').value;
       const modelSelect = document.getElementById('modelSelect');
-      const filtered = CATALOG_DATA.models.filter(m => m.cat === selectedCat);
+      const filteredModels = CATALOG_DATA.models.filter(m => m.cat === selectedCat);
       
       modelSelect.disabled = false;
       modelSelect.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
       modelSelect.classList.add('bg-slate-50', 'text-slate-800');
       
       modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם מקלחון --</option>' + 
-        filtered.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+        filteredModels.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
 
       document.getElementById('dimensionsSection').classList.add('opacity-50', 'pointer-events-none');
       document.getElementById('optionsSection').classList.add('opacity-50', 'pointer-events-none');
@@ -307,8 +292,10 @@
       waBtn.disabled = true;
       waBtn.className = "w-full py-3.5 bg-slate-700 opacity-50 cursor-not-allowed text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition";
 
-      document.getElementById('topViewSvg').innerHTML = '<text x="160" y="75" font-size="12" text-anchor="middle" fill="#94a3b8">בחר דגם לתצוגת על</text>';
-      document.getElementById('isoScene').innerHTML = '<div class="text-xs text-slate-400 font-semibold">בחר דגם לתלת-ממד</div>';
+      const img = document.getElementById('showerGif');
+      const placeholder = document.getElementById('gifPlaceholder');
+      img.classList.add('hidden');
+      placeholder.classList.remove('hidden');
     }
 
     function onModelChange() {
@@ -323,18 +310,39 @@
       const widthSelect = document.getElementById('widthSelect');
       widthSelect.innerHTML = model.widths.map((w, idx) => `<option value="${w}" ${idx === 0 ? 'selected' : ''}>${w} ס"מ</option>`).join('');
       
+      const heightSelect = document.getElementById('heightSelect');
+      heightSelect.value = "190";
+
       const waBtn = document.getElementById('whatsappBtn');
       waBtn.disabled = false;
       waBtn.className = "w-full py-3.5 bg-green-500 hover:bg-green-600 active:scale-[0.98] text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition cursor-pointer";
 
-      renderViews(model);
+      updateGif(model);
       calculatePrice();
+    }
+
+    function updateGif(model) {
+      const img = document.getElementById('showerGif');
+      const placeholder = document.getElementById('gifPlaceholder');
+      
+      if (model.file) {
+        // טעינה ישירה ממאגר ה-GitHub המקומי
+        img.src = `./${model.file}`;
+        img.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        
+        img.onerror = () => {
+          img.classList.add('hidden');
+          placeholder.classList.remove('hidden');
+        };
+      } else {
+        img.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+      }
     }
 
     function selectColor(index) {
       selectedColor = CATALOG_DATA.colors[index];
-      document.getElementById('hardwareTag').innerText = `גוון פרזול: ${selectedColor.name}`;
-      
       const buttons = document.querySelectorAll('.color-btn');
       buttons.forEach((btn, idx) => {
         if (idx === index) {
@@ -345,149 +353,7 @@
           btn.classList.add('border-slate-200');
         }
       });
-
-      const modelId = document.getElementById('modelSelect').value;
-      const model = CATALOG_DATA.models.find(m => m.id === modelId);
-      if (model) renderViews(model);
       calculatePrice();
-    }
-
-    function renderViews(model) {
-      const width = document.getElementById('widthSelect').value || 80;
-      const height = document.getElementById('heightSelect').value || 190;
-      renderTopView(model.type, width);
-      renderIsometricView(model.type);
-    }
-
-    // 1. ציור מבט על (Top View SVG)
-    function renderTopView(type, w) {
-      const svg = document.getElementById('topViewSvg');
-      const stroke = selectedColor.hex === '#ffffff' ? '#64748b' : selectedColor.hex;
-      let content = '';
-
-      // קירות צדדיים
-      content += `<rect x="25" y="20" width="12" height="90" fill="#cbd5e1" />`;
-      content += `<rect x="283" y="20" width="12" height="90" fill="#cbd5e1" />`;
-      content += `<line x1="37" y1="20" x2="283" y2="20" stroke="#94a3b8" stroke-dasharray="4 4" stroke-width="1.5" />`;
-      content += `<text x="160" y="15" font-size="11" font-weight="bold" text-anchor="middle" fill="#64748b">רוחב ${w} ס"מ</text>`;
-
-      if (type === 'fixed_door') {
-        content += `
-          <!-- קבוע ימין -->
-          <line x1="170" y1="65" x2="283" y2="65" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="283" cy="65" r="3.5" fill="${stroke}"/>
-          <!-- דלת ציר שמאל -->
-          <line x1="37" y1="65" x2="165" y2="65" stroke="#0284c7" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="37" cy="65" r="4" fill="${stroke}"/>
-          <!-- קשת פתיחה -->
-          <path d="M 165 65 A 128 128 0 0 1 37 130" fill="none" stroke="#94a3b8" stroke-dasharray="3 3" stroke-width="1.2"/>
-          <text x="225" y="85" font-size="10" font-weight="bold" fill="#64748b" text-anchor="middle">קבוע</text>
-          <text x="100" y="85" font-size="10" font-weight="bold" fill="#0284c7" text-anchor="middle">דלת נפתחת</text>
-        `;
-      } else if (type === 'single_door') {
-        content += `
-          <line x1="37" y1="65" x2="280" y2="65" stroke="#0284c7" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="37" cy="65" r="4.5" fill="${stroke}"/>
-          <path d="M 280 65 A 243 243 0 0 1 37 135" fill="none" stroke="#94a3b8" stroke-dasharray="3 3" stroke-width="1.2"/>
-          <text x="160" y="85" font-size="10" font-weight="bold" fill="#0284c7" text-anchor="middle">דלת פתיחה מלאה</text>
-        `;
-      } else if (type === 'double_door') {
-        content += `
-          <line x1="37" y1="65" x2="155" y2="65" stroke="#0284c7" stroke-width="5" stroke-linecap="round"/>
-          <line x1="165" y1="65" x2="283" y2="65" stroke="#0284c7" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="37" cy="65" r="4" fill="${stroke}"/>
-          <circle cx="283" cy="65" r="4" fill="${stroke}"/>
-          <path d="M 155 65 A 118 118 0 0 1 37 125" fill="none" stroke="#94a3b8" stroke-dasharray="3 3" stroke-width="1.2"/>
-          <path d="M 165 65 A 118 118 0 0 0 283 125" fill="none" stroke="#94a3b8" stroke-dasharray="3 3" stroke-width="1.2"/>
-        `;
-      } else if (type === 'slide_single') {
-        content += `
-          <line x1="37" y1="60" x2="283" y2="60" stroke="${stroke}" stroke-width="3"/>
-          <line x1="160" y1="60" x2="283" y2="60" stroke="#38bdf8" stroke-width="5"/>
-          <line x1="37" y1="72" x2="165" y2="72" stroke="#0284c7" stroke-width="5"/>
-          <text x="100" y="90" font-size="10" font-weight="bold" fill="#0284c7" text-anchor="middle">← כנף הזזה</text>
-        `;
-      } else {
-        content += `
-          <line x1="37" y1="65" x2="210" y2="65" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="37" cy="65" r="4" fill="${stroke}"/>
-          <text x="120" y="85" font-size="10" font-weight="bold" fill="#64748b" text-anchor="middle">קבוע Walk-in (מעבר חופשי)</text>
-        `;
-      }
-
-      svg.innerHTML = content;
-    }
-
-    // 2. ציור מבט איזומטרי 45 מעלות (Isometric 3D)
-    function renderIsometricView(type) {
-      const scene = document.getElementById('isoScene');
-      const hwColor = selectedColor.hex;
-      const hwBorder = selectedColor.borderHex;
-      const glassBg = "rgba(224, 242, 254, 0.65)";
-      const glassBorder = "rgba(125, 211, 252, 0.85)";
-
-      let html = '';
-
-      if (type === 'fixed_door') {
-        html = `
-          <div class="relative flex items-end justify-center w-48 h-40">
-            <!-- קבוע ימני -->
-            <div class="glass-3d relative w-20 h-36 border-2 border-r-4 rounded-t-sm" style="background:${glassBg}; border-color:${glassBorder};">
-              <div class="absolute -top-2 left-1 w-16 h-1 rounded-full" style="background:${hwColor}; border:1px solid ${hwBorder};"></div>
-              <div class="absolute right-0 top-4 w-1.5 h-3" style="background:${hwColor};"></div>
-            </div>
-            <!-- דלת נפתחת שמאל -->
-            <div class="iso-door-swing-left glass-3d relative w-24 h-36 border-2 rounded-t-sm" style="background:${glassBg}; border-color:${glassBorder};">
-              <div class="absolute left-0 top-6 -translate-x-1 w-2 h-4 rounded-sm" style="background:${hwColor}; border:1px solid ${hwBorder};"></div>
-              <div class="absolute left-0 bottom-6 -translate-x-1 w-2 h-4 rounded-sm" style="background:${hwColor}; border:1px solid ${hwBorder};"></div>
-              <div class="absolute right-2 top-16 w-1 h-8 rounded-full" style="background:${hwColor}; border:1px solid ${hwBorder};"></div>
-            </div>
-          </div>
-        `;
-      } else if (type === 'single_door') {
-        html = `
-          <div class="relative flex items-end justify-center w-36 h-40">
-            <div class="iso-door-swing-left glass-3d relative w-32 h-36 border-2 rounded-t-sm" style="background:${glassBg}; border-color:${glassBorder};">
-              <div class="absolute left-0 top-6 -translate-x-1 w-2 h-4 rounded-sm" style="background:${hwColor}; border:1px solid ${hwBorder};"></div>
-              <div class="absolute left-0 bottom-6 -translate-x-1 w-2 h-4 rounded-sm" style="background:${hwColor}; border:1px solid ${hwBorder};"></div>
-              <div class="absolute right-2 top-16 w-1.5 h-8 rounded-full" style="background:${hwColor}; border:1px solid ${hwBorder};"></div>
-            </div>
-          </div>
-        `;
-      } else if (type === 'double_door') {
-        html = `
-          <div class="relative flex items-end justify-center w-48 h-40 gap-0.5">
-            <div class="iso-door-swing-left glass-3d relative w-22 h-36 border-2 rounded-t-sm" style="background:${glassBg}; border-color:${glassBorder};">
-              <div class="absolute left-0 top-6 -translate-x-1 w-2 h-4" style="background:${hwColor};"></div>
-              <div class="absolute right-1 top-16 w-1 h-7" style="background:${hwColor};"></div>
-            </div>
-            <div class="iso-door-swing-right glass-3d relative w-22 h-36 border-2 rounded-t-sm" style="background:${glassBg}; border-color:${glassBorder};">
-              <div class="absolute right-0 top-6 translate-x-1 w-2 h-4" style="background:${hwColor};"></div>
-              <div class="absolute left-1 top-16 w-1 h-7" style="background:${hwColor};"></div>
-            </div>
-          </div>
-        `;
-      } else if (type === 'slide_single') {
-        html = `
-          <div class="relative flex items-end justify-center w-48 h-40">
-            <div class="absolute top-1 w-44 h-1.5 rounded-full z-20" style="background:${hwColor}; border:1px solid ${hwBorder};"></div>
-            <div class="glass-3d relative w-22 h-34 border-2" style="background:${glassBg}; border-color:${glassBorder};"></div>
-            <div class="iso-door-slide glass-3d absolute left-0 w-22 h-34 border-2 z-10" style="background:${glassBg}; border-color:${glassBorder};">
-              <div class="absolute left-2 top-14 w-1.5 h-8 rounded-full" style="background:${hwColor};"></div>
-            </div>
-          </div>
-        `;
-      } else {
-        html = `
-          <div class="relative flex items-end justify-center w-40 h-40">
-            <div class="glass-3d relative w-32 h-36 border-2 rounded-t-sm" style="background:${glassBg}; border-color:${glassBorder};">
-              <div class="absolute -top-2 left-2 w-28 h-1 rounded-full" style="background:${hwColor};"></div>
-            </div>
-          </div>
-        `;
-      }
-
-      scene.innerHTML = html;
     }
 
     function calculatePrice() {
@@ -514,18 +380,16 @@
       document.getElementById('subTotalDisplay').innerText = Math.round(subTotal).toLocaleString() + ' ₪';
       document.getElementById('vatDisplay').innerText = vat.toLocaleString() + ' ₪';
       document.getElementById('finalPriceDisplay').innerText = total.toLocaleString() + ' ₪';
-
-      renderTopView(model.type, width);
     }
 
     function sendOrderWhatsApp() {
       const modelName = document.getElementById('currentModelBadge').innerText;
       const width = document.getElementById('widthSelect').value;
       const height = document.getElementById('heightSelect').value;
-      const glassText = document.getElementById('glassSelect').options[document.getElementById('glassSelect').selectedIndex].text;
+      const glass = document.getElementById('glassSelect').options[document.getElementById('glassSelect').selectedIndex].text;
       const price = document.getElementById('finalPriceDisplay').innerText;
 
-      const msg = `שלום MTI, ברצוני לקבל הצעת מחיר עבור:\n*דגם:* ${modelName}\n*מידות:* ${width}x${height} ס"מ\n*פרזול:* ${selectedColor.name}\n*זכוכית:* ${glassText}\n*סה"כ לתשלום:* ${price}`;
+      const msg = `שלום MTI, ברצוני לקבל הצעה רשמית עבור:\n*דגם:* ${modelName}\n*מידות:* ${width}x${height} ס"מ\n*פרזול:* ${selectedColor.name}\n*זכוכית:* ${glass}\n*סה"כ משוער:* ${price}`;
       window.open(`https://wa.me/972500000000?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
