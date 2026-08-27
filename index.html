@@ -124,20 +124,26 @@
       </div>
     </section>
 
-    <!-- פנל תצוגה מקדימה וסיכום מחיר -->
+    <!-- פנל תצוגת GIF וסיכום מחיר -->
     <section class="lg:col-span-5 flex flex-col gap-6">
       
-      <!-- שרטוט -->
+      <!-- הדמיית GIF דינמית מ-Firebase -->
       <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
-          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">שרטוט טכני</span>
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">הדמיית פתיחה</span>
           <span id="currentModelBadge" class="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 font-bold rounded-lg truncate max-w-[200px]">טרם נבחר דגם</span>
         </div>
         
-        <div class="w-full h-64 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center p-4 relative overflow-hidden">
-          <svg id="schematicSvg" viewBox="0 0 300 240" class="w-full h-full max-h-56">
-            <text x="150" y="120" font-size="13" text-anchor="middle" fill="#94a3b8">בחר סוג ודגם מקלחון לתצוגה</text>
-          </svg>
+        <div class="w-full h-64 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center p-2 relative overflow-hidden">
+          <img id="showerGif" src="" alt="הדמיית מקלחון" class="max-h-full max-w-full object-contain hidden" />
+          <div id="gifPlaceholder" class="flex flex-col items-center justify-center text-slate-400 gap-2">
+            <svg class="w-10 h-10 stroke-current opacity-40" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            <span class="text-xs font-semibold">בחר דגם מקלחון לצפייה ב-GIF</span>
+          </div>
         </div>
       </div>
 
@@ -168,6 +174,9 @@
   </main>
 
   <script>
+    // הגדרת בסיס כתובת Firebase לקבצי ה-GIF
+    const FIREBASE_BASE_URL = "https://firebasestorage.googleapis.com/v0/b/tochat-catalog.appspot.com/o/mti%2Fgifs%2F";
+
     const CATALOG_DATA = {
       categories: [
         { id: "front", name: "מקלחון חזיתי" },
@@ -183,28 +192,28 @@
       ],
       models: [
         // חזיתי
-        { cat: "מקלחון חזיתי", id: "718", name: "MTI-718 - דלת", base: 138, type: "single", widths: [50,55,60,65,70,75,80,85,90] },
-        { cat: "מקלחון חזיתי", id: "719", name: "MTI-719 - קבוע WALK-IN", base: 160, type: "walkin", widths: [80,85,90,95,100,105,110,115,120] },
-        { cat: "מקלחון חזיתי", id: "720", name: "MTI-720 - קבוע", base: 122, type: "fixed", widths: [40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120] },
-        { cat: "מקלחון חזיתי", id: "721", name: "MTI-721 - קבוע ודלת", base: 241, type: "fixed_door", widths: [70,75,80,85,90,95,100,110,120,130,140,150,160,170,180,190] },
-        { cat: "מקלחון חזיתי", id: "722", name: "MTI-722 - שתי דלתות", base: 275, type: "double_door", widths: [60,65,70,75,80,85,90,95,100,110,120,130,140,150,160,170,180] },
-        { cat: "מקלחון חזיתי", id: "723", name: "MTI-723 - הרמוניקה שתי דלתות", base: 282, type: "harmonica_2", widths: [60,70,80,90,100,110,120] },
-        { cat: "מקלחון חזיתי", id: "727", name: "MTI-727 - שני קבועים ושתי דלתות", base: 563, type: "two_fixed_two_doors", widths: [90,100,110,120,130,140,150,160,170,180,200,220,240,260] },
+        { cat: "מקלחון חזיתי", id: "718", name: "MTI-718 - דלת", base: 138, gif: "MTI-718.gif", widths: [50,55,60,65,70,75,80,85,90] },
+        { cat: "מקלחון חזיתי", id: "719", name: "MTI-719 - קבוע WALK-IN", base: 160, gif: "MTI-719.gif", widths: [80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "720", name: "MTI-720 - קבוע", base: 122, gif: "MTI-720.gif", widths: [40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "721", name: "MTI-721 - קבוע ודלת", base: 241, gif: "MTI-721.gif", widths: [70,75,80,85,90,95,100,110,120,130,140,150,160,170,180,190] },
+        { cat: "מקלחון חזיתי", id: "722", name: "MTI-722 - שתי דלתות", base: 275, gif: "MTI-722.gif", widths: [60,65,70,75,80,85,90,95,100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון חזיתי", id: "723", name: "MTI-723 - הרמוניקה שתי דלתות", base: 282, gif: "MTI-723.gif", widths: [60,70,80,90,100,110,120] },
+        { cat: "מקלחון חזיתי", id: "727", name: "MTI-727 - שני קבועים ושתי דלתות", base: 563, gif: "MTI-727.gif", widths: [90,100,110,120,130,140,150,160,170,180,200,220,240,260] },
         
         // פינתי
-        { cat: "מקלחון פינתי", id: "740", name: "MTI-740 - שתי דלתות", base: 275, type: "corner_2d", widths: [60,65,70,75,80,85,90,95,100] },
-        { cat: "מקלחון פינתי", id: "741", name: "MTI-741 - קבוע ודלת", base: 241, type: "corner_fd", widths: [55,60,65,70,75,80,85,90,95,100] },
-        { cat: "מקלחון פינתי", id: "746", name: "MTI-746 - שני קבועים ושתי דלתות", base: 563, type: "corner_2f2d", widths: [70,75,80,85,90,95,100,110,120,130] },
-        { cat: "מקלחון פינתי", id: "747", name: "MTI-747 - שתי דלתות הרמוניקה מתקפלות", base: 531, type: "corner_harmonica", widths: [60,70,80,90,100,110] },
+        { cat: "מקלחון פינתי", id: "740", name: "MTI-740 - שתי דלתות", base: 275, gif: "MTI-740.gif", widths: [60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "741", name: "MTI-741 - קבוע ודלת", base: 241, gif: "MTI-741.gif", widths: [55,60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "746", name: "MTI-746 - שני קבועים ושתי דלתות", base: 563, gif: "MTI-746.gif", widths: [70,75,80,85,90,95,100,110,120,130] },
+        { cat: "מקלחון פינתי", id: "747", name: "MTI-747 - שתי דלתות הרמוניקה מתקפלות", base: 531, gif: "MTI-747.gif", widths: [60,70,80,90,100,110] },
 
         // אמבטיון
-        { cat: "אמבטיון סגירה חלקית", id: "760", name: "MTI-760 - דלת", base: 130, type: "single", widths: [30,40,50,60,70,80,90] },
-        { cat: "אמבטיון סגירה חלקית", id: "762", name: "MTI-762 - קבוע ודלת", base: 274, type: "fixed_door", widths: [45,50,60,70,80,90,100,120,140,160] },
+        { cat: "אמבטיון סגירה חלקית", id: "760", name: "MTI-760 - דלת", base: 130, gif: "MTI-760.gif", widths: [30,40,50,60,70,80,90] },
+        { cat: "אמבטיון סגירה חלקית", id: "762", name: "MTI-762 - קבוע ודלת", base: 274, gif: "MTI-762.gif", widths: [45,50,60,70,80,90,100,120,140,160] },
         
         // הזזה
-        { cat: "מקלחון הזזה צינור חזיתי", id: "800", name: "MTI-800 - קבוע ודלת", base: 450, type: "slide_pipe", widths: [100,110,120,130,140,150,160,170,180] },
-        { cat: "מקלחון הזזה CNC חזיתי", id: "830", name: "MTI-830 - קבוע ודלת", base: 270, type: "slide_cnc", widths: [100,110,120,130,140,150,160,170,180] },
-        { cat: "מקלחון הזזה CNC פינתי", id: "832", name: "MTI-832 - 2 קבועים ו-2 דלתות", base: 540, type: "slide_cnc_corner", widths: [70,80,90,100,110,120] }
+        { cat: "מקלחון הזזה צינור חזיתי", id: "800", name: "MTI-800 - קבוע ודלת", base: 450, gif: "MTI-800.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה CNC חזיתי", id: "830", name: "MTI-830 - קבוע ודלת", base: 270, gif: "MTI-830.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה CNC פינתי", id: "832", name: "MTI-832 - 2 קבועים ו-2 דלתות", base: 540, gif: "MTI-832.gif", widths: [70,80,90,100,110,120] }
       ],
       colors: [
         { name: "ניקל", mult: 1.0, hex: "#cbd5e1" },
@@ -261,7 +270,11 @@
       waBtn.disabled = true;
       waBtn.className = "w-full py-3.5 bg-slate-700 opacity-50 cursor-not-allowed text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition";
 
-      document.getElementById('schematicSvg').innerHTML = '<text x="150" y="120" font-size="13" text-anchor="middle" fill="#94a3b8">בחר דגם מקלחון לתצוגה</text>';
+      // איפוס תמונת ה-GIF
+      const img = document.getElementById('showerGif');
+      const placeholder = document.getElementById('gifPlaceholder');
+      img.classList.add('hidden');
+      placeholder.classList.remove('hidden');
     }
 
     function onModelChange() {
@@ -285,7 +298,31 @@
       waBtn.disabled = false;
       waBtn.className = "w-full py-3.5 bg-green-500 hover:bg-green-600 active:scale-[0.98] text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition cursor-pointer";
 
+      // טעינת ה-GIF המתאים מ-Firebase
+      updateGif(model);
       calculatePrice();
+    }
+
+    function updateGif(model) {
+      const img = document.getElementById('showerGif');
+      const placeholder = document.getElementById('gifPlaceholder');
+      
+      if (model.gif) {
+        // הרכבת כתובת ה-Firebase
+        const gifUrl = `${FIREBASE_BASE_URL}${encodeURIComponent(model.gif)}?alt=media`;
+        img.src = gifUrl;
+        img.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        
+        img.onerror = () => {
+          // אם ה-GIF הספציפי חסר ב-Firebase
+          img.classList.add('hidden');
+          placeholder.classList.remove('hidden');
+        };
+      } else {
+        img.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+      }
     }
 
     function selectColor(index) {
@@ -301,43 +338,6 @@
         }
       });
       calculatePrice();
-    }
-
-    function drawSchematic(type, w, h) {
-      const svg = document.getElementById('schematicSvg');
-      let content = '';
-      const glass = "rgba(226, 232, 240, 0.65)";
-      const stroke = selectedColor.hex === '#f8fafc' ? '#64748b' : selectedColor.hex;
-
-      if (type === 'single') {
-        content = `
-          <rect x="90" y="30" width="120" height="170" fill="${glass}" stroke="${stroke}" stroke-width="2.5" rx="3"/>
-          <circle cx="195" cy="115" r="4.5" fill="${stroke}"/>
-          <rect x="88" y="50" width="4" height="18" fill="${stroke}" rx="1"/>
-          <rect x="88" y="160" width="4" height="18" fill="${stroke}" rx="1"/>
-          <text x="150" y="222" font-size="12" text-anchor="middle" font-weight="bold" fill="#64748b">${w} ס"מ</text>
-          <text x="65" y="120" font-size="12" text-anchor="middle" font-weight="bold" fill="#64748b" transform="rotate(-90 65 120)">${h} ס"מ</text>
-        `;
-      } else if (type === 'fixed_door') {
-        content = `
-          <rect x="50" y="30" width="90" height="170" fill="${glass}" stroke="${stroke}" stroke-width="2.5" rx="2"/>
-          <rect x="144" y="30" width="105" height="170" fill="${glass}" stroke="${stroke}" stroke-width="2.5" rx="2"/>
-          <circle cx="235" cy="115" r="4.5" fill="${stroke}"/>
-          <line x1="50" y1="30" x2="140" y2="30" stroke="${stroke}" stroke-width="3.5"/>
-          <text x="150" y="222" font-size="12" text-anchor="middle" font-weight="bold" fill="#64748b">${w} ס"מ</text>
-          <text x="30" y="120" font-size="12" text-anchor="middle" font-weight="bold" fill="#64748b" transform="rotate(-90 30 120)">${h} ס"מ</text>
-        `;
-      } else {
-        content = `
-          <rect x="50" y="30" width="98" height="170" fill="${glass}" stroke="${stroke}" stroke-width="2.5" rx="2"/>
-          <rect x="152" y="30" width="98" height="170" fill="${glass}" stroke="${stroke}" stroke-width="2.5" rx="2"/>
-          <circle cx="135" cy="115" r="4.5" fill="${stroke}"/>
-          <circle cx="165" cy="115" r="4.5" fill="${stroke}"/>
-          <text x="150" y="222" font-size="12" text-anchor="middle" font-weight="bold" fill="#64748b">${w} ס"מ</text>
-          <text x="30" y="120" font-size="12" text-anchor="middle" font-weight="bold" fill="#64748b" transform="rotate(-90 30 120)">${h} ס"מ</text>
-        `;
-      }
-      svg.innerHTML = content;
     }
 
     function calculatePrice() {
@@ -364,8 +364,6 @@
       document.getElementById('subTotalDisplay').innerText = Math.round(subTotal).toLocaleString() + ' ₪';
       document.getElementById('vatDisplay').innerText = vat.toLocaleString() + ' ₪';
       document.getElementById('finalPriceDisplay').innerText = total.toLocaleString() + ' ₪';
-
-      drawSchematic(model.type, width, height);
     }
 
     function sendOrderWhatsApp() {
