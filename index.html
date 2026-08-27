@@ -9,15 +9,25 @@
   <style>body { font-family: 'Assistant', sans-serif; }</style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+  
+  <!-- כותרת ראשית עם לוגו MTI הרשמי -->
   <header class="bg-white shadow-sm border-b sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-inner">M</div>
-        <div>
-          <h1 class="text-xl font-bold text-slate-900 leading-tight">MTI Bath Gallery</h1>
-          <p class="text-xs text-slate-500 font-medium">מחירון מקלחונים ומחיצות 2025</p>
+    <div class="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <!-- לוגו MTI ISRAEL וקטורי מדויק -->
+        <svg viewBox="0 0 1000 420" class="h-10 md:h-12 w-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="15" width="970" height="390" rx="60" stroke="#1e293b" stroke-width="22"/>
+          <line x1="860" y1="15" x2="860" y2="405" stroke="#1e293b" stroke-width="20"/>
+          <text x="75" y="340" font-family="'Times New Roman', serif" font-weight="900" font-size="390" fill="#1e293b" letter-spacing="-5">MTI</text>
+          <text x="930" y="70" font-family="'Arial', sans-serif" font-weight="700" font-size="75" fill="#1e293b" letter-spacing="18" transform="rotate(90 930 70)">ISRAEL</text>
+        </svg>
+
+        <div class="hidden sm:block border-r border-slate-200 pr-4">
+          <h1 class="text-base font-bold text-slate-900 leading-tight">קונפיגורטור מקלחונים ומחיצות</h1>
+          <p class="text-xs text-slate-500 font-medium">MTI Bath Gallery 2025</p>
         </div>
       </div>
+      
       <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full border border-slate-200">
         התאמה אישית
       </span>
@@ -45,13 +55,12 @@
         </select>
       </div>
 
-      <!-- שלב 3: מידות דינמיות (חזיתי = מידה אחת, פינתי = 2 צלעות) -->
+      <!-- שלב 3: מידות -->
       <div id="dimensionsSection" class="border-t pt-4 space-y-4 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-sm font-bold text-slate-800">3. מידות (ס"מ)</h3>
         
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="dimGrid">
-          
-          <!-- צלע א' / רוחב חזית -->
+          <!-- צלע א' -->
           <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60" id="dimBox1">
             <div class="flex justify-between items-center mb-1.5">
               <span id="dimLabel1" class="text-xs font-semibold text-slate-500">רוחב חזית</span>
@@ -62,7 +71,7 @@
             </select>
           </div>
 
-          <!-- צלע ב' (מוצג רק בפינתי) -->
+          <!-- צלע ב' (במקרה פינתי) -->
           <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60 hidden" id="dimBox2">
             <div class="flex justify-between items-center mb-1.5">
               <span class="text-xs font-semibold text-slate-500">עומק (צלע ב')</span>
@@ -91,7 +100,6 @@
               <option value="220">220 ס"מ</option>
             </select>
           </div>
-
         </div>
       </div>
 
@@ -143,7 +151,7 @@
     <!-- פנל תצוגת GIF וסיכום מחיר -->
     <section class="lg:col-span-5 flex flex-col gap-6">
       
-      <!-- הדמיית GIF מתוך המאגר המקומי ב-GitHub -->
+      <!-- הדמיית GIF מתוך המאגר ב-GitHub -->
       <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
           <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">הדמיית פתיחה</span>
@@ -425,7 +433,6 @@
       }
       document.getElementById('hDisplay').innerText = height + ' ס"מ';
 
-      // חישוב מחירון מותאם לחזיתי / פינתי
       let sizeFactor = isCurrentCorner ? ((width1 + width2 - 160) * 6) : ((width1 - 60) * 8);
       let basePrice = (model.base * 10) + sizeFactor;
       
