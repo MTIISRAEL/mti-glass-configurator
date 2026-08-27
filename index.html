@@ -18,8 +18,8 @@
           <p class="text-xs text-slate-500 font-medium">מחירון מקלחונים ומחיצות 2025</p>
         </div>
       </div>
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full border border-blue-200">
-        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span> התאמה אישית
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full border border-slate-200">
+        התאמה אישית
       </span>
     </div>
   </header>
@@ -33,20 +33,20 @@
       <div>
         <label class="block text-sm font-bold text-slate-800 mb-2">1. סוג מקלחון</label>
         <select id="categorySelect" onchange="onCategoryChange()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm transition">
-          <!-- נטען דינמית -->
+          <option value="" disabled selected>-- בחר סוג מקלחון --</option>
         </select>
       </div>
 
       <!-- שלב 2: דגם ספציפי -->
       <div>
         <label class="block text-sm font-bold text-slate-800 mb-2">2. דגם מקלחון</label>
-        <select id="modelSelect" onchange="onModelChange()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm transition">
-          <!-- נטען דינמית לפי הקטגוריה -->
+        <select id="modelSelect" onchange="onModelChange()" disabled class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl font-semibold text-slate-400 outline-none text-sm transition cursor-not-allowed">
+          <option value="" disabled selected>-- יש לבחור סוג מקלחון תחילה --</option>
         </select>
       </div>
 
       <!-- שלב 3: מידות -->
-      <div class="border-t pt-4 space-y-4">
+      <div id="dimensionsSection" class="border-t pt-4 space-y-4 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-sm font-bold text-slate-800">3. מידות (ס"מ)</h3>
         <div class="grid grid-cols-2 gap-4">
           <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60">
@@ -55,22 +55,23 @@
               <span id="wDisplay" class="text-sm font-bold text-blue-600">--</span>
             </div>
             <select id="widthSelect" onchange="calculatePrice()" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
-              <!-- נטען דינמית לפי הדגם -->
+              <option value="" disabled selected>-- בחר רוחב --</option>
             </select>
           </div>
 
           <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/60">
             <div class="flex justify-between items-center mb-2">
               <span class="text-xs font-semibold text-slate-500">גובה</span>
-              <span id="hDisplay" class="text-sm font-bold text-blue-600">190 ס"מ</span>
+              <span id="hDisplay" class="text-sm font-bold text-blue-600">--</span>
             </div>
             <select id="heightSelect" onchange="calculatePrice()" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="" disabled selected>-- בחר גובה --</option>
               <option value="140">140 ס"מ</option>
               <option value="150">150 ס"מ</option>
               <option value="160">160 ס"מ</option>
               <option value="170">170 ס"מ</option>
               <option value="180">180 ס"מ</option>
-              <option value="190" selected>190 ס"מ (סטנדרט)</option>
+              <option value="190">190 ס"מ (סטנדרט)</option>
               <option value="200">200 ס"מ</option>
               <option value="210">210 ס"מ</option>
               <option value="220">220 ס"מ</option>
@@ -80,7 +81,7 @@
       </div>
 
       <!-- שלב 4: גימורים ושדרוגים -->
-      <div class="border-t pt-4 space-y-4">
+      <div id="optionsSection" class="border-t pt-4 space-y-4 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-sm font-bold text-slate-800">4. מפרט פרזול וזכוכית</h3>
         
         <div>
@@ -94,7 +95,7 @@
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">סוג זכוכית (8 מ"מ)</label>
             <select id="glassSelect" onchange="calculatePrice()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="0">שקופה (ללא תוספת)</option>
+              <option value="0">שקופה (בסיס)</option>
               <option value="220">אקסטרה קליר (+220 ₪)</option>
               <option value="185">גרניט (+185 ₪)</option>
               <option value="190">פפיטה (+190 ₪)</option>
@@ -129,12 +130,14 @@
       <!-- שרטוט -->
       <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
-          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">שרטוט טכני דינמי</span>
-          <span id="currentModelBadge" class="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 font-bold rounded-lg truncate max-w-[200px]"></span>
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">שרטוט טכני</span>
+          <span id="currentModelBadge" class="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 font-bold rounded-lg truncate max-w-[200px]">טרם נבחר דגם</span>
         </div>
         
         <div class="w-full h-64 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center p-4 relative overflow-hidden">
-          <svg id="schematicSvg" viewBox="0 0 300 240" class="w-full h-full max-h-56"></svg>
+          <svg id="schematicSvg" viewBox="0 0 300 240" class="w-full h-full max-h-56">
+            <text x="150" y="120" font-size="13" text-anchor="middle" fill="#94a3b8">בחר סוג ודגם מקלחון לתצוגה</text>
+          </svg>
         </div>
       </div>
 
@@ -156,7 +159,7 @@
           </div>
         </div>
 
-        <button onclick="sendOrderWhatsApp()" class="w-full py-3.5 bg-green-500 hover:bg-green-600 active:scale-[0.98] text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition">
+        <button id="whatsappBtn" onclick="sendOrderWhatsApp()" disabled class="w-full py-3.5 bg-slate-700 opacity-50 cursor-not-allowed text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition">
           <span>שליחת מפרט והזמנה ב-WhatsApp</span>
         </button>
       </div>
@@ -165,7 +168,6 @@
   </main>
 
   <script>
-    // מבנה נתונים ממופה מלא מתוך גיליון האקסל
     const CATALOG_DATA = {
       categories: [
         { id: "front", name: "מקלחון חזיתי" },
@@ -219,11 +221,10 @@
     let selectedColor = CATALOG_DATA.colors[0];
 
     function init() {
-      // טעינת קטגוריות
       const catSelect = document.getElementById('categorySelect');
-      catSelect.innerHTML = CATALOG_DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      catSelect.innerHTML = '<option value="" disabled selected>-- בחר סוג מקלחון --</option>' + 
+        CATALOG_DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
 
-      // טעינת צבעי פרזול
       const colorBox = document.getElementById('colorContainer');
       colorBox.innerHTML = CATALOG_DATA.colors.map((col, idx) => `
         <button type="button" onclick="selectColor(${idx})" class="color-btn ${idx === 0 ? 'border-blue-600 bg-blue-50/50' : 'border-slate-200'} p-2 border rounded-xl flex items-center gap-2 text-right transition">
@@ -231,8 +232,6 @@
           <span class="text-xs font-semibold text-slate-700 truncate">${col.name}</span>
         </button>
       `).join('');
-
-      onCategoryChange();
     }
 
     function onCategoryChange() {
@@ -241,24 +240,51 @@
       
       const filteredModels = CATALOG_DATA.models.filter(m => m.cat === selectedCat);
       
-      if (filteredModels.length === 0) {
-        modelSelect.innerHTML = `<option value="">אין דגמים זמינים לקטגוריה זו כרגע</option>`;
-      } else {
-        modelSelect.innerHTML = filteredModels.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
-      }
-      onModelChange();
+      modelSelect.disabled = false;
+      modelSelect.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+      modelSelect.classList.add('bg-slate-50', 'text-slate-800');
+      
+      modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם מקלחון --</option>' + 
+        filteredModels.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+
+      // איפוס שאר הטופס
+      document.getElementById('dimensionsSection').classList.add('opacity-50', 'pointer-events-none');
+      document.getElementById('optionsSection').classList.add('opacity-50', 'pointer-events-none');
+      document.getElementById('currentModelBadge').innerText = 'טרם נבחר דגם';
+      document.getElementById('wDisplay').innerText = '--';
+      document.getElementById('hDisplay').innerText = '--';
+      document.getElementById('finalPriceDisplay').innerText = '0 ₪';
+      document.getElementById('subTotalDisplay').innerText = '0 ₪';
+      document.getElementById('vatDisplay').innerText = '0 ₪';
+      
+      const waBtn = document.getElementById('whatsappBtn');
+      waBtn.disabled = true;
+      waBtn.className = "w-full py-3.5 bg-slate-700 opacity-50 cursor-not-allowed text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition";
+
+      document.getElementById('schematicSvg').innerHTML = '<text x="150" y="120" font-size="13" text-anchor="middle" fill="#94a3b8">בחר דגם מקלחון לתצוגה</text>';
     }
 
     function onModelChange() {
       const modelId = document.getElementById('modelSelect').value;
-      const model = CATALOG_DATA.models.find(m => m.id === modelId) || CATALOG_DATA.models[0];
-      
+      const model = CATALOG_DATA.models.find(m => m.id === modelId);
+      if (!model) return;
+
       document.getElementById('currentModelBadge').innerText = model.name;
 
-      // עדכון רוחב זמין לפי הדגם
+      // הפעלת שלבי המידות והאפשרויות
+      document.getElementById('dimensionsSection').classList.remove('opacity-50', 'pointer-events-none');
+      document.getElementById('optionsSection').classList.remove('opacity-50', 'pointer-events-none');
+
       const widthSelect = document.getElementById('widthSelect');
-      widthSelect.innerHTML = model.widths.map(w => `<option value="${w}">${w} ס"מ</option>`).join('');
+      widthSelect.innerHTML = model.widths.map((w, idx) => `<option value="${w}" ${idx === 0 ? 'selected' : ''}>${w} ס"מ</option>`).join('');
       
+      const heightSelect = document.getElementById('heightSelect');
+      heightSelect.value = "190";
+
+      const waBtn = document.getElementById('whatsappBtn');
+      waBtn.disabled = false;
+      waBtn.className = "w-full py-3.5 bg-green-500 hover:bg-green-600 active:scale-[0.98] text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm transition cursor-pointer";
+
       calculatePrice();
     }
 
@@ -328,7 +354,6 @@
       document.getElementById('wDisplay').innerText = width + ' ס"מ';
       document.getElementById('hDisplay').innerText = height + ' ס"מ';
 
-      // חישוב מחירון
       let basePrice = (model.base * 10) + ((width - 60) * 8);
       let hardwareMarkup = basePrice * (selectedColor.mult - 1);
       let subTotal = basePrice + hardwareMarkup + glassExtra + nanoExtra;
