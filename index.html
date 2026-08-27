@@ -84,7 +84,10 @@
         <h3 class="text-sm font-bold text-slate-800">4. מפרט פרזול וזכוכית</h3>
         
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-2">גוון פרזול</label>
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-xs font-semibold text-slate-600">גוון פרזול</label>
+            <span id="selectedColorBadge" class="text-xs font-bold text-slate-400">טרם נבחר גוון</span>
+          </div>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="colorContainer"></div>
         </div>
 
@@ -251,7 +254,7 @@
       ]
     };
 
-    let selectedColor = CATALOG_DATA.colors[0];
+    let selectedColor = null; // ברירת מחדל: ללא צבע נבחר
 
     function init() {
       const catSelect = document.getElementById('categorySelect');
@@ -260,7 +263,7 @@
 
       const colorBox = document.getElementById('colorContainer');
       colorBox.innerHTML = CATALOG_DATA.colors.map((col, idx) => `
-        <button type="button" onclick="selectColor(${idx})" class="color-btn ${idx === 0 ? 'border-blue-600 bg-blue-50/50' : 'border-slate-200'} p-2 border rounded-xl flex items-center gap-2 text-right transition">
+        <button type="button" onclick="selectColor(${idx})" class="color-btn border-slate-200 p-2 border rounded-xl flex items-center gap-2 text-right transition">
           <span class="w-3.5 h-3.5 rounded-full border shadow-sm flex-shrink-0" style="background-color: ${col.hex}"></span>
           <span class="text-xs font-semibold text-slate-700 truncate">${col.name}</span>
         </button>
@@ -278,6 +281,14 @@
       
       modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם מקלחון --</option>' + 
         filteredModels.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+
+      // איפוס צבע
+      selectedColor = null;
+      document.getElementById('selectedColorBadge').innerText = 'טרם נבחר גוון';
+      document.querySelectorAll('.color-btn').forEach(b => {
+        b.classList.remove('border-blue-600', 'bg-blue-50/50');
+        b.classList.add('border-slate-200');
+      });
 
       document.getElementById('dimensionsSection').classList.add('opacity-50', 'pointer-events-none');
       document.getElementById('optionsSection').classList.add('opacity-50', 'pointer-events-none');
@@ -326,7 +337,6 @@
       const placeholder = document.getElementById('gifPlaceholder');
       
       if (model.file) {
-        // טעינה ישירה ממאגר ה-GitHub המקומי
         img.src = `./${model.file}`;
         img.classList.remove('hidden');
         placeholder.classList.add('hidden');
@@ -343,6 +353,8 @@
 
     function selectColor(index) {
       selectedColor = CATALOG_DATA.colors[index];
+      document.getElementById('selectedColorBadge').innerText = selectedColor.name;
+      
       const buttons = document.querySelectorAll('.color-btn');
       buttons.forEach((btn, idx) => {
         if (idx === index) {
@@ -371,9 +383,12 @@
       document.getElementById('hDisplay').innerText = height + ' ס"מ';
 
       let basePrice = (model.base * 10) + ((width - 60) * 8);
-      let hardwareMarkup = basePrice * (selectedColor.mult - 1);
-      let subTotal = basePrice + hardwareMarkup + glassExtra + nanoExtra;
       
+      // אם לא נבחר צבע, המקדם הוא 1.0 (בסיס)
+      let colorMult = selectedColor ? selectedColor.mult : 1.0;
+      let hardwareMarkup = basePrice * (colorMult - 1);
+      
+      let subTotal = basePrice + hardwareMarkup + glassExtra + nanoExtra;
       let vat = Math.round(subTotal * 0.18);
       let total = subTotal + vat + (hasInstall ? 600 : 0);
 
@@ -387,9 +402,10 @@
       const width = document.getElementById('widthSelect').value;
       const height = document.getElementById('heightSelect').value;
       const glass = document.getElementById('glassSelect').options[document.getElementById('glassSelect').selectedIndex].text;
+      const colorName = selectedColor ? selectedColor.name : 'טרם נבחר (בסיס ניקל)';
       const price = document.getElementById('finalPriceDisplay').innerText;
 
-      const msg = `שלום MTI, ברצוני לקבל הצעה רשמית עבור:\n*דגם:* ${modelName}\n*מידות:* ${width}x${height} ס"מ\n*פרזול:* ${selectedColor.name}\n*זכוכית:* ${glass}\n*סה"כ משוער:* ${price}`;
+      const msg = `שלום MTI, ברצוני לקבל הצעת מחיר עבור:\n*דגם:* ${modelName}\n*מידות:* ${width}x${height} ס"מ\n*פרזול:* ${colorName}\n*זכוכית:* ${glass}\n*סה"כ משוער:* ${price}`;
       window.open(`https://wa.me/972500000000?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
