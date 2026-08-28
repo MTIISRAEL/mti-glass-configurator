@@ -6,7 +6,7 @@
   <title>קונפיגורטור מקלחונים - MTI Bath Gallery</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <!-- ספריית html2pdf ליצירת מסמכי PDF ישירות מהדפדפן -->
+  <!-- ספריית html2pdf -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>body { font-family: 'Assistant', sans-serif; }</style>
 </head>
@@ -113,11 +113,11 @@
         </div>
       </div>
 
-      <!-- שלב 4: מפרט זכוכית, פרזול ושדרוגים -->
-      <div id="optionsSection" class="border-t pt-4 space-y-4 opacity-50 pointer-events-none transition-opacity">
+      <!-- שלב 4: מפרט פרזול וזכוכית -->
+      <div id="optionsSection" class="border-t pt-4 space-y-6 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-sm font-bold text-slate-800">4. מפרט פרזול וזכוכית</h3>
         
-        <!-- בחירת גוון פרזול -->
+        <!-- גוון פרזול -->
         <div>
           <div class="flex justify-between items-center mb-2">
             <label class="block text-xs font-semibold text-slate-600">גוון פרזול</label>
@@ -126,18 +126,21 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5" id="colorContainer"></div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <!-- סוג זכוכית 8 מ"מ -->
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1.5">סוג זכוכית (8 מ"מ)</label>
-            <select id="glassSelect" onchange="calculatePrice()" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
-            </select>
+        <!-- גלריית סוגי זכוכית 8 מ"מ (כרטיסי תמונות מתוך התיקייה "סוגי זכוכית") -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-xs font-semibold text-slate-600">סוג זכוכית (8 מ"מ)</label>
+            <span id="selectedGlassBadge" class="text-xs font-bold text-blue-600">שקופה (בסיס)</span>
           </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5" id="glassContainer"></div>
+        </div>
 
+        <!-- תוספות נוספות: ננו וחיתוכים -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
           <!-- ציפוי ננו -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">ציפוי ננו דוחה אבנית</label>
-            <select id="nanoSelect" onchange="calculatePrice()" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
+            <select id="nanoSelect" onchange="calculatePrice()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
               <option value="0" selected>ללא ציפוי</option>
               <option value="150">כולל ציפוי ננו</option>
             </select>
@@ -146,7 +149,7 @@
           <!-- חיתוכים בזכוכית -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">חיתוך / גריעה בזכוכית</label>
-            <select id="cutSelect" onchange="calculatePrice()" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
+            <select id="cutSelect" onchange="calculatePrice()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
               <option value="0" selected>ללא חיתוכים</option>
               <option value="50">חיתוך אחד</option>
               <option value="100">2 חיתוכים</option>
@@ -195,7 +198,7 @@
           <p id="installNoteDisplay" class="text-[11px] text-slate-300">תשלום בסך 600 ₪ ישולם ישירות למתקין במעמד ההתקנה.</p>
         </div>
 
-        <!-- כפתור הורדת PDF רשמי של ההזמנה -->
+        <!-- כפתור הורדת PDF רשמי -->
         <button id="downloadPdfBtn" onclick="generateOrderPDF()" disabled class="w-full py-4 bg-slate-700 opacity-50 cursor-not-allowed text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition">
           <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -207,11 +210,9 @@
     </section>
   </main>
 
-  <!-- תבנית נסתרת להפקת מסמך ה-PDF הרשמי -->
+  <!-- תבנית PDF נסתרת להפקה -->
   <div class="hidden">
     <div id="pdfTemplate" class="p-8 bg-white text-slate-800" style="width: 800px; font-family: 'Assistant', sans-serif; direction: rtl;">
-      
-      <!-- ראש מסמך PDF -->
       <div class="flex justify-between items-center border-b pb-4 mb-6">
         <div>
           <h1 class="text-2xl font-extrabold text-slate-900">MTI Bath Gallery</h1>
@@ -221,7 +222,6 @@
         <img src="./mtilogo.jpg" alt="MTI Logo" style="height: 55px; width: auto; object-contain;" />
       </div>
 
-      <!-- פרטי מפרט מלאים -->
       <div class="mb-6">
         <h2 class="text-sm font-bold text-slate-800 bg-slate-100 p-2.5 rounded-lg mb-3">מפרט טכני של המוצר</h2>
         <table class="w-full text-xs text-right border-collapse">
@@ -237,7 +237,6 @@
         </table>
       </div>
 
-      <!-- סיכום כספי -->
       <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
         <div class="flex justify-between items-center mb-2">
           <span class="text-sm font-bold text-slate-700">מחיר מחירון רשמי לצרכן (כולל מע"מ):</span>
@@ -250,7 +249,6 @@
         <p id="pdfInstallNote" class="text-[11px] text-slate-500 mt-1"></p>
       </div>
 
-      <!-- שורת חתימות והערות לחנות -->
       <div class="border-t pt-4 grid grid-cols-2 gap-8 text-xs text-slate-600">
         <div>
           <p class="font-bold mb-1">הערות / הנחת חנות:</p>
@@ -260,7 +258,6 @@
           <div class="border-t border-slate-300 pt-1 text-center font-bold text-slate-700">חתימת הלקוח / אישור הזמנה</div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -361,13 +358,16 @@
     };
 
     let selectedColor = null;
+    let selectedGlassIndex = 0;
     let isCurrentCorner = false;
 
     function init() {
+      // טעינת קטגוריות
       const catSelect = document.getElementById('categorySelect');
       catSelect.innerHTML = '<option value="" disabled selected>-- בחר סוג מקלחון --</option>' + 
         CATALOG_DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
 
+      // טעינת כרטיסי תמונות הצירים
       const colorBox = document.getElementById('colorContainer');
       colorBox.innerHTML = CATALOG_DATA.colors.map((col, idx) => `
         <button type="button" onclick="selectColor(${idx})" class="color-btn bg-white border border-slate-200 p-2 rounded-2xl flex flex-col items-center justify-between hover:border-blue-400 active:scale-95 transition shadow-sm group">
@@ -378,8 +378,46 @@
         </button>
       `).join('');
 
-      const glassSelect = document.getElementById('glassSelect');
-      glassSelect.innerHTML = CATALOG_DATA.glasses.map(g => `<option value="${g.cost}">${g.name}</option>`).join('');
+      // טעינת כרטיסי תמונות הזכוכית מתוך התיקייה "סוגי זכוכית"
+      const glassBox = document.getElementById('glassContainer');
+      const folderName = encodeURIComponent("סוגי זכוכית");
+
+      glassBox.innerHTML = CATALOG_DATA.glasses.map((g, idx) => {
+        const baseFileName = encodeURIComponent(g.name);
+        return `
+          <button type="button" onclick="selectGlass(${idx})" class="glass-btn bg-white border ${idx === 0 ? 'ring-2 ring-blue-600 border-blue-600 bg-blue-50/40' : 'border-slate-200'} p-2 rounded-2xl flex flex-col items-center justify-between hover:border-blue-400 active:scale-95 transition shadow-sm group">
+            <div class="w-full h-14 bg-slate-100 rounded-xl mb-1.5 flex items-center justify-center p-0.5 overflow-hidden relative">
+              <img 
+                src="./${folderName}/${baseFileName}.png" 
+                alt="${g.name}" 
+                class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition duration-200" 
+                onerror="
+                  if (!this.dataset.step) {
+                    this.dataset.step = 'jpg';
+                    this.src = './${folderName}/${baseFileName}.jpg';
+                  } else if (this.dataset.step === 'jpg') {
+                    this.dataset.step = 'jpeg';
+                    this.src = './${folderName}/${baseFileName}.jpeg';
+                  } else if (this.dataset.step === 'jpeg') {
+                    this.dataset.step = 'PNG';
+                    this.src = './${folderName}/${baseFileName}.PNG';
+                  } else if (this.dataset.step === 'PNG') {
+                    this.dataset.step = 'JPG';
+                    this.src = './${folderName}/${baseFileName}.JPG';
+                  } else {
+                    this.style.display = 'none';
+                    this.nextElementSibling.classList.remove('hidden');
+                  }
+                " 
+              />
+              <div class="fallback-glass hidden w-full h-full flex flex-col items-center justify-center bg-slate-200 text-slate-500 rounded-lg p-1 text-center">
+                <span class="text-[10px] font-bold leading-tight">${g.name}</span>
+              </div>
+            </div>
+            <span class="text-[11px] font-bold text-slate-700 truncate w-full text-center">${g.name}</span>
+          </button>
+        `;
+      }).join('');
     }
 
     function onCategoryChange() {
@@ -496,6 +534,24 @@
       calculatePrice();
     }
 
+    function selectGlass(index) {
+      selectedGlassIndex = index;
+      const glass = CATALOG_DATA.glasses[index];
+      document.getElementById('selectedGlassBadge').innerText = glass.name;
+
+      const buttons = document.querySelectorAll('.glass-btn');
+      buttons.forEach((btn, idx) => {
+        if (idx === index) {
+          btn.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          btn.classList.remove('border-slate-200', 'bg-white');
+        } else {
+          btn.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          btn.classList.add('border-slate-200', 'bg-white');
+        }
+      });
+      calculatePrice();
+    }
+
     function calculatePrice() {
       const modelId = document.getElementById('modelSelect').value;
       const model = CATALOG_DATA.models.find(m => m.id === modelId);
@@ -505,7 +561,7 @@
       const width2 = isCurrentCorner ? (parseFloat(document.getElementById('widthSelect2').value) || 80) : 0;
       const height = parseFloat(document.getElementById('heightSelect').value) || 190;
       
-      const glassCostPerM2 = parseFloat(document.getElementById('glassSelect').value) || 160;
+      const glassCostPerM2 = CATALOG_DATA.glasses[selectedGlassIndex].cost;
       const nanoCost = parseFloat(document.getElementById('nanoSelect').value) || 0;
       const cutCost = parseFloat(document.getElementById('cutSelect').value) || 0;
 
@@ -515,22 +571,17 @@
       }
       document.getElementById('hDisplay').innerText = height + ' ס"מ';
 
-      // 1. עלות זכוכית (מ"ר)
       let areaM2 = isCurrentCorner ? (((width1 + width2) * height) / 10000) : ((width1 * height) / 10000);
       let glassCost = areaM2 * glassCostPerM2;
 
-      // 2. עלות פרזול
       let colorMult = selectedColor ? selectedColor.mult : 1.0;
       let hardwareCost = model.cost * colorMult;
 
-      // 3. עלות כוללת
       let totalCost = hardwareCost + glassCost + nanoCost + cutCost;
 
-      // 4. מחיר מחירון לצרכן (עלות * 2.1 / 0.4)
       let catalogRetailPrice = Math.round(totalCost * (2.1 / 0.4));
       document.getElementById('finalPriceDisplay').innerText = catalogRetailPrice.toLocaleString() + ' ₪';
 
-      // 5. חישוב דמי התקנה למתקין
       let installPrice = 600;
       let installText = "תשלום בסך 600 ₪ ישולם ישירות למתקין במעמד ההתקנה.";
 
@@ -556,6 +607,7 @@
       modelSelect.className = "w-full p-3 bg-slate-100 border border-slate-200 rounded-xl font-semibold text-slate-400 outline-none text-sm transition cursor-not-allowed";
 
       selectedColor = null;
+      selectedGlassIndex = 0;
       isCurrentCorner = false;
 
       document.getElementById('selectedColorBadge').innerText = 'טרם נבחר גוון';
@@ -564,7 +616,17 @@
         b.classList.add('border-slate-200', 'bg-white');
       });
 
-      document.getElementById('glassSelect').selectedIndex = 0;
+      document.getElementById('selectedGlassBadge').innerText = CATALOG_DATA.glasses[0].name;
+      document.querySelectorAll('.glass-btn').forEach((b, idx) => {
+        if (idx === 0) {
+          b.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          b.classList.remove('border-slate-200', 'bg-white');
+        } else {
+          b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          b.classList.add('border-slate-200', 'bg-white');
+        }
+      });
+
       document.getElementById('nanoSelect').value = "0";
       document.getElementById('cutSelect').value = "0";
 
@@ -592,14 +654,13 @@
       pdfBtn.className = "w-full py-4 bg-slate-700 opacity-50 cursor-not-allowed text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition";
     }
 
-    // פונקציית הפקת ה-PDF הרשמי
     function generateOrderPDF() {
       const category = document.getElementById('categorySelect').value;
       const modelName = document.getElementById('currentModelBadge').innerText;
       const width1 = document.getElementById('widthSelect1').value;
       const width2 = document.getElementById('widthSelect2').value;
       const height = document.getElementById('heightSelect').value;
-      const glass = document.getElementById('glassSelect').options[document.getElementById('glassSelect').selectedIndex].text;
+      const glass = CATALOG_DATA.glasses[selectedGlassIndex].name;
       const nano = document.getElementById('nanoSelect').options[document.getElementById('nanoSelect').selectedIndex].text;
       const cut = document.getElementById('cutSelect').options[document.getElementById('cutSelect').selectedIndex].text;
       const colorName = selectedColor ? selectedColor.name : 'טרם נבחר (בסיס ניקל)';
@@ -607,7 +668,6 @@
       const installPrice = document.getElementById('installPriceDisplay').innerText;
       const installNote = document.getElementById('installNoteDisplay').innerText;
 
-      // הזנת הנתונים לתוך תבנית ה-PDF
       document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('he-IL');
       document.getElementById('pdfCategory').innerText = category;
       document.getElementById('pdfModel').innerText = modelName;
@@ -622,7 +682,6 @@
       document.getElementById('pdfInstallPrice').innerText = installPrice;
       document.getElementById('pdfInstallNote').innerText = installNote;
 
-      // הפקת ה-PDF
       const element = document.getElementById('pdfTemplate');
       const opt = {
         margin:       10,
