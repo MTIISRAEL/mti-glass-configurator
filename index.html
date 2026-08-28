@@ -140,6 +140,7 @@
 
         <!-- תוספות נוספות: ננו וחיתוכים -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <!-- ציפוי ננו -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">ציפוי ננו דוחה אבנית</label>
             <select id="nanoSelect" onchange="calculatePrice()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
@@ -148,6 +149,7 @@
             </select>
           </div>
 
+          <!-- חיתוכים בזכוכית -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">חיתוך / גריעה בזכוכית</label>
             <select id="cutSelect" onchange="calculatePrice()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
@@ -177,7 +179,6 @@
             <svg class="w-10 h-10 stroke-current opacity-40" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
               <circle cx="8.5" cy="8.5" r="1.5"/>
-              <path d="M21 15l-5-5L5 21"/>
             </svg>
             <span class="text-xs font-semibold">בחר דגם לצפייה בהנפשה</span>
           </div>
@@ -397,18 +398,17 @@
         { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "881", name: "MTI-881 - פינתי 2 קבועים ודלת", cost: 244, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] },
         { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "882", name: "MTI-882 - פינתי 2 קבועים ו-2 דלתות", cost: 380, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] }
       ],
-      // רשימת הזכוכיות המעודכנת לפי שמות הקבצים שהעלית
       glasses: [
-        { name: "שקוף", cost: 160 },
-        { name: "אקסטרה קליר", cost: 220 },
-        { name: "גרניט", cost: 185 },
-        { name: "פפיטה", cost: 190 },
-        { name: "אנטי סאן אפור", cost: 250 },
-        { name: "אנטי סאן חום", cost: 250 },
-        { name: "אסיד", cost: 220 },
-        { name: "אסיד אקסטרה קליר", cost: 330 },
+        { name: "שקופה", cost: 160 },
+        { name: "אקסטרה קליר", cost: 210 },
+        { name: "גרניט", cost: 205 },
+        { name: "פפיטה", cost: 205 },
+        { name: "אנטי סאן אפור", cost: 210 },
+        { name: "אנטי סאן חום", cost: 240 },
+        { name: "אסיד", cost: 210 },
+        { name: "אסיד אקסטרה קליר", cost: 340 },
         { name: "פסים בהתזת חול", cost: 230 },
-        { name: "גלינה אקסטרה קליר", cost: 380 }
+        { name: "גלינה אקסטרה קליר", cost: 360 }
       ],
       colors: [
         { name: "ניקל", mult: 1.0, file: "ניקל.png" },
