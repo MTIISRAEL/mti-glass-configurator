@@ -140,7 +140,6 @@
 
         <!-- תוספות נוספות: ננו וחיתוכים -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-          <!-- ציפוי ננו -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">ציפוי ננו דוחה אבנית</label>
             <select id="nanoSelect" onchange="calculatePrice()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
@@ -149,7 +148,6 @@
             </select>
           </div>
 
-          <!-- חיתוכים בזכוכית -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">חיתוך / גריעה בזכוכית</label>
             <select id="cutSelect" onchange="calculatePrice()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
@@ -163,7 +161,7 @@
       </div>
     </section>
 
-    <!-- פנל תצוגת GIF וסיכום מחיר -->
+    <!-- פנל תצוגת GIF, גלריית לקוחות וסיכום מחיר -->
     <section class="lg:col-span-5 flex flex-col gap-6">
       
       <!-- הדמיית פתיחה -->
@@ -182,6 +180,21 @@
               <path d="M21 15l-5-5L5 21"/>
             </svg>
             <span class="text-xs font-semibold">בחר דגם לצפייה בהנפשה</span>
+          </div>
+        </div>
+
+        <!-- אזור גלריית תמונות מבתי לקוח (מוצג רק לאחר בחירת דגם) -->
+        <div id="customerGallerySection" class="w-full mt-5 pt-4 border-t border-slate-100 hidden">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
+              <span>📸</span>
+              <span>תמונות מהשטח ומבתי לקוחות</span>
+            </span>
+            <span class="text-[11px] text-slate-400 font-medium">לחץ להגדלה</span>
+          </div>
+          
+          <div id="galleryGrid" class="grid grid-cols-4 gap-2.5">
+            <!-- התמונות נטענות כאן דינמית -->
           </div>
         </div>
       </div>
@@ -222,7 +235,7 @@
       <div class="w-full h-64 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center justify-center p-3 overflow-hidden">
         <img id="zoomImage" src="" alt="תצוגה מוגדלת" class="max-h-full max-w-full object-contain" />
       </div>
-      <p class="text-xs text-slate-500 font-medium">תצוגה מוגדלת של הדוגמה</p>
+      <p class="text-xs text-slate-500 font-medium">תצוגה מוגדלת</p>
     </div>
   </div>
 
@@ -481,7 +494,6 @@
       }
     }
 
-    // פונקציית הגדלה מדויקת שלוקחת את ה-URL הפעיל מהכרטיס
     function zoomFromButton(e, btn, title) {
       e.stopPropagation();
       const parentCard = btn.closest('.color-btn, .glass-btn');
@@ -541,6 +553,10 @@
       document.getElementById('hDisplay').innerText = '--';
       document.getElementById('finalPriceDisplay').innerText = '0 ₪';
       
+      // הסתרת גלריית תמונות לקוח
+      document.getElementById('customerGallerySection').classList.add('hidden');
+      document.getElementById('galleryGrid').innerHTML = '';
+
       const pdfBtn = document.getElementById('downloadPdfBtn');
       pdfBtn.disabled = true;
       pdfBtn.className = "w-full py-4 bg-slate-700 opacity-50 cursor-not-allowed text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition";
@@ -576,6 +592,7 @@
       pdfBtn.className = "w-full py-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition cursor-pointer";
 
       updateGif(model);
+      loadCustomerGallery(model);
       calculatePrice();
     }
 
@@ -595,6 +612,56 @@
       } else {
         img.classList.add('hidden');
         placeholder.classList.remove('hidden');
+      }
+    }
+
+    // פונקציית טעינת גלריית לקוחות מהשטח
+    function loadCustomerGallery(model) {
+      const gallerySection = document.getElementById('customerGallerySection');
+      const galleryGrid = document.getElementById('galleryGrid');
+      galleryGrid.innerHTML = '';
+
+      const modelFolder = `MTI-${model.id}`;
+      const folderPath = `gallery/${modelFolder}`;
+
+      // ניסיון טעינה של עד 8 תמונות ראשונות (1.jpg עד 8.jpg)
+      let loadedCount = 0;
+      for (let i = 1; i <= 8; i++) {
+        const imgWrapper = document.createElement('div');
+        imgWrapper.className = 'w-full h-16 bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition';
+
+        const img = document.createElement('img');
+        const basePath = `${folderPath}/${i}`;
+        img.src = `${basePath}.jpg`;
+        img.alt = `תמונה ${i} מהשטח - ${model.name}`;
+        img.className = 'w-full h-full object-cover';
+
+        img.onerror = function() {
+          if (!this.dataset.step) {
+            this.dataset.step = 'jpeg';
+            this.src = `${basePath}.jpeg`;
+          } else if (this.dataset.step === 'jpeg') {
+            this.dataset.step = 'png';
+            this.src = `${basePath}.png`;
+          } else {
+            // אם התמונה לא קיימת בתיקייה, מסירים את הכרטיס שלה
+            imgWrapper.remove();
+            if (galleryGrid.children.length === 0) {
+              gallerySection.classList.add('hidden');
+            }
+          }
+        };
+
+        img.onload = function() {
+          gallerySection.classList.remove('hidden');
+        };
+
+        imgWrapper.onclick = function() {
+          openZoomModal(`תמונה מהשטח - ${model.name}`, img.src);
+        };
+
+        imgWrapper.appendChild(img);
+        galleryGrid.appendChild(imgWrapper);
       }
     }
 
@@ -724,6 +791,10 @@
       img.src = '';
       img.classList.add('hidden');
       placeholder.classList.remove('hidden');
+
+      // איפוס גלריית לקוחות
+      document.getElementById('customerGallerySection').classList.add('hidden');
+      document.getElementById('galleryGrid').innerHTML = '';
 
       const pdfBtn = document.getElementById('downloadPdfBtn');
       pdfBtn.disabled = true;
