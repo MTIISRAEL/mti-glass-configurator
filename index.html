@@ -129,7 +129,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5" id="colorContainer"></div>
         </div>
 
-        <!-- גלריית סוגי זכוכית -->
+        <!-- גלריית סוגי זכוכית מעודכנת -->
         <div>
           <div class="flex justify-between items-center mb-2">
             <label class="block text-xs font-semibold text-slate-600">סוג זכוכית (8 מ"מ)</label>
@@ -140,7 +140,6 @@
 
         <!-- תוספות נוספות: ננו וחיתוכים -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-          <!-- ציפוי ננו -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">ציפוי ננו דוחה אבנית</label>
             <select id="nanoSelect" onchange="calculatePrice()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
@@ -149,7 +148,6 @@
             </select>
           </div>
 
-          <!-- חיתוכים בזכוכית -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1.5">חיתוך / גריעה בזכוכית</label>
             <select id="cutSelect" onchange="calculatePrice()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-none">
@@ -399,16 +397,17 @@
         { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "881", name: "MTI-881 - פינתי 2 קבועים ודלת", cost: 244, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] },
         { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "882", name: "MTI-882 - פינתי 2 קבועים ו-2 דלתות", cost: 380, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] }
       ],
+      // רשימת הזכוכיות המעודכנת לפי שמות הקבצים שהעלית
       glasses: [
-        { name: "שקופה", cost: 160 },
+        { name: "שקוף", cost: 160 },
         { name: "אקסטרה קליר", cost: 220 },
         { name: "גרניט", cost: 185 },
         { name: "פפיטה", cost: 190 },
-        { name: "אנטי סאן", cost: 250 },
+        { name: "אנטי סאן אפור", cost: 250 },
+        { name: "אנטי סאן חום", cost: 250 },
         { name: "אסיד", cost: 220 },
         { name: "אסיד אקסטרה קליר", cost: 330 },
         { name: "פסים בהתזת חול", cost: 230 },
-        { name: "גלינה שקופה", cost: 320 },
         { name: "גלינה אקסטרה קליר", cost: 380 }
       ],
       colors: [
