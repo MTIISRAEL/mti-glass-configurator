@@ -422,8 +422,9 @@
         { cat: "מקלחון הזזה CNC חזיתי", id: "833", name: "MTI-833 - אמבטיון חזית קבוע ודלת", cost: 270, file: "MTI_833_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
         { cat: "מקלחון הזזה CNC חזיתי", id: "834", name: "MTI-834 - אמבטיון 2 קבועים ו-2 דלתות", cost: 540, file: "MTI_834_animated.gif", widths: [120,130,140,150,160,170,180] },
         { cat: "מקלחון הזזה מסילה מוסתרת חזיתי", id: "880", name: "MTI-880 - חזית קבוע ודלת", cost: 380, file: "MTI_820_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
-        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "881", name: "MTI-881 - פינתי 2 קבועים ודלת", cost: 244, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] },
-        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "882", name: "MTI-882 - פינתי 2 קבועים ו-2 דלתות", cost: 380, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] }
+        // תוספת 500 ש"ח למחיר הצרכן עבור דגמי הזזה מסילה מוסתרת פינתי
+        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "881", name: "MTI-881 - פינתי 2 קבועים ודלת", cost: 244, extraRetail: 500, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] },
+        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "882", name: "MTI-882 - פינתי 2 קבועים ו-2 דלתות", cost: 380, extraRetail: 500, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] }
       ],
       glasses: [
         { name: "שקופה", cost: 160 },
@@ -809,6 +810,7 @@
       });
     }
 
+    // מנוע חישוב מחיר
     function calculatePrice() {
       const modelId = document.getElementById('modelSelect').value;
       const model = CATALOG_DATA.models.find(m => m.id === modelId);
@@ -862,7 +864,10 @@
 
       let totalCost = hardwareCost + glassCost + nanoCost + cutCost;
 
-      let catalogRetailPrice = Math.round(totalCost * (2.1 / 0.4));
+      // תוספת 500 ש"ח למחיר הצרכן אם הוגדרה בדגם (לדוגמה 881 ו-882)
+      let extraRetail = model.extraRetail || 0;
+      let catalogRetailPrice = Math.round(totalCost * (2.1 / 0.4)) + extraRetail;
+
       document.getElementById('finalPriceDisplay').innerText = catalogRetailPrice.toLocaleString() + ' ₪';
       document.getElementById('finalPriceDisplay').className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1";
 
