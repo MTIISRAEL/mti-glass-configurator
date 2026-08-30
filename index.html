@@ -139,7 +139,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3" id="glassContainer"></div>
         </div>
 
-        <!-- תוספות: ננו וחיתוכים -->
+        <!-- תוספות: ננו וחיתוכים ככרטיסי בחירה (Radio Cards) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-3 border-t border-slate-100">
           
           <!-- כרטיסי ציפוי ננו -->
@@ -751,7 +751,7 @@
       calculatePrice();
     }
 
-    // בחירת ציפוי ננו (ללא הצגת תוספת המחיר בכפתור)
+    // בחירת ציפוי ננו
     function selectNano(val) {
       selectedNano = val;
       document.getElementById('selectedNanoBadge').innerText = val === 0 ? 'ללא ציפוי' : 'כולל ציפוי ננו';
@@ -773,7 +773,7 @@
       calculatePrice();
     }
 
-    // בחירת חיתוך (ללא הצגת תוספת המחיר בכפתור)
+    // בחירת חיתוך
     function selectCut(val) {
       selectedCut = val;
       document.getElementById('selectedCutBadge').innerText = val === 0 ? 'ללא חיתוכים' : (val === 50 ? 'חיתוך 1' : '2 חיתוכים');
@@ -864,7 +864,7 @@
       document.getElementById('finalPriceDisplay').innerText = catalogRetailPrice.toLocaleString() + ' ₪';
       document.getElementById('finalPriceDisplay').className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1";
 
-      // חישוב דמי התקנה
+      // לוגיקת חישוב דמי התקנה מדויקת:
       let installPrice = 600;
       let installText = "תשלום בסך 600 ₪ ישולם ישירות למתקין במעמד ההתקנה.";
 
@@ -873,9 +873,9 @@
       if (height > 220) {
         installPrice = 1350;
         installText = "חריג גובה (מעל 220 ס\"מ): תשלום בסך 1,350 ₪ ישולם ישירות למתקין.";
-      } else if ((model.id === "719" || model.id === "720") && maxDim >= 105) {
+      } else if ((model.id === "719" || model.id === "720") && maxDim >= 105 && height <= 220) {
         installPrice = 850;
-        installText = `דגם MTI-${model.id} ברוחב 105 ס"מ ומעלה: תשלום בסך 850 ₪ ישולם ישירות למתקין.`;
+        installText = `דגם MTI-${model.id} ברוחב 105 ס"מ ומעלה (עד גובה 220 ס"מ): תשלום בסך 850 ₪ ישולם ישירות למתקין.`;
       }
 
       document.getElementById('installPriceDisplay').innerText = installPrice.toLocaleString() + ' ₪';
