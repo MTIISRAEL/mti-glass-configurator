@@ -139,7 +139,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3" id="glassContainer"></div>
         </div>
 
-        <!-- תוספות: ננו וחיתוכים ככרטיסי בחירה (Radio Cards) -->
+        <!-- תוספות: ננו וחיתוכים -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-3 border-t border-slate-100">
           
           <!-- כרטיסי ציפוי ננו -->
@@ -155,7 +155,7 @@
               </button>
               <button type="button" onclick="selectNano(150)" class="nano-card bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center gap-2.5 hover:border-blue-400 transition cursor-pointer text-right">
                 <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
-                <span class="text-xs md:text-sm font-bold text-slate-700">כולל ציפוי (+150 ₪)</span>
+                <span class="text-xs md:text-sm font-bold text-slate-700">כולל ציפוי</span>
               </button>
             </div>
           </div>
@@ -173,11 +173,11 @@
               </button>
               <button type="button" onclick="selectCut(50)" class="cut-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex items-center gap-2 hover:border-blue-400 transition cursor-pointer text-right">
                 <span class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 hidden"></span></span>
-                <span class="text-xs font-bold text-slate-700 truncate">1 (+50 ₪)</span>
+                <span class="text-xs font-bold text-slate-700 truncate">חיתוך 1</span>
               </button>
               <button type="button" onclick="selectCut(100)" class="cut-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex items-center gap-2 hover:border-blue-400 transition cursor-pointer text-right">
                 <span class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 hidden"></span></span>
-                <span class="text-xs font-bold text-slate-700 truncate">2 (+100 ₪)</span>
+                <span class="text-xs font-bold text-slate-700 truncate">2 חיתוכים</span>
               </button>
             </div>
           </div>
@@ -751,7 +751,7 @@
       calculatePrice();
     }
 
-    // בחירת ציפוי ננו (כרטיס רדיו)
+    // בחירת ציפוי ננו (ללא הצגת תוספת המחיר בכפתור)
     function selectNano(val) {
       selectedNano = val;
       document.getElementById('selectedNanoBadge').innerText = val === 0 ? 'ללא ציפוי' : 'כולל ציפוי ננו';
@@ -759,7 +759,7 @@
       const cards = document.querySelectorAll('.nano-card');
       cards.forEach(card => {
         const dot = card.querySelector('.check-dot span');
-        const isSelected = (val === 0 && card.innerText.includes('ללא')) || (val === 150 && card.innerText.includes('כולל'));
+        const isSelected = (val === 0 && card.innerText.trim() === 'ללא ציפוי') || (val === 150 && card.innerText.trim() === 'כולל ציפוי');
         if (isSelected) {
           card.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
           card.classList.remove('border-slate-200', 'bg-slate-50');
@@ -773,7 +773,7 @@
       calculatePrice();
     }
 
-    // בחירת חיתוך (כרטיס רדיו)
+    // בחירת חיתוך (ללא הצגת תוספת המחיר בכפתור)
     function selectCut(val) {
       selectedCut = val;
       document.getElementById('selectedCutBadge').innerText = val === 0 ? 'ללא חיתוכים' : (val === 50 ? 'חיתוך 1' : '2 חיתוכים');
@@ -781,9 +781,9 @@
       const cards = document.querySelectorAll('.cut-card');
       cards.forEach(card => {
         const dot = card.querySelector('.check-dot span');
-        const isSelected = (val === 0 && card.innerText.includes('ללא')) || 
-                           (val === 50 && card.innerText.includes('1')) || 
-                           (val === 100 && card.innerText.includes('2'));
+        const isSelected = (val === 0 && card.innerText.trim() === 'ללא') || 
+                           (val === 50 && card.innerText.trim() === 'חיתוך 1') || 
+                           (val === 100 && card.innerText.trim() === '2 חיתוכים');
         if (isSelected) {
           card.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
           card.classList.remove('border-slate-200', 'bg-slate-50');
@@ -806,7 +806,7 @@
       });
     }
 
-    // מנוע חישוב מחיר והתקנה מעודכן
+    // מנוע חישוב מחיר והתקנה
     function calculatePrice() {
       const modelId = document.getElementById('modelSelect').value;
       const model = CATALOG_DATA.models.find(m => m.id === modelId);
@@ -864,7 +864,7 @@
       document.getElementById('finalPriceDisplay').innerText = catalogRetailPrice.toLocaleString() + ' ₪';
       document.getElementById('finalPriceDisplay').className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1";
 
-      // חישוב דמי התקנה לפי הכלל המעודכן
+      // חישוב דמי התקנה
       let installPrice = 600;
       let installText = "תשלום בסך 600 ₪ ישולם ישירות למתקין במעמד ההתקנה.";
 
