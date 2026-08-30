@@ -117,11 +117,11 @@
         </div>
       </div>
 
-      <!-- שלב 4: מפרט פרזול וזכוכית -->
+      <!-- שלב 4: מפרט פרזול, זכוכית, ננו וחיתוכים -->
       <div id="optionsSection" class="border-t pt-5 space-y-6 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-base font-extrabold text-slate-800">4. מפרט פרזול וזכוכית</h3>
         
-        <!-- גוון פרזול (שורה אחת ב-Desktop) -->
+        <!-- גוון פרזול -->
         <div>
           <div class="flex justify-between items-center mb-2.5">
             <label class="block text-sm md:text-base font-bold text-slate-700">גוון פרזול <span class="text-red-500">*</span></label>
@@ -130,7 +130,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 md:gap-3" id="colorContainer"></div>
         </div>
 
-        <!-- גלריית סוגי זכוכית (2 שורות בדיוק ב-Desktop) -->
+        <!-- גלריית סוגי זכוכית -->
         <div>
           <div class="flex justify-between items-center mb-2.5">
             <label class="block text-sm md:text-base font-bold text-slate-700">סוג זכוכית (8 מ"מ) <span class="text-red-500">*</span></label>
@@ -139,28 +139,49 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3" id="glassContainer"></div>
         </div>
 
-        <!-- תוספות נוספות: ננו וחיתוכים -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-          <!-- ציפוי ננו -->
+        <!-- תוספות: ננו וחיתוכים ככרטיסי בחירה (Tick Box / Radio Cards) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-3 border-t border-slate-100">
+          
+          <!-- כרטיסי ציפוי ננו -->
           <div>
-            <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">ציפוי ננו דוחה אבנית <span class="text-red-500">*</span></label>
-            <select id="nanoSelect" onchange="calculatePrice()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="" disabled selected>-- בחר אפשרות ציפוי ננו --</option>
-              <option value="0">ללא ציפוי</option>
-              <option value="150">כולל ציפוי ננו (+150 ₪)</option>
-            </select>
+            <div class="flex justify-between items-center mb-2">
+              <label class="block text-sm font-bold text-slate-700">ציפוי ננו דוחה אבנית <span class="text-red-500">*</span></label>
+              <span id="selectedNanoBadge" class="text-xs font-bold text-slate-400">טרם נבחר</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2.5" id="nanoCards">
+              <button type="button" onclick="selectNano(0)" class="nano-card bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center gap-2.5 hover:border-blue-400 transition cursor-pointer text-right">
+                <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs md:text-sm font-bold text-slate-700">ללא ציפוי</span>
+              </button>
+              <button type="button" onclick="selectNano(150)" class="nano-card bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center gap-2.5 hover:border-blue-400 transition cursor-pointer text-right">
+                <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs md:text-sm font-bold text-slate-700">כולל ציפוי (+150 ₪)</span>
+              </button>
+            </div>
           </div>
 
-          <!-- חיתוכים בזכוכית -->
+          <!-- כרטיסי חיתוך / גריעה -->
           <div>
-            <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">חיתוך / גריעה בזכוכית <span class="text-red-500">*</span></label>
-            <select id="cutSelect" onchange="calculatePrice()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="" disabled selected>-- בחר אפשרות חיתוך/גריעה --</option>
-              <option value="0">ללא חיתוכים</option>
-              <option value="50">חיתוך אחד (+50 ₪)</option>
-              <option value="100">2 חיתוכים (+100 ₪)</option>
-            </select>
+            <div class="flex justify-between items-center mb-2">
+              <label class="block text-sm font-bold text-slate-700">חיתוך / גריעה בזכוכית <span class="text-red-500">*</span></label>
+              <span id="selectedCutBadge" class="text-xs font-bold text-slate-400">טרם נבחר</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2" id="cutCards">
+              <button type="button" onclick="selectCut(0)" class="cut-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex items-center gap-2 hover:border-blue-400 transition cursor-pointer text-right">
+                <span class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs font-bold text-slate-700 truncate">ללא</span>
+              </button>
+              <button type="button" onclick="selectCut(50)" class="cut-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex items-center gap-2 hover:border-blue-400 transition cursor-pointer text-right">
+                <span class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs font-bold text-slate-700 truncate">1 (+50 ₪)</span>
+              </button>
+              <button type="button" onclick="selectCut(100)" class="cut-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex items-center gap-2 hover:border-blue-400 transition cursor-pointer text-right">
+                <span class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs font-bold text-slate-700 truncate">2 (+100 ₪)</span>
+              </button>
+            </div>
           </div>
+
         </div>
 
       </div>
@@ -197,9 +218,7 @@
             <span class="text-xs text-slate-400 font-bold">לחץ להגדלה</span>
           </div>
           
-          <div id="galleryGrid" class="grid grid-cols-4 gap-3">
-            <!-- התמונות נטענות כאן דינמית -->
-          </div>
+          <div id="galleryGrid" class="grid grid-cols-4 gap-3"></div>
         </div>
       </div>
 
@@ -207,7 +226,7 @@
       <div class="bg-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-lg space-y-4">
         <div>
           <span class="text-slate-300 text-xs md:text-sm font-semibold">מחיר מחירון רשמי לצרכן (לא כולל מע״מ)</span>
-          <div id="finalPriceDisplay" class="text-2xl md:text-3xl font-extrabold text-amber-400 mt-1">יש להשלים את כל שלבי הבחירה</div>
+          <div id="finalPriceDisplay" class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1">יש להשלים את כל שלבי הבחירה</div>
         </div>
 
         <!-- הערת התקנה מופרדת -->
@@ -300,7 +319,7 @@
         </tbody>
       </table>
 
-      <!-- סיכום כספי ללא חיתוך שוליים -->
+      <!-- סיכום כספי -->
       <table style="width: 100%; border-collapse: collapse; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 20px;">
         <tr>
           <td style="padding: 14px; text-align: right; vertical-align: middle;">
@@ -425,6 +444,8 @@
 
     let selectedColor = null;
     let selectedGlassIndex = null;
+    let selectedNano = null;
+    let selectedCut = null;
     let isCurrentCorner = false;
 
     function init() {
@@ -432,7 +453,7 @@
       catSelect.innerHTML = '<option value="" disabled selected>-- בחר סוג מקלחון --</option>' + 
         CATALOG_DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
 
-      // טעינת צבעים (מרווח מוגדל ומראה נקי)
+      // טעינת צבעים
       const colorBox = document.getElementById('colorContainer');
       colorBox.innerHTML = CATALOG_DATA.colors.map((col, idx) => {
         const imgPath = `./${encodeURIComponent(col.file)}`;
@@ -447,7 +468,7 @@
         `;
       }).join('');
 
-      // טעינת זכוכיות (2 שורות מרווחות עם פונט ברור)
+      // טעינת זכוכיות
       const glassBox = document.getElementById('glassContainer');
       const folderName = encodeURIComponent("סוגי זכוכיות");
 
@@ -534,8 +555,13 @@
 
       selectedColor = null;
       selectedGlassIndex = null;
+      selectedNano = null;
+      selectedCut = null;
+
       document.getElementById('selectedColorBadge').innerText = 'טרם נבחר גוון';
       document.getElementById('selectedGlassBadge').innerText = 'טרם נבחר סוג זכוכית';
+      document.getElementById('selectedNanoBadge').innerText = 'טרם נבחר';
+      document.getElementById('selectedCutBadge').innerText = 'טרם נבחר';
       
       document.querySelectorAll('.color-btn').forEach(b => {
         b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
@@ -546,6 +572,8 @@
         b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
         b.classList.add('border-slate-200', 'bg-white');
       });
+
+      resetRadioCards();
 
       const dimBox2 = document.getElementById('dimBox2');
       const dimLabel1 = document.getElementById('dimLabel1');
@@ -595,8 +623,12 @@
       }
       
       document.getElementById('heightSelect').selectedIndex = 0;
-      document.getElementById('nanoSelect').selectedIndex = 0;
-      document.getElementById('cutSelect').selectedIndex = 0;
+      
+      selectedNano = null;
+      selectedCut = null;
+      document.getElementById('selectedNanoBadge').innerText = 'טרם נבחר';
+      document.getElementById('selectedCutBadge').innerText = 'טרם נבחר';
+      resetRadioCards();
 
       updateGif(model);
       loadCustomerGallery(model);
@@ -719,7 +751,62 @@
       calculatePrice();
     }
 
-    // מנוע בדיקת שלמות וחישוב מחיר
+    // בחירת ציפוי ננו (כפתור רדיו)
+    function selectNano(val) {
+      selectedNano = val;
+      document.getElementById('selectedNanoBadge').innerText = val === 0 ? 'ללא ציפוי' : 'כולל ציפוי ננו';
+
+      const cards = document.querySelectorAll('.nano-card');
+      cards.forEach(card => {
+        const dot = card.querySelector('.check-dot span');
+        const isSelected = (val === 0 && card.innerText.includes('ללא')) || (val === 150 && card.innerText.includes('כולל'));
+        if (isSelected) {
+          card.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          card.classList.remove('border-slate-200', 'bg-slate-50');
+          dot.classList.remove('hidden');
+        } else {
+          card.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          card.classList.add('border-slate-200', 'bg-slate-50');
+          dot.classList.add('hidden');
+        }
+      });
+      calculatePrice();
+    }
+
+    // בחירת חיתוך (כפתור רדיו)
+    function selectCut(val) {
+      selectedCut = val;
+      document.getElementById('selectedCutBadge').innerText = val === 0 ? 'ללא חיתוכים' : (val === 50 ? 'חיתוך 1' : '2 חיתוכים');
+
+      const cards = document.querySelectorAll('.cut-card');
+      cards.forEach(card => {
+        const dot = card.querySelector('.check-dot span');
+        const isSelected = (val === 0 && card.innerText.includes('ללא')) || 
+                           (val === 50 && card.innerText.includes('1')) || 
+                           (val === 100 && card.innerText.includes('2'));
+        if (isSelected) {
+          card.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          card.classList.remove('border-slate-200', 'bg-slate-50');
+          dot.classList.remove('hidden');
+        } else {
+          card.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          card.classList.add('border-slate-200', 'bg-slate-50');
+          dot.classList.add('hidden');
+        }
+      });
+      calculatePrice();
+    }
+
+    function resetRadioCards() {
+      document.querySelectorAll('.nano-card, .cut-card').forEach(card => {
+        card.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+        card.classList.add('border-slate-200', 'bg-slate-50');
+        const dot = card.querySelector('.check-dot span');
+        if (dot) dot.classList.add('hidden');
+      });
+    }
+
+    // מנוע חישוב מחיר - פועל אך ורק כשכל הפרמטרים מולאו
     function calculatePrice() {
       const modelId = document.getElementById('modelSelect').value;
       const model = CATALOG_DATA.models.find(m => m.id === modelId);
@@ -727,8 +814,6 @@
       const valW1 = document.getElementById('widthSelect1').value;
       const valW2 = isCurrentCorner ? document.getElementById('widthSelect2').value : '0';
       const valH = document.getElementById('heightSelect').value;
-      const valNano = document.getElementById('nanoSelect').value;
-      const valCut = document.getElementById('cutSelect').value;
 
       document.getElementById('wDisplay1').innerText = valW1 ? (valW1 + ' ס"מ') : '--';
       if (isCurrentCorner) {
@@ -745,8 +830,8 @@
         valH &&
         selectedColor !== null &&
         selectedGlassIndex !== null &&
-        valNano !== "" &&
-        valCut !== ""
+        selectedNano !== null &&
+        selectedCut !== null
       );
 
       if (!isComplete) {
@@ -764,8 +849,8 @@
       const width2 = isCurrentCorner ? parseFloat(valW2) : 0;
       const height = parseFloat(valH);
       const glassCostPerM2 = CATALOG_DATA.glasses[selectedGlassIndex].cost;
-      const nanoCost = parseFloat(valNano);
-      const cutCost = parseFloat(valCut);
+      const nanoCost = selectedNano;
+      const cutCost = selectedCut;
 
       let areaM2 = isCurrentCorner ? (((width1 + width2) * height) / 10000) : ((width1 * height) / 10000);
       let glassCost = areaM2 * glassCostPerM2;
@@ -808,25 +893,30 @@
 
       selectedColor = null;
       selectedGlassIndex = null;
+      selectedNano = null;
+      selectedCut = null;
       isCurrentCorner = false;
 
       document.getElementById('selectedColorBadge').innerText = 'טרם נבחר גוון';
+      document.getElementById('selectedGlassBadge').innerText = 'טרם נבחר סוג זכוכית';
+      document.getElementById('selectedNanoBadge').innerText = 'טרם נבחר';
+      document.getElementById('selectedCutBadge').innerText = 'טרם נבחר';
+
       document.querySelectorAll('.color-btn').forEach(b => {
         b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
         b.classList.add('border-slate-200', 'bg-white');
       });
 
-      document.getElementById('selectedGlassBadge').innerText = 'טרם נבחר סוג זכוכית';
       document.querySelectorAll('.glass-btn').forEach(b => {
         b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
         b.classList.add('border-slate-200', 'bg-white');
       });
 
+      resetRadioCards();
+
       document.getElementById('widthSelect1').innerHTML = '<option value="" disabled selected>-- בחר רוחב --</option>';
       document.getElementById('widthSelect2').innerHTML = '<option value="" disabled selected>-- בחר עומק --</option>';
       document.getElementById('heightSelect').selectedIndex = 0;
-      document.getElementById('nanoSelect').selectedIndex = 0;
-      document.getElementById('cutSelect').selectedIndex = 0;
 
       document.getElementById('dimensionsSection').classList.add('opacity-50', 'pointer-events-none');
       document.getElementById('optionsSection').classList.add('opacity-50', 'pointer-events-none');
@@ -863,8 +953,8 @@
       const width2 = document.getElementById('widthSelect2').value;
       const height = document.getElementById('heightSelect').value;
       const glass = CATALOG_DATA.glasses[selectedGlassIndex].name;
-      const nano = document.getElementById('nanoSelect').options[document.getElementById('nanoSelect').selectedIndex].text;
-      const cut = document.getElementById('cutSelect').options[document.getElementById('cutSelect').selectedIndex].text;
+      const nano = selectedNano === 150 ? 'כולל ציפוי ננו' : 'ללא ציפוי';
+      const cut = selectedCut === 0 ? 'ללא חיתוכים' : (selectedCut === 50 ? 'חיתוך 1' : '2 חיתוכים');
       const colorName = selectedColor.name;
       const finalPrice = document.getElementById('finalPriceDisplay').innerText;
       const installPrice = document.getElementById('installPriceDisplay').innerText;
