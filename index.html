@@ -28,7 +28,7 @@
 
         <div class="hidden sm:block border-r border-slate-200 pr-4">
           <h1 class="text-lg md:text-xl font-extrabold text-slate-900 leading-tight">קונפיגורטור מקלחונים ומחיצות</h1>
-          <p class="text-xs md:text-sm text-slate-500 font-semibold">מחירון רשמי לצרכן 2025</p>
+          <p class="text-xs md:text-sm text-slate-500 font-semibold">מחירון רשמי 2026</p>
         </div>
       </div>
       
@@ -230,7 +230,7 @@
       <!-- פירוט מחיר מחירון לצרכן והתקנה -->
       <div class="bg-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-lg space-y-4">
         <div>
-          <span class="text-slate-300 text-xs md:text-sm font-semibold">מחיר מחירון רשמי לצרכן (לא כולל מע״מ)</span>
+          <span class="text-slate-300 text-xs md:text-sm font-semibold">מחיר מחירון רשמי (לא כולל מע״מ)</span>
           <div id="finalPriceDisplay" class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1">יש להשלים את כל שלבי הבחירה</div>
         </div>
 
@@ -328,7 +328,7 @@
       <table style="width: 100%; border-collapse: collapse; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 24px;">
         <tr>
           <td style="padding: 16px; text-align: right; vertical-align: middle;">
-            <div style="font-size: 14px; font-weight: bold; color: #1e293b;">מחיר מחירון רשמי לצרכן (לא כולל מע"מ):</div>
+            <div style="font-size: 14px; font-weight: bold; color: #1e293b;">מחיר מחירון רשמי (לא כולל מע"מ):</div>
             <div style="font-size: 12px; color: #475569; margin-top: 4px;">תשלום עבור מדידה והתקנה: <span id="pdfInstallPrice" style="font-weight: bold; color: #b45309;"></span></div>
             <div id="pdfInstallNote" style="font-size: 11px; color: #64748b; margin-top: 3px;"></div>
           </td>
@@ -422,7 +422,6 @@
         { cat: "מקלחון הזזה CNC חזיתי", id: "833", name: "MTI-833 - אמבטיון חזית קבוע ודלת", cost: 270, file: "MTI_833_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
         { cat: "מקלחון הזזה CNC חזיתי", id: "834", name: "MTI-834 - אמבטיון 2 קבועים ו-2 דלתות", cost: 540, file: "MTI_834_animated.gif", widths: [120,130,140,150,160,170,180] },
         { cat: "מקלחון הזזה מסילה מוסתרת חזיתי", id: "880", name: "MTI-880 - חזית קבוע ודלת", cost: 380, file: "MTI_820_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
-        // תוספת 500 ש"ח למחיר הצרכן עבור דגמי הזזה מסילה מוסתרת פינתי
         { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "881", name: "MTI-881 - פינתי 2 קבועים ודלת", cost: 244, extraRetail: 500, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] },
         { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "882", name: "MTI-882 - פינתי 2 קבועים ו-2 דלתות", cost: 380, extraRetail: 500, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] }
       ],
@@ -810,7 +809,6 @@
       });
     }
 
-    // מנוע חישוב מחיר
     function calculatePrice() {
       const modelId = document.getElementById('modelSelect').value;
       const model = CATALOG_DATA.models.find(m => m.id === modelId);
@@ -864,7 +862,6 @@
 
       let totalCost = hardwareCost + glassCost + nanoCost + cutCost;
 
-      // תוספת 500 ש"ח למחיר הצרכן אם הוגדרה בדגם (לדוגמה 881 ו-882)
       let extraRetail = model.extraRetail || 0;
       let catalogRetailPrice = Math.round(totalCost * (2.1 / 0.4)) + extraRetail;
 
