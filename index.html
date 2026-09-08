@@ -17,19 +17,19 @@
     }
     #pdfTemplate * { box-sizing: border-box; }
     
-    /* עיצוב עדין לפס הגלילה בגלריה */
-    .gallery-scroll::-webkit-scrollbar {
-      width: 5px;
+    /* עיצוב עדין לפס הגלילה האופקי בגלריה */
+    .gallery-scroll-x::-webkit-scrollbar {
+      height: 6px;
     }
-    .gallery-scroll::-webkit-scrollbar-track {
+    .gallery-scroll-x::-webkit-scrollbar-track {
       background: #f1f5f9;
       border-radius: 8px;
     }
-    .gallery-scroll::-webkit-scrollbar-thumb {
+    .gallery-scroll-x::-webkit-scrollbar-thumb {
       background: #cbd5e1;
       border-radius: 8px;
     }
-    .gallery-scroll::-webkit-scrollbar-thumb:hover {
+    .gallery-scroll-x::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
     }
   </style>
@@ -229,20 +229,18 @@
           </div>
         </div>
 
-        <!-- אזור גלריית תמונות: 4 תמונות בשורה, בגובה שורה אחת עם גלילה אנכית אם יש יותר -->
+        <!-- אזור גלריית תמונות: שורה אחת של 4 תמונות עם גלילה שמאלה -->
         <div id="customerGallerySection" class="w-full mt-5 pt-4 border-t border-slate-100 hidden">
           <div class="flex items-center justify-between mb-2.5">
             <span class="text-xs md:text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
               <span>📸</span>
               <span>תמונות מהשטח ומבתי לקוחות</span>
             </span>
-            <span class="text-xs text-slate-400 font-bold">לחץ להגדלה</span>
+            <span class="text-xs text-slate-400 font-bold">גלול שמאלה ➔ לחץ להגדלה</span>
           </div>
           
-          <!-- מיכל הגלריה: 4 תמונות בשורה, מקסימום שורה אחת גלויה וגלילה מעבר לכך -->
-          <div class="max-h-[92px] overflow-y-auto pr-1 gallery-scroll">
-            <div id="galleryGrid" class="grid grid-cols-4 gap-2.5"></div>
-          </div>
+          <!-- פס אופקי שנגלל שמאלה (כל תמונה תופסת כרבע מרוחב המסגרת) -->
+          <div id="galleryGrid" class="flex items-center gap-2.5 overflow-x-auto pb-2 pt-1 gallery-scroll-x w-full"></div>
         </div>
       </div>
 
@@ -701,7 +699,7 @@
       tryNext();
     }
 
-    // טעינת גלריית לקוחות מהשטח - קריאת כל התמונות הקיימות בתיקייה
+    // טעינת גלריית לקוחות מהשטח - פס אופקי שנגלל שמאלה ומציג 4 תמונות מלאות ברוחב
     async function loadCustomerGallery(model) {
       const gallerySection = document.getElementById('customerGallerySection');
       const galleryGrid = document.getElementById('galleryGrid');
@@ -720,7 +718,8 @@
           if (imageFiles.length > 0) {
             imageFiles.forEach(file => {
               const imgWrapper = document.createElement('div');
-              imgWrapper.className = 'w-full h-20 bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition flex items-center justify-center';
+              // רוחב של כ-23.5% כדי שיוצגו בדיוק 4 תמונות מלאות בשורה עם מרווח
+              imgWrapper.className = 'shrink-0 w-[calc(25%-8px)] h-20 md:h-24 bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition flex items-center justify-center';
 
               const img = document.createElement('img');
               img.className = 'w-full h-full object-cover';
@@ -746,7 +745,7 @@
       // מנגנון גיבוי מקומי (Fallback)
       for (let i = 1; i <= 12; i++) {
         const imgWrapper = document.createElement('div');
-        imgWrapper.className = 'w-full h-20 bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition flex items-center justify-center';
+        imgWrapper.className = 'shrink-0 w-[calc(25%-8px)] h-20 md:h-24 bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition flex items-center justify-center';
 
         const img = document.createElement('img');
         img.className = 'w-full h-full object-cover';
