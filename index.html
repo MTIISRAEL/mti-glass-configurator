@@ -10,12 +10,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body { font-family: 'Assistant', sans-serif; font-size: 16px; }
-    #pdfTemplate {
-      font-family: Arial, Tahoma, sans-serif !important;
-      word-spacing: 3px;
-      letter-spacing: 0px;
-    }
-    #pdfTemplate * { box-sizing: border-box; }
     
     /* עיצוב עדין לפס הגלילה האופקי בגלריה */
     .gallery-scroll-x::-webkit-scrollbar {
@@ -31,6 +25,17 @@
     }
     .gallery-scroll-x::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
+    }
+
+    /* הגדרות קשיחות לתבנית ה-PDF בלבד למניעת שיבושי עברית */
+    #pdfTemplate {
+      font-family: Arial, Tahoma, Helvetica, sans-serif !important;
+      direction: rtl !important;
+      text-align: right !important;
+      unicode-bidi: embed !important;
+    }
+    #pdfTemplate * {
+      box-sizing: border-box;
     }
   </style>
 </head>
@@ -82,7 +87,7 @@
     </div>
   </header>
 
-  <!-- באנר כבוד ומיתוג אישי לחנות (מופיע רק בחנויות מוגדרות) -->
+  <!-- באנר מיתוג אישי לחנות -->
   <div id="storeWelcomeBanner" class="hidden bg-gradient-to-r from-blue-900 via-slate-900 to-slate-900 text-white border-b border-blue-800/40 shadow-sm">
     <div class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs md:text-sm">
       <div class="flex items-center gap-2">
@@ -272,18 +277,15 @@
             <span class="text-xs text-slate-400 font-bold">גלול שמאלה ➔ לחץ להגדלה</span>
           </div>
           
-          <!-- פס אופקי שנגלל שמאלה -->
           <div id="galleryGrid" class="flex items-center gap-2.5 overflow-x-auto pb-2 pt-1 gallery-scroll-x w-full"></div>
         </div>
       </div>
 
-      <!-- פירוט מחיר מחירון והתקנה - עיצוב יוקרתי ועדין (סיום התהליך) -->
+      <!-- פירוט מחיר מחירון והתקנה -->
       <div class="relative bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/80 text-white p-6 md:p-8 rounded-3xl shadow-2xl shadow-blue-950/20 border border-blue-500/20 space-y-5 overflow-hidden">
         
-        <!-- אלמנט דקורטיבי עדין ברקע -->
         <div class="absolute -top-24 -left-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <!-- תג כותרת עליון מעוצב -->
         <div class="flex items-center justify-between">
           <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-400/20 text-blue-300 text-xs font-bold rounded-full">
             <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
@@ -292,7 +294,6 @@
           <span class="text-[11px] text-slate-400 font-medium">שלב סופי</span>
         </div>
 
-        <!-- אזור המחיר המרכזי -->
         <div class="pt-1">
           <span class="text-slate-400 text-xs md:text-sm font-semibold tracking-wide">מחיר מחירון רשמי (לא כולל מע״מ)</span>
           <div id="finalPriceDisplay" class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200">
@@ -300,7 +301,6 @@
           </div>
         </div>
 
-        <!-- תיבת מדידה והתקנה עם רקע עדין ואלגנטי -->
         <div class="bg-white/5 border border-white/10 backdrop-blur-sm p-4 rounded-2xl space-y-1.5 transition-all">
           <div class="flex items-center justify-between text-sm md:text-base font-bold text-amber-400">
             <span class="flex items-center gap-1.5">
@@ -312,7 +312,6 @@
           <p id="installNoteDisplay" class="text-xs text-slate-300 font-medium leading-relaxed">המחיר וההתקנה יחושבו במלואם לאחר בחירת כל הפרמטרים.</p>
         </div>
 
-        <!-- כפתור הורדת PDF רשמי -->
         <button id="downloadPdfBtn" onclick="generateOrderPDF()" disabled class="w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg">
           <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -324,31 +323,24 @@
     </section>
   </main>
 
-  <!-- חלון קופץ מוגדל ורחב עם כפתורי מעבר קדימה/אחורה (Modal Zoom) -->
+  <!-- חלון קופץ מוגדל (Modal Zoom) -->
   <div id="zoomModal" onclick="closeZoomModal()" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-8 hidden transition-all duration-200 select-none">
     <div onclick="event.stopPropagation()" class="bg-white rounded-3xl p-5 md:p-6 max-w-4xl w-full max-h-[92vh] shadow-2xl flex flex-col items-center gap-3 text-center relative border border-slate-100">
       
-      <!-- כפתור סגירה -->
       <button onclick="closeZoomModal()" class="absolute top-4 left-4 w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition z-20">✕</button>
       
-      <!-- כותרת דגם ומונה תמונות -->
       <div class="flex items-center justify-center gap-3 pr-2">
         <h3 id="zoomTitle" class="text-base md:text-lg font-extrabold text-slate-800"></h3>
         <span id="zoomCounter" class="hidden text-xs md:text-sm font-bold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full border border-blue-200"></span>
       </div>
       
-      <!-- אזור התמונה המוגדלת + חיצי ניווט צדדיים -->
       <div class="relative w-full h-[65vh] md:h-[75vh] bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 overflow-hidden">
-        
-        <!-- כפתור ניווט קודם (ימינה ב-RTL) -->
         <button id="prevImgBtn" onclick="navigateGallery(-1)" class="hidden absolute right-3 md:right-5 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/90 hover:bg-white text-slate-800 rounded-full shadow-lg border border-slate-200 flex items-center justify-center text-xl font-bold transition hover:scale-110 active:scale-95 z-10">
           ➔
         </button>
 
-        <!-- התמונה המרכזית -->
         <img id="zoomImage" src="" alt="תצוגה מוגדלת" class="max-h-full max-w-full object-contain drop-shadow-md transition duration-150" />
 
-        <!-- כפתור ניווט הבא (שמאלה ב-RTL) -->
         <button id="nextImgBtn" onclick="navigateGallery(1)" class="hidden absolute left-3 md:left-5 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/90 hover:bg-white text-slate-800 rounded-full shadow-lg border border-slate-200 flex items-center justify-center text-xl font-bold transition hover:scale-110 active:scale-95 z-10">
           ←
         </button>
@@ -358,92 +350,101 @@
     </div>
   </div>
 
-  <!-- תבנית PDF מיושרת עם רווחים מושלמים בעברית ותמיכה בלוגו חנות מוביל -->
+  <!-- ========================================================================= -->
+  <!-- תבנית PDF נקייה ומיושרת לחלוטין (מבנה טבלאי מבודד ללא היפוך אותיות) -->
+  <!-- ========================================================================= -->
   <div style="position: absolute; left: -9999px; top: -9999px;">
-    <div id="pdfTemplate" style="width: 720px; padding: 28px; background-color: #ffffff; color: #1e293b; direction: rtl;">
+    <div id="pdfTemplate" style="width: 760px; padding: 32px; background-color: #ffffff; color: #0f172a; direction: rtl; text-align: right;">
       
-      <!-- כותרת ולוגו ב-PDF (מותאם אוטומטית לחנות) -->
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 14px;">
+      <!-- ראש העמוד: לוגו חנות וכותרת מסמך -->
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border-bottom: 2px solid #0f172a; padding-bottom: 16px;">
         <tr>
-          <td style="text-align: right; vertical-align: middle;">
-            <div id="pdfTitleMain" style="font-size: 24px; font-weight: bold; color: #0f172a; margin-bottom: 4px;">MTI Bath Gallery</div>
-            <div id="pdfTitleSub" style="font-size: 13px; color: #475569;">טופס מפרט והזמנת מקלחון בהתאמה אישית</div>
-            <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">תאריך הפקה: <span id="pdfDate"></span></div>
+          <!-- צד ימין: כותרות המסמך -->
+          <td style="text-align: right; vertical-align: top;">
+            <div id="pdfTitleMain" style="font-size: 26px; font-weight: bold; color: #0f172a; margin-bottom: 4px;"></div>
+            <div id="pdfTitleSub" style="font-size: 14px; font-weight: normal; color: #475569; margin-bottom: 8px;"></div>
+            <div style="font-size: 12px; color: #64748b;">
+              <span>תאריך&nbsp;הפקה:&nbsp;</span>
+              <span id="pdfDate" style="font-weight: bold; color: #0f172a; direction: ltr; display: inline-block;"></span>
+            </div>
           </td>
-          <td style="text-align: left; vertical-align: middle; width: 220px;">
-            <div id="pdfLogoContainer" style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
-              <img id="pdfLogoImg" src="./mtilogo.jpg" alt="Logo" style="max-height: 60px; max-width: 180px; object-fit: contain;" />
+          
+          <!-- צד שמאל: לוגו החנות (גדול ונקי) -->
+          <td style="text-align: left; vertical-align: middle; width: 240px;">
+            <div style="display: flex; justify-content: flex-end; align-items: center;">
+              <img id="pdfLogoImg" src="" alt="לוגו" style="max-height: 70px; max-width: 220px; object-fit: contain;" />
             </div>
           </td>
         </tr>
       </table>
 
-      <!-- כותרת מפרט -->
-      <div style="background-color: #f1f5f9; padding: 9px 14px; border-radius: 8px; font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 14px;">
-        מפרט טכני של המוצר
+      <!-- כותרת מפרט טכני -->
+      <div style="background-color: #f1f5f9; border-right: 4px solid #2563eb; padding: 10px 14px; font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 16px;">
+        מפרט&nbsp;טכני&nbsp;של&nbsp;המוצר
       </div>
 
-      <!-- טבלת נתונים -->
+      <!-- טבלת נתוני המקלחון (מבנה שורות מרווח ומסודר ללא שום היפוך) -->
       <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 24px;">
         <tbody>
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td style="padding: 8px 6px; color: #64748b; font-weight: bold; width: 35%;">סוג מקלחון:</td>
-            <td id="pdfCategory" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">סוג&nbsp;מקלחון</td>
+            <td id="pdfCategory" style="padding: 10px 12px; font-weight: bold; color: #0f172a;"></td>
           </tr>
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">דגם מקלחון:</td>
-            <td id="pdfModel" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">דגם&nbsp;מקלחון</td>
+            <td id="pdfModel" style="padding: 10px 12px; font-weight: bold; color: #0f172a;"></td>
           </tr>
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">מידות (רוחב x גובה):</td>
-            <td id="pdfDimensions" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">מידות&nbsp;בס״מ</td>
+            <td id="pdfDimensions" style="padding: 10px 12px; font-weight: bold; color: #0f172a;"></td>
           </tr>
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">גוון פרזול:</td>
-            <td id="pdfColor" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">גוון&nbsp;פרזול</td>
+            <td id="pdfColor" style="padding: 10px 12px; font-weight: bold; color: #0f172a;"></td>
           </tr>
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">סוג ועובי זכוכית:</td>
-            <td id="pdfGlass" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">סוג&nbsp;זכוכית</td>
+            <td id="pdfGlass" style="padding: 10px 12px; font-weight: bold; color: #0f172a;"></td>
           </tr>
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">ציפוי ננו דוחה אבנית:</td>
-            <td id="pdfNano" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">ציפוי&nbsp;ננו&nbsp;דוחה&nbsp;אבנית</td>
+            <td id="pdfNano" style="padding: 10px 12px; font-weight: bold; color: #0f172a;"></td>
           </tr>
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">חיתוך / גריעה:</td>
-            <td id="pdfCut" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">חיתוך&nbsp;/&nbsp;גריעה&nbsp;בזכוכית</td>
+            <td id="pdfCut" style="padding: 10px 12px; font-weight: bold; color: #0f172a;"></td>
           </tr>
         </tbody>
       </table>
 
-      <!-- סיכום כספי -->
-      <table style="width: 100%; border-collapse: collapse; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 24px;">
+      <!-- סיכום כספי מהודר -->
+      <table style="width: 100%; border-collapse: collapse; background-color: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; margin-bottom: 28px;">
         <tr>
-          <td style="padding: 16px; text-align: right; vertical-align: middle;">
-            <div style="font-size: 14px; font-weight: bold; color: #1e293b;">מחיר מחירון רשמי (לא כולל מע"מ):</div>
-            <div style="font-size: 12px; color: #475569; margin-top: 4px;">תשלום עבור מדידה והתקנה: <span id="pdfInstallPrice" style="font-weight: bold; color: #b45309;"></span></div>
-            <div id="pdfInstallNote" style="font-size: 11px; color: #64748b; margin-top: 3px;"></div>
+          <td style="padding: 18px 20px; text-align: right; vertical-align: middle;">
+            <div style="font-size: 14px; font-weight: bold; color: #1e293b;">מחיר&nbsp;מחירון&nbsp;רשמי&nbsp;(לא&nbsp;כולל&nbsp;מע״מ):</div>
+            <div style="font-size: 13px; color: #475569; margin-top: 6px;">
+              <span>תשלום&nbsp;עבור&nbsp;מדידה&nbsp;והתקנה:&nbsp;</span>
+              <span id="pdfInstallPrice" style="font-weight: bold; color: #b45309;"></span>
+            </div>
+            <div id="pdfInstallNote" style="font-size: 11px; color: #64748b; margin-top: 4px;"></div>
           </td>
-          <td style="padding: 16px; text-align: left; vertical-align: middle; width: 170px;">
-            <div id="pdfFinalPrice" style="font-size: 22px; font-weight: bold; color: #1d4ed8;"></div>
+          <td style="padding: 18px 20px; text-align: left; vertical-align: middle; width: 220px;">
+            <div id="pdfFinalPrice" style="font-size: 26px; font-weight: bold; color: #1d4ed8; text-align: left;"></div>
           </td>
         </tr>
       </table>
 
-      <!-- הערות וחתימה -->
+      <!-- הערות וחתימה נקייה -->
       <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
         <tr>
-          <td style="width: 50%; vertical-align: top; padding-left: 14px;">
-            <div style="font-size: 12px; font-weight: bold; color: #475569; margin-bottom: 5px;">הערות / הנחת חנות:</div>
-            <div style="height: 55px; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 6px; font-size: 11px; color: #94a3b8;">
-              הערות נוספות או אחוז הנחה שניתן ללקוח...
+          <td style="width: 55%; vertical-align: top; padding-left: 20px;">
+            <div style="font-size: 12px; font-weight: bold; color: #475569; margin-bottom: 6px;">הערות&nbsp;/&nbsp;הנחת&nbsp;חנות:</div>
+            <div style="height: 60px; border: 1px dashed #94a3b8; border-radius: 8px; padding: 8px; font-size: 11px; color: #94a3b8;">
+              הערות&nbsp;נוספות&nbsp;או&nbsp;אחוז&nbsp;הנחה&nbsp;שניתן&nbsp;ללקוח...
             </div>
           </td>
-          <td style="width: 50%; vertical-align: bottom; padding-right: 14px;">
-            <div id="pdfSignatureText" style="border-top: 1px solid #94a3b8; padding-top: 6px; text-align: center; font-size: 12px; font-weight: bold; color: #334155;">
-              חתימת הלקוח / אישור הזמנה
-            </div>
+          <td style="width: 45%; vertical-align: bottom; padding-right: 20px;">
+            <div id="pdfSignatureText" style="border-top: 1.5px solid #0f172a; padding-top: 8px; text-align: center; font-size: 12px; font-weight: bold; color: #0f172a;"></div>
           </td>
         </tr>
       </table>
@@ -467,6 +468,12 @@
     };
 
     let activeStore = null;
+
+    // פונקציית עזר להמרת כל הרווחים לרווחים בלתי-שבירים (מונע הידבקות מילים ב-PDF)
+    function toNbsp(str) {
+      if (!str) return '';
+      return String(str).replace(/ /g, '\u00A0');
+    }
 
     // בדיקת פרמטר ?store בכל צורת כתיבה
     function checkStoreParameter() {
@@ -1201,6 +1208,9 @@
       pdfBtn.className = "w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg";
     }
 
+    // ==========================================
+    // הפקת PDF נקייה ומבוצרת (ללא שום היפוך אותיות או הידבקות)
+    // ==========================================
     function generateOrderPDF() {
       const category = document.getElementById('categorySelect').value;
       const modelName = document.getElementById('currentModelBadge').innerText;
@@ -1208,47 +1218,62 @@
       const width2 = document.getElementById('widthSelect2').value;
       const height = document.getElementById('heightSelect').value;
       const glass = CATALOG_DATA.glasses[selectedGlassIndex].name;
-      const nano = selectedNano === 150 ? 'כולל ציפוי ננו' : 'ללא ציפוי';
+      const nano = selectedNano === 150 ? 'כולל ציפוי ננו דוחה אבנית' : 'ללא ציפוי';
       const cut = selectedCut === 0 ? 'ללא חיתוכים' : (selectedCut === 50 ? 'חיתוך 1' : '2 חיתוכים');
       const colorName = selectedColor.name;
       const finalPrice = document.getElementById('finalPriceDisplay').innerText;
       const installPrice = document.getElementById('installPriceDisplay').innerText;
       const installNote = document.getElementById('installNoteDisplay').innerText;
 
-      document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('he-IL');
+      // תאריך מבודד שלא מתהפך
+      const now = new Date();
+      const formattedDate = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()}`;
+      document.getElementById('pdfDate').innerText = formattedDate;
       
+      // כותרת ולוגו ב-PDF לפי החנות
       if (activeStore) {
-        document.getElementById('pdfTitleMain').innerText = activeStore.name;
-        document.getElementById('pdfTitleSub').innerText = 'טופס מפרט והזמנת מקלחון בהתאמה אישית (בשיתוף רשמי עם MTI)';
+        document.getElementById('pdfTitleMain').innerText = toNbsp(activeStore.name);
+        document.getElementById('pdfTitleSub').innerText = toNbsp('טופס מפרט והזמנת מקלחון פרימיום (בשיתוף MTI)');
         document.getElementById('pdfLogoImg').src = activeStore.logo;
-        document.getElementById('pdfSignatureText').innerText = `אישור הזמנה ואישור מפרט - ${activeStore.name}`;
+        document.getElementById('pdfSignatureText').innerText = toNbsp(`אישור הזמנה ומפרט - ${activeStore.name}`);
       } else {
-        document.getElementById('pdfTitleMain').innerText = 'MTI Bath Gallery';
-        document.getElementById('pdfTitleSub').innerText = 'טופס מפרט והזמנת מקלחון בהתאמה אישית';
+        document.getElementById('pdfTitleMain').innerText = toNbsp('MTI Bath Gallery');
+        document.getElementById('pdfTitleSub').innerText = toNbsp('טופס מפרט והזמנת מקלחון בהתאמה אישית');
         document.getElementById('pdfLogoImg').src = './mtilogo.jpg';
-        document.getElementById('pdfSignatureText').innerText = 'חתימת הלקוח / אישור הזמנה';
+        document.getElementById('pdfSignatureText').innerText = toNbsp('חתימת הלקוח / אישור הזמנה');
       }
 
-      document.getElementById('pdfCategory').innerText = category;
-      document.getElementById('pdfModel').innerText = modelName;
-      document.getElementById('pdfDimensions').innerText = isCurrentCorner 
-        ? `רוחב ${width1} ס"מ | עומק ${width2} ס"מ | גובה ${height} ס"מ`
-        : `רוחב חזית ${width1} ס"מ | גובה ${height} ס"מ`;
-      document.getElementById('pdfColor').innerText = colorName;
-      document.getElementById('pdfGlass').innerText = `${glass} (8 מ"מ)`;
-      document.getElementById('pdfNano').innerText = nano;
-      document.getElementById('pdfCut').innerText = cut;
-      document.getElementById('pdfFinalPrice').innerText = finalPrice;
-      document.getElementById('pdfInstallPrice').innerText = installPrice;
-      document.getElementById('pdfInstallNote').innerText = installNote;
+      // הזרקת הנתונים עם רווחים מובטחים
+      document.getElementById('pdfCategory').innerText = toNbsp(category);
+      document.getElementById('pdfModel').innerText = toNbsp(modelName);
+
+      const dimText = isCurrentCorner 
+        ? `רוחב: ${width1} ס"מ | עומק: ${width2} ס"מ | גובה: ${height} ס"מ`
+        : `רוחב חזית: ${width1} ס"מ | גובה: ${height} ס"מ`;
+      document.getElementById('pdfDimensions').innerText = toNbsp(dimText);
+
+      document.getElementById('pdfColor').innerText = toNbsp(colorName);
+      document.getElementById('pdfGlass').innerText = toNbsp(`${glass} | עובי 8 מ"מ מחוסמת`);
+      document.getElementById('pdfNano').innerText = toNbsp(nano);
+      document.getElementById('pdfCut').innerText = toNbsp(cut);
+      document.getElementById('pdfFinalPrice').innerText = toNbsp(finalPrice);
+      document.getElementById('pdfInstallPrice').innerText = toNbsp(installPrice);
+      document.getElementById('pdfInstallNote').innerText = toNbsp(installNote);
 
       const storePrefix = activeStore ? `${activeStore.name}_` : '';
       const element = document.getElementById('pdfTemplate');
+      
       const opt = {
         margin:       [10, 10, 10, 10],
         filename:     `הזמנת_מקלחון_${storePrefix}MTI_${modelName.replace(/\s+/g, '_')}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0 },
+        html2canvas:  { 
+          scale: 2, 
+          useCORS: true, 
+          letterRendering: false, // ביטול מכוון כדי למנוע הידבקות אותיות בעברית
+          scrollX: 0, 
+          scrollY: 0 
+        },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
