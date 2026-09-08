@@ -6,7 +6,6 @@
   <title>קונפיגורטור מקלחונים - MTI Bath Gallery</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <!-- ספריית html2pdf -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body { font-family: 'Assistant', sans-serif; font-size: 16px; }
@@ -20,7 +19,6 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
   
-  <!-- כותרת עליונה ולוגו MTI -->
   <header class="bg-white shadow-sm border-b sticky top-0 z-50">
     <div class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-3.5 flex items-center justify-between">
       <div class="flex items-center gap-4">
@@ -33,7 +31,6 @@
       </div>
       
       <div class="flex items-center gap-3">
-        <!-- כפתור איפוס -->
         <button onclick="resetConfigurator()" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-sm font-bold rounded-xl border border-slate-300 transition cursor-pointer shadow-sm">
           <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -50,10 +47,8 @@
 
   <main class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-1">
     
-    <!-- פנל הגדרות מוצר (ימין) -->
     <section class="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
       
-      <!-- שלב 1: סוג מקלחון ראשי -->
       <div>
         <label class="block text-base font-bold text-slate-800 mb-2">1. סוג מקלחון <span class="text-red-500">*</span></label>
         <select id="categorySelect" onchange="onCategoryChange()" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm md:text-base transition">
@@ -61,7 +56,6 @@
         </select>
       </div>
 
-      <!-- שלב 2: דגם ספציפי -->
       <div>
         <label class="block text-base font-bold text-slate-800 mb-2">2. דגם מקלחון <span class="text-red-500">*</span></label>
         <select id="modelSelect" onchange="onModelChange()" disabled class="w-full p-3.5 bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-400 outline-none text-sm md:text-base transition cursor-not-allowed">
@@ -69,12 +63,10 @@
         </select>
       </div>
 
-      <!-- שלב 3: מידות -->
       <div id="dimensionsSection" class="border-t pt-5 space-y-4 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-base font-extrabold text-slate-800">3. מידות (ס"מ) <span class="text-red-500">*</span></h3>
         
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="dimGrid">
-          <!-- צלע א' -->
           <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60" id="dimBox1">
             <div class="flex justify-between items-center mb-1.5">
               <span id="dimLabel1" class="text-xs md:text-sm font-bold text-slate-500">רוחב חזית</span>
@@ -85,7 +77,6 @@
             </select>
           </div>
 
-          <!-- צלע ב' (פינתי בלבד) -->
           <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 hidden" id="dimBox2">
             <div class="flex justify-between items-center mb-1.5">
               <span class="text-xs md:text-sm font-bold text-slate-500">עומק (צלע ב')</span>
@@ -96,7 +87,6 @@
             </select>
           </div>
 
-          <!-- גובה -->
           <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60" id="heightBox">
             <div class="flex justify-between items-center mb-1.5">
               <span class="text-xs md:text-sm font-bold text-slate-500">גובה</span>
@@ -122,11 +112,9 @@
         </div>
       </div>
 
-      <!-- שלב 4: מפרט פרזול, זכוכית, ננו וחיתוכים -->
       <div id="optionsSection" class="border-t pt-5 space-y-6 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-base font-extrabold text-slate-800">4. מפרט פרזול וזכוכית</h3>
         
-        <!-- גוון פרזול -->
         <div>
           <div class="flex justify-between items-center mb-2.5">
             <label class="block text-sm md:text-base font-bold text-slate-700">גוון פרזול <span class="text-red-500">*</span></label>
@@ -135,7 +123,6 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 md:gap-3" id="colorContainer"></div>
         </div>
 
-        <!-- גלריית סוגי זכוכית -->
         <div>
           <div class="flex justify-between items-center mb-2.5">
             <label class="block text-sm md:text-base font-bold text-slate-700">סוג זכוכית (8 מ"מ) <span class="text-red-500">*</span></label>
@@ -144,10 +131,8 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3" id="glassContainer"></div>
         </div>
 
-        <!-- תוספות: ננו וחיתוכים -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-3 border-t border-slate-100">
           
-          <!-- כרטיסי ציפוי ננו -->
           <div>
             <div class="flex justify-between items-center mb-2">
               <label class="block text-sm font-bold text-slate-700">ציפוי ננו דוחה אבנית <span class="text-red-500">*</span></label>
@@ -165,7 +150,6 @@
             </div>
           </div>
 
-          <!-- כרטיסי חיתוך / גריעה -->
           <div>
             <div class="flex justify-between items-center mb-2">
               <label class="block text-sm font-bold text-slate-700">חיתוך / גריעה בזכוכית <span class="text-red-500">*</span></label>
@@ -192,10 +176,8 @@
       </div>
     </section>
 
-    <!-- פנל תצוגת GIF, גלריית לקוחות וסיכום מחיר (שמאל) -->
     <section class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
       
-      <!-- הדמיית פתיחה -->
       <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
           <span class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider">הדמיית פתיחה</span>
@@ -213,7 +195,6 @@
           </div>
         </div>
 
-        <!-- אזור גלריית תמונות מבתי לקוח -->
         <div id="customerGallerySection" class="w-full mt-6 pt-5 border-t border-slate-100 hidden">
           <div class="flex items-center justify-between mb-3">
             <span class="text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
@@ -227,14 +208,12 @@
         </div>
       </div>
 
-      <!-- פירוט מחיר מחירון לצרכן והתקנה -->
       <div class="bg-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-lg space-y-4">
         <div>
           <span class="text-slate-300 text-xs md:text-sm font-semibold">מחיר מחירון רשמי (לא כולל מע״מ)</span>
           <div id="finalPriceDisplay" class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1">יש להשלים את כל שלבי הבחירה</div>
         </div>
 
-        <!-- הערת התקנה מופרדת -->
         <div class="bg-slate-800/80 border border-slate-700/80 p-4 rounded-2xl space-y-1">
           <div class="flex items-center justify-between text-sm md:text-base font-bold text-amber-400">
             <span>מדידה והתקנה מקצועית:</span>
@@ -243,7 +222,6 @@
           <p id="installNoteDisplay" class="text-xs md:text-sm text-slate-300 font-medium">המחיר וההתקנה יחושבו במלואם לאחר בחירת כל הפרמטרים.</p>
         </div>
 
-        <!-- כפתור הורדת PDF רשמי -->
         <button id="downloadPdfBtn" onclick="generateOrderPDF()" disabled class="w-full py-4 bg-slate-700 opacity-50 cursor-not-allowed text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition text-sm md:text-base">
           <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -255,7 +233,6 @@
     </section>
   </main>
 
-  <!-- חלון קופץ לתצוגה מוגדלת (Modal Zoom) -->
   <div id="zoomModal" onclick="closeZoomModal()" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden transition-all duration-200">
     <div onclick="event.stopPropagation()" class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl flex flex-col items-center gap-4 text-center relative border border-slate-100">
       <button onclick="closeZoomModal()" class="absolute top-4 left-4 w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-600 font-bold transition">✕</button>
@@ -267,11 +244,9 @@
     </div>
   </div>
 
-  <!-- תבנית PDF מיושרת עם רווחים מושלמים בעברית -->
   <div style="position: absolute; left: -9999px; top: -9999px;">
     <div id="pdfTemplate" style="width: 720px; padding: 28px; background-color: #ffffff; color: #1e293b; direction: rtl;">
       
-      <!-- כותרת ולוגו -->
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 14px;">
         <tr>
           <td style="text-align: right; vertical-align: middle;">
@@ -285,12 +260,10 @@
         </tr>
       </table>
 
-      <!-- כותרת מפרט -->
       <div style="background-color: #f1f5f9; padding: 9px 14px; border-radius: 8px; font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 14px;">
         מפרט טכני של המוצר
       </div>
 
-      <!-- טבלת נתונים -->
       <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 24px;">
         <tbody>
           <tr style="border-bottom: 1px solid #f1f5f9;">
@@ -324,7 +297,6 @@
         </tbody>
       </table>
 
-      <!-- סיכום כספי -->
       <table style="width: 100%; border-collapse: collapse; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 24px;">
         <tr>
           <td style="padding: 16px; text-align: right; vertical-align: middle;">
@@ -338,7 +310,6 @@
         </tr>
       </table>
 
-      <!-- הערות וחתימה -->
       <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
         <tr>
           <td style="width: 50%; vertical-align: top; padding-left: 14px;">
@@ -675,39 +646,57 @@
       tryNext();
     }
 
+    // פונקציית טעינת גלריית לקוחות מהשטח
     function loadCustomerGallery(model) {
       const gallerySection = document.getElementById('customerGallerySection');
       const galleryGrid = document.getElementById('galleryGrid');
       galleryGrid.innerHTML = '';
 
       const modelFolder = `MTI-${model.id}`;
-      const folderPath = `gallery/${modelFolder}`;
+      const folderPaths = [
+        `gallery/${modelFolder}`,
+        `Gallery/${modelFolder}`,
+        `GALLERY/${modelFolder}`
+      ];
 
-      for (let i = 1; i <= 8; i++) {
+      for (let i = 1; i <= 12; i++) {
         const imgWrapper = document.createElement('div');
-        imgWrapper.className = 'w-full h-20 bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition';
+        imgWrapper.className = 'w-full h-20 md:h-24 bg-slate-100 rounded-2xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition flex items-center justify-center';
 
         const img = document.createElement('img');
-        const basePath = `${folderPath}/${i}`;
-        img.src = `${basePath}.jpg`;
-        img.alt = `תמונה ${i} מהשטח - ${model.name}`;
         img.className = 'w-full h-full object-cover';
+        img.alt = `תמונה מהשטח - ${model.name}`;
 
-        img.onerror = function() {
-          if (!this.dataset.step) {
-            this.dataset.step = 'jpeg';
-            this.src = `${basePath}.jpeg`;
-          } else if (this.dataset.step === 'jpeg') {
-            this.dataset.step = 'png';
-            this.src = `${basePath}.png`;
+        const fileVariants = [];
+        folderPaths.forEach(fp => {
+          fileVariants.push(
+            `${fp}/${i}.jpg`,
+            `${fp}/${i}.png`,
+            `${fp}/${i}.jpeg`,
+            `${fp}/${i}.JPG`,
+            `${fp}/${i}.PNG`,
+            `${fp}/MTI-${model.id}-${i}.jpg`,
+            `${fp}/MTI-${model.id}-${i}.png`,
+            `${fp}/MTI-${model.id}-${i}.jpeg`,
+            `${fp}/MTI_${model.id}_${i}.jpg`,
+            `${fp}/MTI_${model.id}_${i}.png`
+          );
+        });
+
+        let step = 0;
+
+        function tryLoadNext() {
+          if (step < fileVariants.length) {
+            img.src = `./${fileVariants[step++]}`;
           } else {
             imgWrapper.remove();
             if (galleryGrid.children.length === 0) {
               gallerySection.classList.add('hidden');
             }
           }
-        };
+        }
 
+        img.onerror = tryLoadNext;
         img.onload = function() {
           gallerySection.classList.remove('hidden');
         };
@@ -718,6 +707,8 @@
 
         imgWrapper.appendChild(img);
         galleryGrid.appendChild(imgWrapper);
+
+        tryLoadNext();
       }
     }
 
