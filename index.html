@@ -36,14 +36,30 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
   
-  <!-- כותרת עליונה ולוגו MTI -->
+  <!-- כותרת עליונה דינמית (תומכת מיתוג אישי לכל חנות) -->
   <header class="bg-white shadow-sm border-b sticky top-0 z-50">
     <div class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-3.5 flex items-center justify-between">
+      
+      <!-- אזור הלוגואים המשולב -->
       <div class="flex items-center gap-4">
-        <img src="./mtilogo.jpg" alt="MTI ISRAEL" class="h-12 md:h-16 w-auto object-contain" />
+        
+        <!-- לוגו חנות ייעודי (מופיע רק אם יש ?store בכתובת) -->
+        <div id="storeHeaderArea" class="hidden flex items-center gap-3">
+          <img id="storeLogoImg" src="" alt="לוגו חנות" class="h-10 md:h-14 w-auto object-contain" />
+          <div class="h-8 w-[1px] bg-slate-200"></div>
+          <div class="flex flex-col text-right">
+            <span class="text-[10px] md:text-xs text-slate-400 font-semibold leading-none">בשיתוף רשמי עם</span>
+            <img src="./mtilogo.jpg" alt="MTI ISRAEL" class="h-5 md:h-6 w-auto object-contain mt-1" />
+          </div>
+        </div>
+
+        <!-- לוגו ברירת מחדל של MTI (מופיע אם אין חנות מוגדרת) -->
+        <div id="defaultHeaderArea" class="flex items-center gap-4">
+          <img src="./mtilogo.jpg" alt="MTI ISRAEL" class="h-12 md:h-16 w-auto object-contain" />
+        </div>
 
         <div class="hidden sm:block border-r border-slate-200 pr-4">
-          <h1 class="text-lg md:text-xl font-extrabold text-slate-900 leading-tight">קונפיגורטור מקלחונים ומחיצות</h1>
+          <h1 id="headerTitleText" class="text-lg md:text-xl font-extrabold text-slate-900 leading-tight">קונפיגורטור מקלחונים ומחיצות</h1>
           <p class="text-xs md:text-sm text-slate-500 font-semibold">מחירון רשמי 2026</p>
         </div>
       </div>
@@ -57,7 +73,7 @@
           <span>איפוס</span>
         </button>
 
-        <span class="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-50 text-blue-700 text-sm font-bold rounded-full border border-blue-200">
+        <span id="storeHeaderBadge" class="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-50 text-blue-700 text-sm font-bold rounded-full border border-blue-200">
           מערכת מחירון חכמה
         </span>
       </div>
@@ -325,20 +341,20 @@
     </div>
   </div>
 
-  <!-- תבנית PDF מיושרת עם רווחים מושלמים בעברית -->
+  <!-- תבנית PDF מיושרת עם רווחים מושלמים בעברית ותמיכה בלוגו חנות -->
   <div style="position: absolute; left: -9999px; top: -9999px;">
     <div id="pdfTemplate" style="width: 720px; padding: 28px; background-color: #ffffff; color: #1e293b; direction: rtl;">
       
-      <!-- כותרת ולוגו -->
+      <!-- כותרת ולוגו ב-PDF (מותאם אוטומטית לחנות) -->
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 14px;">
         <tr>
           <td style="text-align: right; vertical-align: middle;">
-            <div style="font-size: 24px; font-weight: bold; color: #0f172a; margin-bottom: 4px;">MTI Bath Gallery</div>
-            <div style="font-size: 14px; color: #475569;">טופס מפרט והזמנת מקלחון בהתאמה אישית</div>
+            <div id="pdfTitleMain" style="font-size: 24px; font-weight: bold; color: #0f172a; margin-bottom: 4px;">MTI Bath Gallery</div>
+            <div id="pdfTitleSub" style="font-size: 14px; color: #475569;">טופס מפרט והזמנת מקלחון בהתאמה אישית</div>
             <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">תאריך הפקה: <span id="pdfDate"></span></div>
           </td>
-          <td style="text-align: left; vertical-align: middle; width: 140px;">
-            <img src="./mtilogo.jpg" alt="MTI Logo" style="height: 50px; width: auto; object-fit: contain;" />
+          <td style="text-align: left; vertical-align: middle; width: 170px;">
+            <img id="pdfLogoImg" src="./mtilogo.jpg" alt="Logo" style="max-height: 52px; max-width: 160px; object-fit: contain;" />
           </td>
         </tr>
       </table>
@@ -406,7 +422,7 @@
             </div>
           </td>
           <td style="width: 50%; vertical-align: bottom; padding-right: 14px;">
-            <div style="border-top: 1px solid #94a3b8; padding-top: 6px; text-align: center; font-size: 12px; font-weight: bold; color: #334155;">
+            <div id="pdfSignatureText" style="border-top: 1px solid #94a3b8; padding-top: 6px; text-align: center; font-size: 12px; font-weight: bold; color: #334155;">
               חתימת הלקוח / אישור הזמנה
             </div>
           </td>
@@ -417,6 +433,45 @@
   </div>
 
   <script>
+    // ==========================================
+    // רשימת החנויות והמיתוג האישי (ניתן להוסיף חנויות בחופשיות)
+    // ==========================================
+    const STORES_CONFIG = {
+      "halamish": {
+        name: "חלמיש קרמיקה",
+        logo: "./stores/halamish.png"
+      }
+      // כדי להוסיף חנות חדשה, פשוט מוסיפים שורה:
+      // "topbath": { name: "טופ בת'", logo: "./stores/topbath.png" }
+    };
+
+    let activeStore = null;
+
+    // בדיקת פרמטר ?store בכתובת האתר בעת טעינה
+    function checkStoreParameter() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const storeKey = urlParams.get('store');
+
+      if (storeKey && STORES_CONFIG[storeKey]) {
+        activeStore = STORES_CONFIG[storeKey];
+        
+        // החלפת לוגו וכותרת בעמוד
+        document.getElementById('defaultHeaderArea').classList.add('hidden');
+        const storeArea = document.getElementById('storeHeaderArea');
+        storeArea.classList.remove('hidden');
+        
+        const storeImg = document.getElementById('storeLogoImg');
+        storeImg.src = activeStore.logo;
+        storeImg.alt = activeStore.name;
+
+        document.getElementById('headerTitleText').innerText = `קונפיגורטור מקלחונים - ${activeStore.name}`;
+        document.title = `קונפיגורטור מקלחונים - ${activeStore.name}`;
+        
+        const badge = document.getElementById('storeHeaderBadge');
+        badge.innerText = `פורטל רשמי - ${activeStore.name}`;
+      }
+    }
+
     const CATALOG_DATA = {
       categories: [
         { id: "front", name: "מקלחון חזיתי", isCorner: false },
@@ -516,6 +571,8 @@
     let currentModalIndex = 0;
 
     function init() {
+      checkStoreParameter();
+
       const catSelect = document.getElementById('categorySelect');
       catSelect.innerHTML = '<option value="" disabled selected>-- בחר סוג מקלחון --</option>' + 
         CATALOG_DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
@@ -600,7 +657,7 @@
       }
     }
 
-    // פתיחת תמונה בודדת (לפרזול או זכוכית - ללא חיצי ניווט)
+    // פתיחת תמונה בודדת
     function zoomSingleImage(e, title, imgSrc) {
       e.stopPropagation();
       document.getElementById('zoomTitle').innerText = title;
@@ -1130,6 +1187,20 @@
       const installNote = document.getElementById('installNoteDisplay').innerText;
 
       document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('he-IL');
+      
+      // התאמת כותרת ולוגו ב-PDF לפי החנות הפעילה
+      if (activeStore) {
+        document.getElementById('pdfTitleMain').innerText = activeStore.name;
+        document.getElementById('pdfTitleSub').innerText = 'טופס מפרט והזמנת מקלחון בהתאמה אישית (בשיתוף MTI)';
+        document.getElementById('pdfLogoImg').src = activeStore.logo;
+        document.getElementById('pdfSignatureText').innerText = `אישור הזמנה - ${activeStore.name}`;
+      } else {
+        document.getElementById('pdfTitleMain').innerText = 'MTI Bath Gallery';
+        document.getElementById('pdfTitleSub').innerText = 'טופס מפרט והזמנת מקלחון בהתאמה אישית';
+        document.getElementById('pdfLogoImg').src = './mtilogo.jpg';
+        document.getElementById('pdfSignatureText').innerText = 'חתימת הלקוח / אישור הזמנה';
+      }
+
       document.getElementById('pdfCategory').innerText = category;
       document.getElementById('pdfModel').innerText = modelName;
       document.getElementById('pdfDimensions').innerText = isCurrentCorner 
@@ -1143,10 +1214,11 @@
       document.getElementById('pdfInstallPrice').innerText = installPrice;
       document.getElementById('pdfInstallNote').innerText = installNote;
 
+      const storePrefix = activeStore ? `${activeStore.name}_` : '';
       const element = document.getElementById('pdfTemplate');
       const opt = {
         margin:       [10, 10, 10, 10],
-        filename:     `הזמנת_מקלחון_MTI_${modelName.replace(/\s+/g, '_')}.pdf`,
+        filename:     `הזמנת_מקלחון_${storePrefix}MTI_${modelName.replace(/\s+/g, '_')}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0 },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
