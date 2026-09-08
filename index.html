@@ -6,6 +6,7 @@
   <title>קונפיגורטור מקלחונים - MTI Bath Gallery</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <!-- ספריית html2pdf -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body { font-family: 'Assistant', sans-serif; font-size: 16px; }
@@ -15,26 +16,11 @@
       letter-spacing: 0px;
     }
     #pdfTemplate * { box-sizing: border-box; }
-    
-    /* עיצוב עדין לפס הגלילה האופקי בגלרייה */
-    .custom-scroll::-webkit-scrollbar {
-      height: 6px;
-    }
-    .custom-scroll::-webkit-scrollbar-track {
-      background: #f1f5f9;
-      border-radius: 8px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 8px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
   
+  <!-- כותרת עליונה ולוגו MTI -->
   <header class="bg-white shadow-sm border-b sticky top-0 z-50">
     <div class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-3.5 flex items-center justify-between">
       <div class="flex items-center gap-4">
@@ -47,6 +33,7 @@
       </div>
       
       <div class="flex items-center gap-3">
+        <!-- כפתור איפוס -->
         <button onclick="resetConfigurator()" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-sm font-bold rounded-xl border border-slate-300 transition cursor-pointer shadow-sm">
           <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -63,8 +50,10 @@
 
   <main class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-1">
     
+    <!-- פנל הגדרות מוצר (ימין) -->
     <section class="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
       
+      <!-- שלב 1: סוג מקלחון ראשי -->
       <div>
         <label class="block text-base font-bold text-slate-800 mb-2">1. סוג מקלחון <span class="text-red-500">*</span></label>
         <select id="categorySelect" onchange="onCategoryChange()" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm md:text-base transition">
@@ -72,6 +61,7 @@
         </select>
       </div>
 
+      <!-- שלב 2: דגם ספציפי -->
       <div>
         <label class="block text-base font-bold text-slate-800 mb-2">2. דגם מקלחון <span class="text-red-500">*</span></label>
         <select id="modelSelect" onchange="onModelChange()" disabled class="w-full p-3.5 bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-400 outline-none text-sm md:text-base transition cursor-not-allowed">
@@ -79,10 +69,12 @@
         </select>
       </div>
 
+      <!-- שלב 3: מידות -->
       <div id="dimensionsSection" class="border-t pt-5 space-y-4 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-base font-extrabold text-slate-800">3. מידות (ס"מ) <span class="text-red-500">*</span></h3>
         
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="dimGrid">
+          <!-- צלע א' -->
           <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60" id="dimBox1">
             <div class="flex justify-between items-center mb-1.5">
               <span id="dimLabel1" class="text-xs md:text-sm font-bold text-slate-500">רוחב חזית</span>
@@ -93,6 +85,7 @@
             </select>
           </div>
 
+          <!-- צלע ב' (פינתי בלבד) -->
           <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 hidden" id="dimBox2">
             <div class="flex justify-between items-center mb-1.5">
               <span class="text-xs md:text-sm font-bold text-slate-500">עומק (צלע ב')</span>
@@ -103,6 +96,7 @@
             </select>
           </div>
 
+          <!-- גובה -->
           <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60" id="heightBox">
             <div class="flex justify-between items-center mb-1.5">
               <span class="text-xs md:text-sm font-bold text-slate-500">גובה</span>
@@ -128,9 +122,11 @@
         </div>
       </div>
 
+      <!-- שלב 4: מפרט פרזול, זכוכית, ננו וחיתוכים -->
       <div id="optionsSection" class="border-t pt-5 space-y-6 opacity-50 pointer-events-none transition-opacity">
         <h3 class="text-base font-extrabold text-slate-800">4. מפרט פרזול וזכוכית</h3>
         
+        <!-- גוון פרזול -->
         <div>
           <div class="flex justify-between items-center mb-2.5">
             <label class="block text-sm md:text-base font-bold text-slate-700">גוון פרזול <span class="text-red-500">*</span></label>
@@ -139,6 +135,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 md:gap-3" id="colorContainer"></div>
         </div>
 
+        <!-- גלריית סוגי זכוכית -->
         <div>
           <div class="flex justify-between items-center mb-2.5">
             <label class="block text-sm md:text-base font-bold text-slate-700">סוג זכוכית (8 מ"מ) <span class="text-red-500">*</span></label>
@@ -147,8 +144,10 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3" id="glassContainer"></div>
         </div>
 
+        <!-- תוספות: ננו וחיתוכים -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-3 border-t border-slate-100">
           
+          <!-- כרטיסי ציפוי ננו -->
           <div>
             <div class="flex justify-between items-center mb-2">
               <label class="block text-sm font-bold text-slate-700">ציפוי ננו דוחה אבנית <span class="text-red-500">*</span></label>
@@ -156,4 +155,885 @@
             </div>
             <div class="grid grid-cols-2 gap-2.5" id="nanoCards">
               <button type="button" onclick="selectNano(0)" class="nano-card bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center gap-2.5 hover:border-blue-400 transition cursor-pointer text-right">
-                <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-60
+                <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs md:text-sm font-bold text-slate-700">ללא ציפוי</span>
+              </button>
+              <button type="button" onclick="selectNano(150)" class="nano-card bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center gap-2.5 hover:border-blue-400 transition cursor-pointer text-right">
+                <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs md:text-sm font-bold text-slate-700">כולל ציפוי</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- כרטיסי חיתוך / גריעה -->
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label class="block text-sm font-bold text-slate-700">חיתוך / גריעה בזכוכית <span class="text-red-500">*</span></label>
+              <span id="selectedCutBadge" class="text-xs font-bold text-slate-400">טרם נבחר</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2" id="cutCards">
+              <button type="button" onclick="selectCut(0)" class="cut-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex items-center gap-2 hover:border-blue-400 transition cursor-pointer text-right">
+                <span class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs font-bold text-slate-700 truncate">ללא</span>
+              </button>
+              <button type="button" onclick="selectCut(50)" class="cut-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex items-center gap-2 hover:border-blue-400 transition cursor-pointer text-right">
+                <span class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs font-bold text-slate-700 truncate">חיתוך 1</span>
+              </button>
+              <button type="button" onclick="selectCut(100)" class="cut-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex items-center gap-2 hover:border-blue-400 transition cursor-pointer text-right">
+                <span class="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 hidden"></span></span>
+                <span class="text-xs font-bold text-slate-700 truncate">2 חיתוכים</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- פנל תצוגת GIF, גלריית לקוחות וסיכום מחיר (שמאל) -->
+    <section class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
+      
+      <!-- הדמיית פתיחה וגלריית לקוחות מתחתיה -->
+      <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
+        <div class="w-full flex justify-between items-center mb-4">
+          <span class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider">הדמיית פתיחה</span>
+          <span id="currentModelBadge" class="text-xs md:text-sm px-3 py-1 bg-slate-100 text-slate-700 font-extrabold rounded-lg truncate max-w-[240px]">טרם נבחר דגם</span>
+        </div>
+        
+        <div class="w-full h-80 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center p-4 relative overflow-hidden">
+          <img id="showerGif" src="" alt="הדמיית מקלחון" class="max-h-full max-w-full object-contain hidden" />
+          <div id="gifPlaceholder" class="flex flex-col items-center justify-center text-slate-400 gap-2">
+            <svg class="w-12 h-12 stroke-current opacity-40" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+            </svg>
+            <span class="text-sm font-bold">בחר דגם לצפייה בהנפשה</span>
+          </div>
+        </div>
+
+        <!-- אזור גלריית תמונות מבתי לקוח -->
+        <div id="customerGallerySection" class="w-full mt-6 pt-5 border-t border-slate-100 hidden">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
+              <span>📸</span>
+              <span>תמונות מהשטח ומבתי לקוחות</span>
+            </span>
+            <span class="text-xs text-slate-400 font-bold">לחץ להגדלה</span>
+          </div>
+          
+          <div id="galleryGrid" class="grid grid-cols-4 gap-3"></div>
+        </div>
+      </div>
+
+      <!-- פירוט מחיר מחירון והתקנה -->
+      <div class="bg-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-lg space-y-4">
+        <div>
+          <span class="text-slate-300 text-xs md:text-sm font-semibold">מחיר מחירון רשמי (לא כולל מע״מ)</span>
+          <div id="finalPriceDisplay" class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1">יש להשלים את כל שלבי הבחירה</div>
+        </div>
+
+        <!-- הערת התקנה מופרדת -->
+        <div class="bg-slate-800/80 border border-slate-700/80 p-4 rounded-2xl space-y-1">
+          <div class="flex items-center justify-between text-sm md:text-base font-bold text-amber-400">
+            <span>מדידה והתקנה מקצועית:</span>
+            <span id="installPriceDisplay">--</span>
+          </div>
+          <p id="installNoteDisplay" class="text-xs md:text-sm text-slate-300 font-medium">המחיר וההתקנה יחושבו במלואם לאחר בחירת כל הפרמטרים.</p>
+        </div>
+
+        <!-- כפתור הורדת PDF רשמי -->
+        <button id="downloadPdfBtn" onclick="generateOrderPDF()" disabled class="w-full py-4 bg-slate-700 opacity-50 cursor-not-allowed text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition text-sm md:text-base">
+          <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+          <span>הורדת טופס הזמנה מסודר (PDF)</span>
+        </button>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- חלון קופץ מוגדל ורחב לתצוגת תמונות איכותית (Modal Zoom) -->
+  <div id="zoomModal" onclick="closeZoomModal()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-8 hidden transition-all duration-200">
+    <div onclick="event.stopPropagation()" class="bg-white rounded-3xl p-5 md:p-6 max-w-4xl w-full max-h-[92vh] shadow-2xl flex flex-col items-center gap-3 text-center relative border border-slate-100">
+      
+      <!-- כפתור סגירה -->
+      <button onclick="closeZoomModal()" class="absolute top-4 left-4 w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition">✕</button>
+      
+      <!-- כותרת דגם -->
+      <h3 id="zoomTitle" class="text-base md:text-lg font-extrabold text-slate-800 pr-2"></h3>
+      
+      <!-- אזור התמונה המוגדלת במסך מלא כמעט -->
+      <div class="w-full h-[65vh] md:h-[75vh] bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 overflow-hidden">
+        <img id="zoomImage" src="" alt="תצוגה מוגדלת" class="max-h-full max-w-full object-contain drop-shadow-md" />
+      </div>
+      
+      <p class="text-xs text-slate-400 font-semibold">לחץ בכל מקום מחוץ לחלון או על ה-X לסגירה</p>
+    </div>
+  </div>
+
+  <!-- תבנית PDF מיושרת עם רווחים מושלמים בעברית -->
+  <div style="position: absolute; left: -9999px; top: -9999px;">
+    <div id="pdfTemplate" style="width: 720px; padding: 28px; background-color: #ffffff; color: #1e293b; direction: rtl;">
+      
+      <!-- כותרת ולוגו -->
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 14px;">
+        <tr>
+          <td style="text-align: right; vertical-align: middle;">
+            <div style="font-size: 24px; font-weight: bold; color: #0f172a; margin-bottom: 4px;">MTI Bath Gallery</div>
+            <div style="font-size: 14px; color: #475569;">טופס מפרט והזמנת מקלחון בהתאמה אישית</div>
+            <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">תאריך הפקה: <span id="pdfDate"></span></div>
+          </td>
+          <td style="text-align: left; vertical-align: middle; width: 140px;">
+            <img src="./mtilogo.jpg" alt="MTI Logo" style="height: 50px; width: auto; object-fit: contain;" />
+          </td>
+        </tr>
+      </table>
+
+      <!-- כותרת מפרט -->
+      <div style="background-color: #f1f5f9; padding: 9px 14px; border-radius: 8px; font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 14px;">
+        מפרט טכני של המוצר
+      </div>
+
+      <!-- טבלת נתונים -->
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 24px;">
+        <tbody>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 6px; color: #64748b; font-weight: bold; width: 35%;">סוג מקלחון:</td>
+            <td id="pdfCategory" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">דגם מקלחון:</td>
+            <td id="pdfModel" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">מידות (רוחב x גובה):</td>
+            <td id="pdfDimensions" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">גוון פרזול:</td>
+            <td id="pdfColor" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">סוג ועובי זכוכית:</td>
+            <td id="pdfGlass" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">ציפוי ננו דוחה אבנית:</td>
+            <td id="pdfNano" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 6px; color: #64748b; font-weight: bold;">חיתוך / גריעה:</td>
+            <td id="pdfCut" style="padding: 8px 6px; font-weight: bold; color: #0f172a;"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- סיכום כספי -->
+      <table style="width: 100%; border-collapse: collapse; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 24px;">
+        <tr>
+          <td style="padding: 16px; text-align: right; vertical-align: middle;">
+            <div style="font-size: 14px; font-weight: bold; color: #1e293b;">מחיר מחירון רשמי (לא כולל מע"מ):</div>
+            <div style="font-size: 12px; color: #475569; margin-top: 4px;">תשלום עבור מדידה והתקנה: <span id="pdfInstallPrice" style="font-weight: bold; color: #b45309;"></span></div>
+            <div id="pdfInstallNote" style="font-size: 11px; color: #64748b; margin-top: 3px;"></div>
+          </td>
+          <td style="padding: 16px; text-align: left; vertical-align: middle; width: 170px;">
+            <div id="pdfFinalPrice" style="font-size: 22px; font-weight: bold; color: #1d4ed8;"></div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- הערות וחתימה -->
+      <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <tr>
+          <td style="width: 50%; vertical-align: top; padding-left: 14px;">
+            <div style="font-size: 12px; font-weight: bold; color: #475569; margin-bottom: 5px;">הערות / הנחת חנות:</div>
+            <div style="height: 55px; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 6px; font-size: 11px; color: #94a3b8;">
+              הערות נוספות או אחוז הנחה שניתן ללקוח...
+            </div>
+          </td>
+          <td style="width: 50%; vertical-align: bottom; padding-right: 14px;">
+            <div style="border-top: 1px solid #94a3b8; padding-top: 6px; text-align: center; font-size: 12px; font-weight: bold; color: #334155;">
+              חתימת הלקוח / אישור הזמנה
+            </div>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
+  <script>
+    const CATALOG_DATA = {
+      categories: [
+        { id: "front", name: "מקלחון חזיתי", isCorner: false },
+        { id: "corner", name: "מקלחון פינתי", isCorner: true },
+        { id: "bath_partial", name: "אמבטיון סגירה חלקית", isCorner: false },
+        { id: "bath_full_front", name: "אמבטיון סגירה מלאה חזיתי", isCorner: false },
+        { id: "bath_full_corner", name: "אמבטיון סגירה מלאה פינתי", isCorner: true },
+        { id: "slide_pipe_front", name: "מקלחון הזזה צינור חזיתי", isCorner: false },
+        { id: "slide_cnc_front", name: "מקלחון הזזה CNC חזיתי", isCorner: false },
+        { id: "slide_cnc_corner", name: "מקלחון הזזה CNC פינתי", isCorner: true },
+        { id: "slide_hidden_front", name: "מקלחון הזזה מסילה מוסתרת חזיתי", isCorner: false },
+        { id: "slide_hidden_corner", name: "מקלחון הזזה מסילה מוסתרת פינתי", isCorner: true }
+      ],
+      models: [
+        { cat: "מקלחון חזיתי", id: "718", name: "MTI-718 - דלת", cost: 138, file: "MTI_718_animated.gif", widths: [50,55,60,65,70,75,80,85,90] },
+        { cat: "מקלחון חזיתי", id: "719", name: "MTI-719 - קבוע WALK-IN", cost: 160, file: "MTI-720 - top view-1.jpg", widths: [80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "720", name: "MTI-720 - קבוע", cost: 122, file: "MTI-720 - top view-1.jpg", widths: [40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "721", name: "MTI-721 - קבוע ודלת", cost: 241, file: "MTI_721_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190] },
+        { cat: "מקלחון חזיתי", id: "722", name: "MTI-722 - שתי דלתות", cost: 275, file: "MTI_722_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "מקלחון חזיתי", id: "723", name: "MTI-723 - הרמוניקה שתי דלתות", cost: 282, file: "MTI_723_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "724", name: "MTI-724 - שני קבועים ודלת", cost: 385, file: "MTI_724_animated_fix1.gif", widths: [80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220] },
+        { cat: "מקלחון חזיתי", id: "725", name: "MTI-725 - קבוע ושתי דלתות", cost: 419, file: "MTI_725_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "מקלחון חזיתי", id: "726", name: "MTI-726 - קבוע והרמוניקה 2 דלתות", cost: 369, file: "MTI_726_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "מקלחון חזיתי", id: "727", name: "MTI-727 - שני קבועים ושתי דלתות", cost: 563, file: "MTI_727_animated.gif", widths: [90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,240,245,250,255,260] },
+        { cat: "מקלחון חזיתי", id: "728", name: "MTI-728 - הרמוניקה ארבע דלתות", cost: 531, file: "MTI_728_animated.gif", widths: [120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "מקלחון חזיתי", id: "729", name: "MTI-729 - קבוע דלת ודלת הרמוניקה", cost: 547, file: "MTI_729_animated.gif", widths: [100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230] },
+        { cat: "מקלחון חזיתי", id: "730", name: "MTI-730 - דלת ודלת הרמוניקה", cost: 403, file: "MTI_730_animated.gif", widths: [90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190] },
+        { cat: "מקלחון פינתי", id: "740", name: "MTI-740 - שתי דלתות", cost: 275, file: "MTI_740_animated.gif", widths: [60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "741", name: "MTI-741 - קבוע ודלת", cost: 241, file: "MTI_741_animated_fix1.gif", widths: [55,60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "742", name: "MTI-742 - קבוע ושתי דלתות", cost: 419, file: "MTI_742.gif", widths: [55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "743", name: "MTI-743 - שני קבועים ודלת", cost: 385, file: "MTI_743_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "744", name: "MTI-744 - קבוע והרמוניקה 2 דלתות", cost: 369, file: "MTI_744_animated_fix1.gif", widths: [60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "745", name: "MTI-745 - דלת ודלת הרמוניקה", cost: 403, file: "MTI_745_animated_fix1.gif", widths: [50,55,60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "746", name: "MTI-746 - שני קבועים ושתי דלתות", cost: 563, file: "MTI_746_animated_fix1.gif", widths: [50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140] },
+        { cat: "מקלחון פינתי", id: "747", name: "MTI-747 - שתי דלתות הרמוניקה מתקפלות", cost: 531, file: "MTI_747_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110] },
+        { cat: "מקלחון פינתי", id: "748", name: "MTI-748 - קבוע ודלת ודלת הרמוניקה", cost: 547, file: "MTI_748_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "749", name: "MTI-749 - קבוע ושתי דלתות בחזית", cost: 453, file: "MTI_749_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "750", name: "MTI-750 - קבוע וקבוע ושתי דלתות בחזית", cost: 551, file: "MTI_750_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195] },
+        { cat: "אמבטיון סגירה חלקית", id: "760", name: "MTI-760 - דלת", cost: 130, file: "MTI_760_animated_fix1.gif", widths: [30,35,40,45,50,55,60,65,70,75,80,85,90] },
+        { cat: "אמבטיון סגירה חלקית", id: "761", name: "MTI-761 - קבוע", cost: 122, file: "MTI-761 - top view-1.jpg", widths: [30,35,40,45,50,55,60,65,70,75,80,85,90,95,100] },
+        { cat: "אמבטיון סגירה חלקית", id: "762", name: "MTI-762 - קבוע ודלת", cost: 274, file: "MTI_762_animated_fix1.gif", widths: [45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "763", name: "MTI-763 - שתי דלתות", cost: 275, file: "MTI_763_animated_fix1.gif", widths: [110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "אמבטיון סגירה חלקית", id: "764", name: "MTI-764 - הרמוניקה שתי דלתות", cost: 274, file: "MTI_764_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "765", name: "MTI-765 - שני קבועים ודלת", cost: 385, file: "MTI_765_animated_fix1.gif", widths: [105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "766", name: "MTI-766 - קבוע ושתי דלתות", cost: 419, file: "MTI_766_animated_fix1.gif", widths: [120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "767", name: "MTI-767 - קבוע והרמוניקה 2 דלתות", cost: 369, file: "MTI_767_animated.gif", widths: [115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "768", name: "MTI-768 - שני קבועים שתי דלתות", cost: 563, file: "MTI_768_animated_fix1.gif", widths: [140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "769", name: "MTI-769 - הרמוניקה ארבע דלתות", cost: 531, file: "MTI_769_animated.gif", widths: [120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "770", name: "MTI-770 - קבוע דלת ודלת הרמוניקה", cost: 547, file: "MTI_770_animated.gif", widths: [145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "771", name: "MTI-771 - דלת ודלת הרמוניקה", cost: 403, file: "MTI_771_animated.gif", widths: [100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "772", name: "MTI-772 - קבוע ודלת", cost: 275, file: "MTI_772_animated.gif", widths: [95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "אמבטיון סגירה מלאה פינתי", id: "781", name: "MTI-781 - שני קבועים ודלת", cost: 385, file: "MTI_781_animated_fix1.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "אמבטיון סגירה מלאה פינתי", id: "782", name: "MTI-782 - שני קבועים ושתי דלתות", cost: 563, file: "MTI_782_animated_fix1.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "800", name: "MTI-800 - קבוע ודלת", cost: 450, file: "MTI_800_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "801", name: "MTI-801 - שני קבועים ודלת", cost: 550, file: "MTI_801_animated.gif", widths: [140,150,160,170,180,190,200] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "840", name: "MTI-840 - אמבטיון קבוע ודלת", cost: 450, file: "MTI_840_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "841", name: "MTI-841 - אמבטיון 2 קבועים ודלת", cost: 550, file: "MTI_841_animated.gif", widths: [140,150,160,170,180,190,200] },
+        { cat: "מקלחון הזזה CNC חזיתי", id: "830", name: "MTI-830 - חזית קבוע ודלת", cost: 270, file: "MTI_830_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה CNC חזיתי", id: "831", name: "MTI-831 - חזית 2 קבועים ו-2 דלתות", cost: 540, file: "MTI_831_animated.gif", widths: [120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה CNC פינתי", id: "832", name: "MTI-832 - פינתי 2 קבועים ו-2 דלתות", cost: 540, file: "MTI_832_animated.gif", widths: [70,80,90,100,110,120] },
+        { cat: "מקלחון הזזה CNC חזיתי", id: "833", name: "MTI-833 - אמבטיון חזית קבוע ודלת", cost: 270, file: "MTI_833_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה CNC חזיתי", id: "834", name: "MTI-834 - אמבטיון 2 קבועים ו-2 דלתות", cost: 540, file: "MTI_834_animated.gif", widths: [120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה מסילה מוסתרת חזיתי", id: "880", name: "MTI-880 - חזית קבוע ודלת", cost: 380, file: "MTI_820_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "881", name: "MTI-881 - פינתי 2 קבועים ודלת", cost: 244, extraRetail: 500, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] },
+        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "882", name: "MTI-882 - פינתי 2 קבועים ו-2 דלתות", cost: 380, extraRetail: 500, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] }
+      ],
+      glasses: [
+        { name: "שקופה", cost: 160 },
+        { name: "אקסטרה קליר", cost: 210 },
+        { name: "גרניט", cost: 205 },
+        { name: "פפיטה", cost: 205 },
+        { name: "אנטי סאן אפור", cost: 210 },
+        { name: "אנטי סאן חום", cost: 240 },
+        { name: "אסיד", cost: 210 },
+        { name: "אסיד אקסטרה קליר", cost: 340 },
+        { name: "פסים בהתזת חול", cost: 230 },
+        { name: "גלינה אקסטרה קליר", cost: 360 }
+      ],
+      colors: [
+        { name: "ניקל", mult: 1.0, file: "ניקל.png" },
+        { name: "ניקל מוברש", mult: 1.2, file: "ניקל מוברש.png" },
+        { name: "שחור", mult: 1.2, file: "שחור.png" },
+        { name: "ברונזה אדומה", mult: 1.35, file: "ברונזה אדומה.png" },
+        { name: "זהב מוברש", mult: 1.35, file: "זהב מוברש.png" },
+        { name: "גרפיט", mult: 1.35, file: "גרפיט.png" }
+      ]
+    };
+
+    let selectedColor = null;
+    let selectedGlassIndex = null;
+    let selectedNano = null;
+    let selectedCut = null;
+    let isCurrentCorner = false;
+
+    function init() {
+      const catSelect = document.getElementById('categorySelect');
+      catSelect.innerHTML = '<option value="" disabled selected>-- בחר סוג מקלחון --</option>' + 
+        CATALOG_DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+      // טעינת צבעים
+      const colorBox = document.getElementById('colorContainer');
+      colorBox.innerHTML = CATALOG_DATA.colors.map((col, idx) => {
+        const imgPath = `./${encodeURIComponent(col.file)}`;
+        return `
+          <div onclick="selectColor(${idx})" class="color-btn bg-white border border-slate-200 p-2.5 rounded-2xl flex flex-col items-center justify-between hover:border-blue-400 active:scale-95 transition shadow-sm group cursor-pointer relative">
+            <button type="button" onclick="zoomFromButton(event, this, '${col.name}')" class="absolute top-1.5 left-1.5 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
+            <div class="w-full h-[72px] bg-slate-50 rounded-xl mb-2 flex items-center justify-center p-1.5 overflow-hidden">
+              <img src="${imgPath}" alt="${col.name}" class="max-h-full max-w-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-200" />
+            </div>
+            <span class="text-xs md:text-sm font-bold text-slate-700 truncate w-full text-center">${col.name}</span>
+          </div>
+        `;
+      }).join('');
+
+      // טעינת זכוכיות
+      const glassBox = document.getElementById('glassContainer');
+      const folderName = encodeURIComponent("סוגי זכוכיות");
+
+      glassBox.innerHTML = CATALOG_DATA.glasses.map((g, idx) => {
+        const baseName = encodeURIComponent(g.name);
+        const imgPath = `./${folderName}/${baseName}.png`;
+        return `
+          <div onclick="selectGlass(${idx})" class="glass-btn bg-white border border-slate-200 p-2.5 rounded-2xl flex flex-col items-center justify-between hover:border-blue-400 active:scale-95 transition shadow-sm group cursor-pointer relative">
+            <button type="button" onclick="zoomFromButton(event, this, '${g.name}')" class="absolute top-1.5 left-1.5 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
+            <div class="w-full h-[72px] bg-slate-100 rounded-xl mb-2 flex items-center justify-center p-0.5 overflow-hidden relative">
+              <img 
+                src="${imgPath}" 
+                alt="${g.name}" 
+                class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition duration-200" 
+                onerror="handleGlassImgError(this, '${folderName}', '${baseName}')" 
+              />
+              <div class="fallback-glass hidden w-full h-full flex flex-col items-center justify-center bg-slate-200 text-slate-500 rounded-lg p-1 text-center">
+                <span class="text-xs font-bold leading-tight">${g.name}</span>
+              </div>
+            </div>
+            <span class="text-xs md:text-sm font-bold text-slate-700 truncate w-full text-center">${g.name}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleGlassImgError(img, folder, name) {
+      if (!img.dataset.step) {
+        img.dataset.step = 'jpg';
+        img.src = `./${folder}/${name}.jpg`;
+      } else if (img.dataset.step === 'jpg') {
+        img.dataset.step = 'jpeg';
+        img.src = `./${folder}/${name}.jpeg`;
+      } else if (img.dataset.step === 'jpeg') {
+        img.dataset.step = 'PNG';
+        img.src = `./${folder}/${name}.PNG`;
+      } else if (img.dataset.step === 'PNG') {
+        img.dataset.step = 'JPG';
+        img.src = `./${folder}/${name}.JPG`;
+      } else if (img.dataset.step === 'JPG') {
+        img.dataset.step = 'webp';
+        img.src = `./${folder}/${name}.webp`;
+      } else {
+        img.style.display = 'none';
+        if (img.nextElementSibling) {
+          img.nextElementSibling.classList.remove('hidden');
+        }
+      }
+    }
+
+    function zoomFromButton(e, btn, title) {
+      e.stopPropagation();
+      const parentCard = btn.closest('.color-btn, .glass-btn');
+      const img = parentCard ? parentCard.querySelector('img') : null;
+      const activeSrc = (img && img.src) ? img.src : '';
+      openZoomModal(title, activeSrc);
+    }
+
+    function openZoomModal(title, imgSrc) {
+      document.getElementById('zoomTitle').innerText = title;
+      const zoomImg = document.getElementById('zoomImage');
+      zoomImg.src = imgSrc;
+      document.getElementById('zoomModal').classList.remove('hidden');
+    }
+
+    function closeZoomModal() {
+      document.getElementById('zoomModal').classList.add('hidden');
+    }
+
+    function onCategoryChange() {
+      const selectedCatName = document.getElementById('categorySelect').value;
+      const catObj = CATALOG_DATA.categories.find(c => c.name === selectedCatName);
+      isCurrentCorner = catObj ? catObj.isCorner : false;
+
+      const modelSelect = document.getElementById('modelSelect');
+      const filteredModels = CATALOG_DATA.models.filter(m => m.cat === selectedCatName);
+      
+      modelSelect.disabled = false;
+      modelSelect.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+      modelSelect.classList.add('bg-slate-50', 'text-slate-800');
+      
+      modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם מקלחון --</option>' + 
+        filteredModels.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+
+      selectedColor = null;
+      selectedGlassIndex = null;
+      selectedNano = null;
+      selectedCut = null;
+
+      document.getElementById('selectedColorBadge').innerText = 'טרם נבחר גוון';
+      document.getElementById('selectedGlassBadge').innerText = 'טרם נבחר סוג זכוכית';
+      document.getElementById('selectedNanoBadge').innerText = 'טרם נבחר';
+      document.getElementById('selectedCutBadge').innerText = 'טרם נבחר';
+      
+      document.querySelectorAll('.color-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+        b.classList.add('border-slate-200', 'bg-white');
+      });
+
+      document.querySelectorAll('.glass-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+        b.classList.add('border-slate-200', 'bg-white');
+      });
+
+      resetRadioCards();
+
+      const dimBox2 = document.getElementById('dimBox2');
+      const dimLabel1 = document.getElementById('dimLabel1');
+      if (isCurrentCorner) {
+        dimBox2.classList.remove('hidden');
+        dimLabel1.innerText = "רוחב (צלע א')";
+      } else {
+        dimBox2.classList.add('hidden');
+        dimLabel1.innerText = 'רוחב חזית';
+      }
+
+      document.getElementById('dimensionsSection').classList.add('opacity-50', 'pointer-events-none');
+      document.getElementById('optionsSection').classList.add('opacity-50', 'pointer-events-none');
+      document.getElementById('currentModelBadge').innerText = 'טרם נבחר דגם';
+      document.getElementById('wDisplay1').innerText = '--';
+      document.getElementById('wDisplay2').innerText = '--';
+      document.getElementById('hDisplay').innerText = '--';
+      
+      document.getElementById('customerGallerySection').classList.add('hidden');
+      document.getElementById('galleryGrid').innerHTML = '';
+
+      const img = document.getElementById('showerGif');
+      const placeholder = document.getElementById('gifPlaceholder');
+      img.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+
+      calculatePrice();
+    }
+
+    function onModelChange() {
+      const modelId = document.getElementById('modelSelect').value;
+      const model = CATALOG_DATA.models.find(m => m.id === modelId);
+      if (!model) return;
+
+      document.getElementById('currentModelBadge').innerText = model.name;
+      document.getElementById('dimensionsSection').classList.remove('opacity-50', 'pointer-events-none');
+      document.getElementById('optionsSection').classList.remove('opacity-50', 'pointer-events-none');
+
+      const widthSelect1 = document.getElementById('widthSelect1');
+      widthSelect1.innerHTML = '<option value="" disabled selected>-- בחר רוחב --</option>' + 
+        model.widths.map(w => `<option value="${w}">${w} ס"מ</option>`).join('');
+
+      const widthSelect2 = document.getElementById('widthSelect2');
+      if (isCurrentCorner) {
+        widthSelect2.innerHTML = '<option value="" disabled selected>-- בחר עומק --</option>' + 
+          model.widths.map(w => `<option value="${w}">${w} ס"מ</option>`).join('');
+      }
+      
+      document.getElementById('heightSelect').selectedIndex = 0;
+      
+      selectedNano = null;
+      selectedCut = null;
+      document.getElementById('selectedNanoBadge').innerText = 'טרם נבחר';
+      document.getElementById('selectedCutBadge').innerText = 'טרם נבחר';
+      resetRadioCards();
+
+      updateGif(model);
+      loadCustomerGallery(model);
+      calculatePrice();
+    }
+
+    function updateGif(model) {
+      const img = document.getElementById('showerGif');
+      const placeholder = document.getElementById('gifPlaceholder');
+      
+      const possibilities = [
+        model.file,
+        `MTI_${model.id}_animated.gif`,
+        `MTI-${model.id}_animated.gif`,
+        `MTI_${model.id}_animated_fix1.gif`,
+        `MTI-${model.id}.gif`,
+        `MTI_${model.id}.gif`,
+        `MTI-${model.id}.jpg`,
+        `MTI_${model.id}.jpg`,
+        `MTI-${model.id}.png`,
+        `MTI_${model.id}.png`
+      ].filter(Boolean);
+
+      let step = 0;
+
+      function tryNext() {
+        if (step < possibilities.length) {
+          const currentFile = possibilities[step++];
+          img.src = `./${encodeURIComponent(currentFile)}`;
+          img.classList.remove('hidden');
+          placeholder.classList.add('hidden');
+        } else {
+          img.classList.add('hidden');
+          placeholder.classList.remove('hidden');
+        }
+      }
+
+      img.onerror = tryNext;
+      tryNext();
+    }
+
+    // טעינת תמונות חכמה מה-API של GitHub שקוראת את כל הקבצים שבתיקייה
+    async function loadCustomerGallery(model) {
+      const gallerySection = document.getElementById('customerGallerySection');
+      const galleryGrid = document.getElementById('galleryGrid');
+      galleryGrid.innerHTML = '';
+      gallerySection.classList.add('hidden');
+
+      const modelFolder = `MTI-${model.id}`;
+      const apiUrl = `https://api.github.com/repos/MTIISRAEL/mti-glass-configurator/contents/gallery/${modelFolder}`;
+
+      try {
+        const res = await fetch(apiUrl);
+        if (res.ok) {
+          const files = await res.json();
+          const imageFiles = files.filter(f => /\.(jpe?g|png|webp|gif)$/i.test(f.name));
+
+          if (imageFiles.length > 0) {
+            imageFiles.forEach(file => {
+              const imgWrapper = document.createElement('div');
+              imgWrapper.className = 'w-full h-20 md:h-24 bg-slate-100 rounded-2xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition flex items-center justify-center';
+
+              const img = document.createElement('img');
+              img.className = 'w-full h-full object-cover';
+              img.src = file.download_url || `./gallery/${modelFolder}/${encodeURIComponent(file.name)}`;
+              img.alt = `תמונה מהשטח - ${model.name}`;
+
+              imgWrapper.onclick = function() {
+                openZoomModal(`תמונה מהשטח - ${model.name}`, img.src);
+              };
+
+              imgWrapper.appendChild(img);
+              galleryGrid.appendChild(imgWrapper);
+            });
+
+            gallerySection.classList.remove('hidden');
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("GitHub API fetch skipped, using static fallback.");
+      }
+
+      // מנגנון גיבוי (Fallback) למקרה שה-API חסום
+      for (let i = 1; i <= 8; i++) {
+        const imgWrapper = document.createElement('div');
+        imgWrapper.className = 'w-full h-20 md:h-24 bg-slate-100 rounded-2xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition flex items-center justify-center';
+
+        const img = document.createElement('img');
+        img.className = 'w-full h-full object-cover';
+        const basePath = `gallery/${modelFolder}/${i}`;
+        img.src = `./${basePath}.jpg`;
+
+        img.onerror = function() {
+          if (!this.dataset.step) {
+            this.dataset.step = 'jpeg';
+            this.src = `./${basePath}.jpeg`;
+          } else if (this.dataset.step === 'jpeg') {
+            this.dataset.step = 'png';
+            this.src = `./${basePath}.png`;
+          } else {
+            imgWrapper.remove();
+            if (galleryGrid.children.length === 0) {
+              gallerySection.classList.add('hidden');
+            }
+          }
+        };
+
+        img.onload = function() {
+          gallerySection.classList.remove('hidden');
+        };
+
+        imgWrapper.onclick = function() {
+          openZoomModal(`תמונה מהשטח - ${model.name}`, img.src);
+        };
+
+        imgWrapper.appendChild(img);
+        galleryGrid.appendChild(imgWrapper);
+      }
+    }
+
+    function selectColor(index) {
+      selectedColor = CATALOG_DATA.colors[index];
+      document.getElementById('selectedColorBadge').innerText = selectedColor.name;
+      
+      const buttons = document.querySelectorAll('.color-btn');
+      buttons.forEach((btn, idx) => {
+        if (idx === index) {
+          btn.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          btn.classList.remove('border-slate-200', 'bg-white');
+        } else {
+          btn.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          btn.classList.add('border-slate-200', 'bg-white');
+        }
+      });
+      calculatePrice();
+    }
+
+    function selectGlass(index) {
+      selectedGlassIndex = index;
+      const glass = CATALOG_DATA.glasses[index];
+      document.getElementById('selectedGlassBadge').innerText = glass.name;
+
+      const buttons = document.querySelectorAll('.glass-btn');
+      buttons.forEach((btn, idx) => {
+        if (idx === index) {
+          btn.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          btn.classList.remove('border-slate-200', 'bg-white');
+        } else {
+          btn.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          btn.classList.add('border-slate-200', 'bg-white');
+        }
+      });
+      calculatePrice();
+    }
+
+    function selectNano(val) {
+      selectedNano = val;
+      document.getElementById('selectedNanoBadge').innerText = val === 0 ? 'ללא ציפוי' : 'כולל ציפוי ננו';
+
+      const cards = document.querySelectorAll('.nano-card');
+      cards.forEach(card => {
+        const dot = card.querySelector('.check-dot span');
+        const isSelected = (val === 0 && card.innerText.trim() === 'ללא ציפוי') || (val === 150 && card.innerText.trim() === 'כולל ציפוי');
+        if (isSelected) {
+          card.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          card.classList.remove('border-slate-200', 'bg-slate-50');
+          dot.classList.remove('hidden');
+        } else {
+          card.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          card.classList.add('border-slate-200', 'bg-slate-50');
+          dot.classList.add('hidden');
+        }
+      });
+      calculatePrice();
+    }
+
+    function selectCut(val) {
+      selectedCut = val;
+      document.getElementById('selectedCutBadge').innerText = val === 0 ? 'ללא חיתוכים' : (val === 50 ? 'חיתוך 1' : '2 חיתוכים');
+
+      const cards = document.querySelectorAll('.cut-card');
+      cards.forEach(card => {
+        const dot = card.querySelector('.check-dot span');
+        const isSelected = (val === 0 && card.innerText.trim() === 'ללא') || 
+                           (val === 50 && card.innerText.trim() === 'חיתוך 1') || 
+                           (val === 100 && card.innerText.trim() === '2 חיתוכים');
+        if (isSelected) {
+          card.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          card.classList.remove('border-slate-200', 'bg-slate-50');
+          dot.classList.remove('hidden');
+        } else {
+          card.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          card.classList.add('border-slate-200', 'bg-slate-50');
+          dot.classList.add('hidden');
+        }
+      });
+      calculatePrice();
+    }
+
+    function resetRadioCards() {
+      document.querySelectorAll('.nano-card, .cut-card').forEach(card => {
+        card.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+        card.classList.add('border-slate-200', 'bg-slate-50');
+        const dot = card.querySelector('.check-dot span');
+        if (dot) dot.classList.add('hidden');
+      });
+    }
+
+    function calculatePrice() {
+      const modelId = document.getElementById('modelSelect').value;
+      const model = CATALOG_DATA.models.find(m => m.id === modelId);
+
+      const valW1 = document.getElementById('widthSelect1').value;
+      const valW2 = isCurrentCorner ? document.getElementById('widthSelect2').value : '0';
+      const valH = document.getElementById('heightSelect').value;
+
+      document.getElementById('wDisplay1').innerText = valW1 ? (valW1 + ' ס"מ') : '--';
+      if (isCurrentCorner) {
+        document.getElementById('wDisplay2').innerText = valW2 ? (valW2 + ' ס"מ') : '--';
+      }
+      document.getElementById('hDisplay').innerText = valH ? (valH + ' ס"מ') : '--';
+
+      const pdfBtn = document.getElementById('downloadPdfBtn');
+
+      const isComplete = Boolean(
+        model &&
+        valW1 &&
+        (!isCurrentCorner || (isCurrentCorner && valW2)) &&
+        valH &&
+        selectedColor !== null &&
+        selectedGlassIndex !== null &&
+        selectedNano !== null &&
+        selectedCut !== null
+      );
+
+      if (!isComplete) {
+        document.getElementById('finalPriceDisplay').innerText = 'יש להשלים את כל שלבי הבחירה';
+        document.getElementById('finalPriceDisplay').className = "text-xl md:text-2xl font-extrabold text-amber-400 mt-1";
+        document.getElementById('installPriceDisplay').innerText = '--';
+        document.getElementById('installNoteDisplay').innerText = 'המחיר וההתקנה יחושבו במלואם לאחר בחירת כל הפרמטרים.';
+        
+        pdfBtn.disabled = true;
+        pdfBtn.className = "w-full py-4 bg-slate-700 opacity-50 cursor-not-allowed text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition text-sm md:text-base";
+        return;
+      }
+
+      const width1 = parseFloat(valW1);
+      const width2 = isCurrentCorner ? parseFloat(valW2) : 0;
+      const height = parseFloat(valH);
+      const glassCostPerM2 = CATALOG_DATA.glasses[selectedGlassIndex].cost;
+      const nanoCost = selectedNano;
+      const cutCost = selectedCut;
+
+      let areaM2 = isCurrentCorner ? (((width1 + width2) * height) / 10000) : ((width1 * height) / 10000);
+      let glassCost = areaM2 * glassCostPerM2;
+
+      let colorMult = selectedColor.mult;
+      let hardwareCost = model.cost * colorMult;
+
+      let totalCost = hardwareCost + glassCost + nanoCost + cutCost;
+
+      let extraRetail = model.extraRetail || 0;
+      let catalogRetailPrice = Math.round(totalCost * (2.1 / 0.4)) + extraRetail;
+
+      document.getElementById('finalPriceDisplay').innerText = catalogRetailPrice.toLocaleString() + ' ₪';
+      document.getElementById('finalPriceDisplay').className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1";
+
+      // לוגיקת דמי התקנה
+      let installPrice = 600;
+      let installText = "תשלום בסך 600 ₪ ישולם ישירות למתקין במעמד ההתקנה.";
+
+      let maxDim = Math.max(width1, width2);
+
+      if (height > 220) {
+        installPrice = 1350;
+        installText = "חריג גובה (מעל 220 ס\"מ): תשלום בסך 1,350 ₪ ישולם ישירות למתקין.";
+      } else if ((model.id === "719" || model.id === "720") && maxDim >= 105 && height <= 220) {
+        installPrice = 850;
+        installText = `דגם MTI-${model.id} ברוחב 105 ס"מ ומעלה (עד גובה 220 ס"מ): תשלום בסך 850 ₪ ישולם ישירות למתקין.`;
+      }
+
+      document.getElementById('installPriceDisplay').innerText = installPrice.toLocaleString() + ' ₪';
+      document.getElementById('installNoteDisplay').innerText = installText;
+
+      pdfBtn.disabled = false;
+      pdfBtn.className = "w-full py-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition cursor-pointer text-sm md:text-base";
+    }
+
+    function resetConfigurator() {
+      document.getElementById('categorySelect').selectedIndex = 0;
+      
+      const modelSelect = document.getElementById('modelSelect');
+      modelSelect.innerHTML = '<option value="" disabled selected>-- יש לבחור סוג מקלחון תחילה --</option>';
+      modelSelect.disabled = true;
+      modelSelect.className = "w-full p-3.5 bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-400 outline-none text-sm transition cursor-not-allowed";
+
+      selectedColor = null;
+      selectedGlassIndex = null;
+      selectedNano = null;
+      selectedCut = null;
+      isCurrentCorner = false;
+
+      document.getElementById('selectedColorBadge').innerText = 'טרם נבחר גוון';
+      document.getElementById('selectedGlassBadge').innerText = 'טרם נבחר סוג זכוכית';
+      document.getElementById('selectedNanoBadge').innerText = 'טרם נבחר';
+      document.getElementById('selectedCutBadge').innerText = 'טרם נבחר';
+
+      document.querySelectorAll('.color-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+        b.classList.add('border-slate-200', 'bg-white');
+      });
+
+      document.querySelectorAll('.glass-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+        b.classList.add('border-slate-200', 'bg-white');
+      });
+
+      resetRadioCards();
+
+      document.getElementById('widthSelect1').innerHTML = '<option value="" disabled selected>-- בחר רוחב --</option>';
+      document.getElementById('widthSelect2').innerHTML = '<option value="" disabled selected>-- בחר עומק --</option>';
+      document.getElementById('heightSelect').selectedIndex = 0;
+
+      document.getElementById('dimensionsSection').classList.add('opacity-50', 'pointer-events-none');
+      document.getElementById('optionsSection').classList.add('opacity-50', 'pointer-events-none');
+      document.getElementById('dimBox2').classList.add('hidden');
+      document.getElementById('dimLabel1').innerText = 'רוחב חזית';
+
+      document.getElementById('currentModelBadge').innerText = 'טרם נבחר דגם';
+      document.getElementById('wDisplay1').innerText = '--';
+      document.getElementById('wDisplay2').innerText = '--';
+      document.getElementById('hDisplay').innerText = '--';
+      document.getElementById('finalPriceDisplay').innerText = 'יש להשלים את כל שלבי הבחירה';
+      document.getElementById('finalPriceDisplay').className = "text-xl md:text-2xl font-extrabold text-amber-400 mt-1";
+      document.getElementById('installPriceDisplay').innerText = '--';
+      document.getElementById('installNoteDisplay').innerText = 'המחיר וההתקנה יחושבו במלואם לאחר בחירת כל הפרמטרים.';
+
+      const img = document.getElementById('showerGif');
+      const placeholder = document.getElementById('gifPlaceholder');
+      img.src = '';
+      img.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+
+      document.getElementById('customerGallerySection').classList.add('hidden');
+      document.getElementById('galleryGrid').innerHTML = '';
+
+      const pdfBtn = document.getElementById('downloadPdfBtn');
+      pdfBtn.disabled = true;
+      pdfBtn.className = "w-full py-4 bg-slate-700 opacity-50 cursor-not-allowed text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition text-sm md:text-base";
+    }
+
+    function generateOrderPDF() {
+      const category = document.getElementById('categorySelect').value;
+      const modelName = document.getElementById('currentModelBadge').innerText;
+      const width1 = document.getElementById('widthSelect1').value;
+      const width2 = document.getElementById('widthSelect2').value;
+      const height = document.getElementById('heightSelect').value;
+      const glass = CATALOG_DATA.glasses[selectedGlassIndex].name;
+      const nano = selectedNano === 150 ? 'כולל ציפוי ננו' : 'ללא ציפוי';
+      const cut = selectedCut === 0 ? 'ללא חיתוכים' : (selectedCut === 50 ? 'חיתוך 1' : '2 חיתוכים');
+      const colorName = selectedColor.name;
+      const finalPrice = document.getElementById('finalPriceDisplay').innerText;
+      const installPrice = document.getElementById('installPriceDisplay').innerText;
+      const installNote = document.getElementById('installNoteDisplay').innerText;
+
+      document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('he-IL');
+      document.getElementById('pdfCategory').innerText = category;
+      document.getElementById('pdfModel').innerText = modelName;
+      document.getElementById('pdfDimensions').innerText = isCurrentCorner 
+        ? `רוחב ${width1} ס"מ | עומק ${width2} ס"מ | גובה ${height} ס"מ`
+        : `רוחב חזית ${width1} ס"מ | גובה ${height} ס"מ`;
+      document.getElementById('pdfColor').innerText = colorName;
+      document.getElementById('pdfGlass').innerText = `${glass} (8 מ"מ)`;
+      document.getElementById('pdfNano').innerText = nano;
+      document.getElementById('pdfCut').innerText = cut;
+      document.getElementById('pdfFinalPrice').innerText = finalPrice;
+      document.getElementById('pdfInstallPrice').innerText = installPrice;
+      document.getElementById('pdfInstallNote').innerText = installNote;
+
+      const element = document.getElementById('pdfTemplate');
+      const opt = {
+        margin:       [10, 10, 10, 10],
+        filename:     `הזמנת_מקלחון_MTI_${modelName.replace(/\s+/g, '_')}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
