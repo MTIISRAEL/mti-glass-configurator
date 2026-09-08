@@ -239,7 +239,7 @@
             <span class="text-xs text-slate-400 font-bold">גלול שמאלה ➔ לחץ להגדלה</span>
           </div>
           
-          <!-- פס אופקי שנגלל שמאלה (כל תמונה תופסת כרבע מרוחב המסגרת) -->
+          <!-- פס אופקי שנגלל שמאלה -->
           <div id="galleryGrid" class="flex items-center gap-2.5 overflow-x-auto pb-2 pt-1 gallery-scroll-x w-full"></div>
         </div>
       </div>
@@ -272,22 +272,37 @@
     </section>
   </main>
 
-  <!-- חלון קופץ מוגדל ורחב לתצוגת תמונות איכותית (Modal Zoom) -->
-  <div id="zoomModal" onclick="closeZoomModal()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-8 hidden transition-all duration-200">
+  <!-- חלון קופץ מוגדל ורחב עם כפתורי מעבר קדימה/אחורה (Modal Zoom) -->
+  <div id="zoomModal" onclick="closeZoomModal()" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-8 hidden transition-all duration-200 select-none">
     <div onclick="event.stopPropagation()" class="bg-white rounded-3xl p-5 md:p-6 max-w-4xl w-full max-h-[92vh] shadow-2xl flex flex-col items-center gap-3 text-center relative border border-slate-100">
       
       <!-- כפתור סגירה -->
-      <button onclick="closeZoomModal()" class="absolute top-4 left-4 w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition">✕</button>
+      <button onclick="closeZoomModal()" class="absolute top-4 left-4 w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition z-20">✕</button>
       
-      <!-- כותרת דגם -->
-      <h3 id="zoomTitle" class="text-base md:text-lg font-extrabold text-slate-800 pr-2"></h3>
-      
-      <!-- אזור התמונה המוגדלת במסך גדול וברור -->
-      <div class="w-full h-[65vh] md:h-[75vh] bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 overflow-hidden">
-        <img id="zoomImage" src="" alt="תצוגה מוגדלת" class="max-h-full max-w-full object-contain drop-shadow-md" />
+      <!-- כותרת דגם ומונה תמונות -->
+      <div class="flex items-center justify-center gap-3 pr-2">
+        <h3 id="zoomTitle" class="text-base md:text-lg font-extrabold text-slate-800"></h3>
+        <span id="zoomCounter" class="hidden text-xs md:text-sm font-bold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full border border-blue-200"></span>
       </div>
       
-      <p class="text-xs text-slate-400 font-semibold">לחץ בכל מקום מחוץ לחלון או על ה-X לסגירה</p>
+      <!-- אזור התמונה המוגדלת + חיצי ניווט צדדיים -->
+      <div class="relative w-full h-[65vh] md:h-[75vh] bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 overflow-hidden">
+        
+        <!-- כפתור ניווט קודם (ימינה ב-RTL) -->
+        <button id="prevImgBtn" onclick="navigateGallery(-1)" class="hidden absolute right-3 md:right-5 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/90 hover:bg-white text-slate-800 rounded-full shadow-lg border border-slate-200 flex items-center justify-center text-xl font-bold transition hover:scale-110 active:scale-95 z-10">
+          ➔
+        </button>
+
+        <!-- התמונה המרכזית -->
+        <img id="zoomImage" src="" alt="תצוגה מוגדלת" class="max-h-full max-w-full object-contain drop-shadow-md transition duration-150" />
+
+        <!-- כפתור ניווט הבא (שמאלה ב-RTL) -->
+        <button id="nextImgBtn" onclick="navigateGallery(1)" class="hidden absolute left-3 md:left-5 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/90 hover:bg-white text-slate-800 rounded-full shadow-lg border border-slate-200 flex items-center justify-center text-xl font-bold transition hover:scale-110 active:scale-95 z-10">
+          ←
+        </button>
+      </div>
+      
+      <p class="text-xs text-slate-400 font-semibold">ניתן להשתמש גם במקשי החיצים במקלדת (➔ / ←) או ב-ESC לסגירה</p>
     </div>
   </div>
 
@@ -477,6 +492,10 @@
     let selectedCut = null;
     let isCurrentCorner = false;
 
+    // מערך התמונות הפעיל של הדגם הנבחר לצורך ניווט ב-Modal
+    let currentGalleryImages = [];
+    let currentModalIndex = 0;
+
     function init() {
       const catSelect = document.getElementById('categorySelect');
       catSelect.innerHTML = '<option value="" disabled selected>-- בחר סוג מקלחון --</option>' + 
@@ -488,7 +507,7 @@
         const imgPath = `./${encodeURIComponent(col.file)}`;
         return `
           <div onclick="selectColor(${idx})" class="color-btn bg-white border border-slate-200 p-2.5 rounded-2xl flex flex-col items-center justify-between hover:border-blue-400 active:scale-95 transition shadow-sm group cursor-pointer relative">
-            <button type="button" onclick="zoomFromButton(event, this, '${col.name}')" class="absolute top-1.5 left-1.5 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
+            <button type="button" onclick="zoomSingleImage(event, '${col.name}', '${imgPath}')" class="absolute top-1.5 left-1.5 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
             <div class="w-full h-[72px] bg-slate-50 rounded-xl mb-2 flex items-center justify-center p-1.5 overflow-hidden">
               <img src="${imgPath}" alt="${col.name}" class="max-h-full max-w-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-200" />
             </div>
@@ -506,7 +525,7 @@
         const imgPath = `./${folderName}/${baseName}.png`;
         return `
           <div onclick="selectGlass(${idx})" class="glass-btn bg-white border border-slate-200 p-2.5 rounded-2xl flex flex-col items-center justify-between hover:border-blue-400 active:scale-95 transition shadow-sm group cursor-pointer relative">
-            <button type="button" onclick="zoomFromButton(event, this, '${g.name}')" class="absolute top-1.5 left-1.5 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
+            <button type="button" onclick="zoomSingleImage(event, '${g.name}', '${imgPath}')" class="absolute top-1.5 left-1.5 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
             <div class="w-full h-[72px] bg-slate-100 rounded-xl mb-2 flex items-center justify-center p-0.5 overflow-hidden relative">
               <img 
                 src="${imgPath}" 
@@ -522,6 +541,20 @@
           </div>
         `;
       }).join('');
+
+      // הוספת האזנה למקשי מקלדת לניווט בגלריה
+      window.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('zoomModal');
+        if (!modal.classList.contains('hidden')) {
+          if (e.key === 'ArrowRight') {
+            navigateGallery(-1); // ימינה (הקודם)
+          } else if (e.key === 'ArrowLeft') {
+            navigateGallery(1);  // שמאלה (הבא)
+          } else if (e.key === 'Escape') {
+            closeZoomModal();
+          }
+        }
+      });
     }
 
     function handleGlassImgError(img, folder, name) {
@@ -548,19 +581,53 @@
       }
     }
 
-    function zoomFromButton(e, btn, title) {
+    // פתיחת תמונה בודדת (לפרזול או זכוכית - ללא חיצי ניווט)
+    function zoomSingleImage(e, title, imgSrc) {
       e.stopPropagation();
-      const parentCard = btn.closest('.color-btn, .glass-btn');
-      const img = parentCard ? parentCard.querySelector('img') : null;
-      const activeSrc = (img && img.src) ? img.src : '';
-      openZoomModal(title, activeSrc);
+      document.getElementById('zoomTitle').innerText = title;
+      document.getElementById('zoomImage').src = imgSrc;
+      document.getElementById('zoomCounter').classList.add('hidden');
+      document.getElementById('prevImgBtn').classList.add('hidden');
+      document.getElementById('nextImgBtn').classList.add('hidden');
+      document.getElementById('zoomModal').classList.remove('hidden');
     }
 
-    function openZoomModal(title, imgSrc) {
-      document.getElementById('zoomTitle').innerText = title;
-      const zoomImg = document.getElementById('zoomImage');
-      zoomImg.src = imgSrc;
+    // פתיחת תמונת גלריה עם אפשרות ניווט ימינה ושמאלה
+    function openGalleryModal(index) {
+      if (!currentGalleryImages || currentGalleryImages.length === 0) return;
+      currentModalIndex = index;
+      updateModalView();
+
+      const prevBtn = document.getElementById('prevImgBtn');
+      const nextBtn = document.getElementById('nextImgBtn');
+      const counter = document.getElementById('zoomCounter');
+
+      if (currentGalleryImages.length > 1) {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        counter.classList.remove('hidden');
+      } else {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.add('hidden');
+        counter.classList.add('hidden');
+      }
+
       document.getElementById('zoomModal').classList.remove('hidden');
+    }
+
+    // ניווט בין תמונות
+    function navigateGallery(direction) {
+      if (!currentGalleryImages || currentGalleryImages.length <= 1) return;
+      currentModalIndex = (currentModalIndex + direction + currentGalleryImages.length) % currentGalleryImages.length;
+      updateModalView();
+    }
+
+    function updateModalView() {
+      const activeImg = currentGalleryImages[currentModalIndex];
+      if (!activeImg) return;
+      document.getElementById('zoomTitle').innerText = activeImg.title || 'תמונה מהשטח';
+      document.getElementById('zoomImage').src = activeImg.src;
+      document.getElementById('zoomCounter').innerText = `${currentModalIndex + 1} / ${currentGalleryImages.length}`;
     }
 
     function closeZoomModal() {
@@ -623,6 +690,7 @@
       
       document.getElementById('customerGallerySection').classList.add('hidden');
       document.getElementById('galleryGrid').innerHTML = '';
+      currentGalleryImages = [];
 
       const img = document.getElementById('showerGif');
       const placeholder = document.getElementById('gifPlaceholder');
@@ -699,12 +767,13 @@
       tryNext();
     }
 
-    // טעינת גלריית לקוחות מהשטח - פס אופקי שנגלל שמאלה ומציג 4 תמונות מלאות ברוחב
+    // טעינת גלריית לקוחות מהשטח ועדכון מערך התמונות עבור הניווט
     async function loadCustomerGallery(model) {
       const gallerySection = document.getElementById('customerGallerySection');
       const galleryGrid = document.getElementById('galleryGrid');
       galleryGrid.innerHTML = '';
       gallerySection.classList.add('hidden');
+      currentGalleryImages = [];
 
       const modelFolder = `MTI-${model.id}`;
       const apiUrl = `https://api.github.com/repos/MTIISRAEL/mti-glass-configurator/contents/gallery/${modelFolder}`;
@@ -716,18 +785,23 @@
           const imageFiles = files.filter(f => /\.(jpe?g|png|webp|gif)$/i.test(f.name));
 
           if (imageFiles.length > 0) {
-            imageFiles.forEach(file => {
+            imageFiles.forEach((file, index) => {
+              const fileSrc = file.download_url || `./gallery/${modelFolder}/${encodeURIComponent(file.name)}`;
+              currentGalleryImages.push({
+                src: fileSrc,
+                title: `תמונה מהשטח - ${model.name}`
+              });
+
               const imgWrapper = document.createElement('div');
-              // רוחב של כ-23.5% כדי שיוצגו בדיוק 4 תמונות מלאות בשורה עם מרווח
               imgWrapper.className = 'shrink-0 w-[calc(25%-8px)] h-20 md:h-24 bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition flex items-center justify-center';
 
               const img = document.createElement('img');
               img.className = 'w-full h-full object-cover';
-              img.src = file.download_url || `./gallery/${modelFolder}/${encodeURIComponent(file.name)}`;
+              img.src = fileSrc;
               img.alt = `תמונה מהשטח - ${model.name}`;
 
               imgWrapper.onclick = function() {
-                openZoomModal(`תמונה מהשטח - ${model.name}`, img.src);
+                openGalleryModal(index);
               };
 
               imgWrapper.appendChild(img);
@@ -744,13 +818,15 @@
 
       // מנגנון גיבוי מקומי (Fallback)
       for (let i = 1; i <= 12; i++) {
+        const basePath = `gallery/${modelFolder}/${i}`;
+        const fallbackSrc = `./${basePath}.jpg`;
+
         const imgWrapper = document.createElement('div');
         imgWrapper.className = 'shrink-0 w-[calc(25%-8px)] h-20 md:h-24 bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition flex items-center justify-center';
 
         const img = document.createElement('img');
         img.className = 'w-full h-full object-cover';
-        const basePath = `gallery/${modelFolder}/${i}`;
-        img.src = `./${basePath}.jpg`;
+        img.src = fallbackSrc;
 
         img.onerror = function() {
           if (!this.dataset.step) {
@@ -761,6 +837,7 @@
             this.src = `./${basePath}.png`;
           } else {
             imgWrapper.remove();
+            currentGalleryImages = currentGalleryImages.filter(item => item.src !== this.src);
             if (galleryGrid.children.length === 0) {
               gallerySection.classList.add('hidden');
             }
@@ -769,10 +846,17 @@
 
         img.onload = function() {
           gallerySection.classList.remove('hidden');
+          if (!currentGalleryImages.some(item => item.src === this.src)) {
+            currentGalleryImages.push({
+              src: this.src,
+              title: `תמונה מהשטח - ${model.name}`
+            });
+          }
         };
 
         imgWrapper.onclick = function() {
-          openZoomModal(`תמונה מהשטח - ${model.name}`, img.src);
+          const clickedIdx = currentGalleryImages.findIndex(item => item.src === img.src);
+          openGalleryModal(clickedIdx >= 0 ? clickedIdx : 0);
         };
 
         imgWrapper.appendChild(img);
@@ -1005,6 +1089,7 @@
 
       document.getElementById('customerGallerySection').classList.add('hidden');
       document.getElementById('galleryGrid').innerHTML = '';
+      currentGalleryImages = [];
 
       const pdfBtn = document.getElementById('downloadPdfBtn');
       pdfBtn.disabled = true;
