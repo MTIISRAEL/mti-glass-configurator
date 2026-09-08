@@ -48,21 +48,21 @@
       <!-- אזור הלוגואים המשולב -->
       <div class="flex items-center gap-4 md:gap-6">
         
-        <!-- לוגו חנות ענק ומוביל (מופיע רק אם יש ?store בכתובת) -->
+        <!-- לוגו חנות ענק ומוביל - משתלב בצורה חלקה גם אם הוא על רקע לבן -->
         <div id="storeHeaderArea" class="hidden flex items-center gap-4 md:gap-5">
-          <div class="bg-slate-50 px-3 py-1.5 rounded-2xl border border-slate-200/80 shadow-inner flex items-center justify-center">
-            <img id="storeLogoImg" src="" alt="לוגו חנות" class="h-12 md:h-16 max-w-[180px] md:max-w-[220px] w-auto object-contain" />
+          <div class="flex items-center justify-center p-0.5">
+            <img id="storeLogoImg" src="" alt="לוגו חנות" class="h-12 md:h-16 max-w-[180px] md:max-w-[240px] w-auto object-contain mix-blend-multiply" />
           </div>
           
           <div class="hidden sm:flex flex-col text-right border-r border-slate-200 pr-4">
             <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">בשיתוף טכנולוגי וייצור עם</span>
-            <img src="./mtilogo.jpg" alt="MTI ISRAEL" class="h-5 md:h-6 w-auto object-contain mt-1 self-start" />
+            <img src="./mtilogo.jpg" alt="MTI ISRAEL" class="h-5 md:h-6 w-auto object-contain mt-1 self-start mix-blend-multiply" />
           </div>
         </div>
 
         <!-- לוגו ברירת מחדל של MTI (מופיע אם אין חנות מוגדרת) -->
         <div id="defaultHeaderArea" class="flex items-center gap-4">
-          <img src="./mtilogo.jpg" alt="MTI ISRAEL" class="h-12 md:h-16 w-auto object-contain" />
+          <img src="./mtilogo.jpg" alt="MTI ISRAEL" class="h-12 md:h-16 w-auto object-contain mix-blend-multiply" />
         </div>
 
         <div class="hidden sm:block border-r border-slate-200 pr-4">
@@ -350,16 +350,13 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
   <!-- תבנית PDF מבודדת לחלוטין ללא שום היפוך אותיות או הידבקות מילים -->
-  <!-- ========================================================================= -->
   <div style="position: absolute; left: -9999px; top: -9999px;">
     <div id="pdfTemplate" style="width: 760px; padding: 32px; background-color: #ffffff; color: #0f172a; direction: rtl; text-align: right;">
       
       <!-- ראש העמוד: לוגו חנות וכותרת מסמך -->
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border-bottom: 2px solid #0f172a; padding-bottom: 16px;">
         <tr>
-          <!-- צד ימין: כותרות המסמך -->
           <td style="text-align: right; vertical-align: top;">
             <div id="pdfTitleMain" style="font-size: 26px; font-weight: bold; color: #0f172a; margin-bottom: 4px;"></div>
             <div id="pdfTitleSub" style="font-size: 14px; font-weight: normal; color: #475569; margin-bottom: 8px;"></div>
@@ -369,7 +366,6 @@
             </div>
           </td>
           
-          <!-- צד שמאל: לוגו החנות (גדול ונקי) -->
           <td style="text-align: left; vertical-align: middle; width: 240px;">
             <div style="display: flex; justify-content: flex-end; align-items: center;">
               <img id="pdfLogoImg" src="" alt="לוגו" style="max-height: 70px; max-width: 220px; object-fit: contain;" />
@@ -453,9 +449,6 @@
   </div>
 
   <script>
-    // ==========================================
-    // מנגנון מיתוג חנויות אוטומטי לחלוטין
-    // ==========================================
     const DEFAULT_STORES_MAP = {
       "harash": { name: "חרש", logo: "./stores/harash.png" },
       "tuboul": { name: "טובול קרמיקה", logo: "./stores/tuboul.svg" },
@@ -470,11 +463,10 @@
       return String(str).replace(/ /g, '\u00A0');
     }
 
-    // בדיקת פרמטר ?store באופן דינמי ואוטומטי לכל חנות שתוסיף בעתיד
     function checkStoreParameter() {
       const urlParams = new URLSearchParams(window.location.search);
       let storeKey = urlParams.get('store');
-      let customName = urlParams.get('name'); // מאפשר הגדרת שם חנות ישירות מה-URL ללא עדכון קוד
+      let customName = urlParams.get('name');
 
       if (!storeKey && window.location.href.includes('store=')) {
         const match = window.location.href.match(/[?&]store=([^&#]+)/);
@@ -489,19 +481,16 @@
       if (storeKey) {
         storeKey = storeKey.toLowerCase().trim();
         
-        // בדיקה אם קיים במפה הידועה או יצירת הגדרה אוטומטית לפי שם הקובץ
         if (DEFAULT_STORES_MAP[storeKey]) {
           activeStore = { ...DEFAULT_STORES_MAP[storeKey] };
           if (customName) activeStore.name = customName;
         } else {
-          // מנגנון אוטומטי לחלוטין לחנויות חדשות שתעלה לתיקיית stores/
           activeStore = {
             name: customName || storeKey.toUpperCase(),
-            logo: `./stores/${storeKey}.png` // ננסה png כברירת מחדל
+            logo: `./stores/${storeKey}.png`
           };
         }
 
-        // החלפת לוגו וכותרת בעמוד
         document.getElementById('defaultHeaderArea').classList.add('hidden');
         const storeArea = document.getElementById('storeHeaderArea');
         storeArea.classList.remove('hidden');
@@ -510,7 +499,6 @@
         storeImg.src = activeStore.logo;
         storeImg.alt = activeStore.name;
 
-        // מנגנון בדיקת סיומות אוטומטי אם הועלה בפורמט אחר (svg, avif, webp, jpg)
         storeImg.onerror = function() {
           if (!this.dataset.step) {
             this.dataset.step = 'svg';
@@ -530,7 +518,6 @@
           }
         };
 
-        // באנר מיתוג עליון
         const welcomeBanner = document.getElementById('storeWelcomeBanner');
         welcomeBanner.classList.remove('hidden');
         document.getElementById('storeWelcomeText').innerText = `בלעדי לסניפי ${activeStore.name}`;
@@ -886,7 +873,7 @@
         `MTI-${model.id}.jpg`,
         `MTI_${model.id}.jpg`,
         `MTI-${model.id}.png`,
-        `MTI-${model.id}.png`
+        `MTI_${model.id}.png`
       ].filter(Boolean);
 
       let step = 0;
@@ -1233,7 +1220,6 @@
       pdfBtn.className = "w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg";
     }
 
-    // הפקת ה-PDF
     function generateOrderPDF() {
       const category = document.getElementById('categorySelect').value;
       const modelName = document.getElementById('currentModelBadge').innerText;
@@ -1248,14 +1234,10 @@
       const installPrice = document.getElementById('installPriceDisplay').innerText;
       const installNote = document.getElementById('installNoteDisplay').innerText;
 
-      // תאריך מבודד
       const now = new Date();
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const formattedDate = `${day}.${month}.${now.getFullYear()}`;
+      const formattedDate = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()}`;
       document.getElementById('pdfDate').innerText = formattedDate;
       
-      // כותרת ולוגו ב-PDF לפי החנות
       if (activeStore) {
         document.getElementById('pdfTitleMain').innerText = toNbsp(activeStore.name);
         document.getElementById('pdfTitleSub').innerText = toNbsp('טופס מפרט והזמנת מקלחון פרימיום (בשיתוף MTI)');
