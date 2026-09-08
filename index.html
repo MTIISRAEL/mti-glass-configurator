@@ -434,7 +434,7 @@
 
   <script>
     // ==========================================
-    // רשימת החנויות והמיתוג האישי (מעודכן עם הקבצים שהעלית)
+    // רשימת החנויות והמיתוג האישי
     // ==========================================
     const STORES_CONFIG = {
       "harash": {
@@ -449,10 +449,25 @@
 
     let activeStore = null;
 
-    // בדיקת פרמטר ?store בכתובת האתר בעת טעינה
+    // בדיקת פרמטר ?store בכל צורת כתיבה
     function checkStoreParameter() {
+      let storeKey = null;
+
+      // בדיקה ישירה דרך URLSearchParams
       const urlParams = new URLSearchParams(window.location.search);
-      const storeKey = urlParams.get('store');
+      storeKey = urlParams.get('store');
+
+      // גיבוי: חילוץ ישיר ממחרוזת הכתובת אם הדפדפן שיבש את הנתיב
+      if (!storeKey && window.location.href.includes('store=')) {
+        const match = window.location.href.match(/[?&]store=([^&#]+)/);
+        if (match && match[1]) {
+          storeKey = decodeURIComponent(match[1]);
+        }
+      }
+
+      if (storeKey) {
+        storeKey = storeKey.toLowerCase().trim();
+      }
 
       if (storeKey && STORES_CONFIG[storeKey]) {
         activeStore = STORES_CONFIG[storeKey];
@@ -568,7 +583,6 @@
     let selectedCut = null;
     let isCurrentCorner = false;
 
-    // מערך התמונות הפעיל של הדגם הנבחר לצורך ניווט ב-Modal
     let currentGalleryImages = [];
     let currentModalIndex = 0;
 
@@ -579,7 +593,6 @@
       catSelect.innerHTML = '<option value="" disabled selected>-- בחר סוג מקלחון --</option>' + 
         CATALOG_DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
 
-      // טעינת צבעים
       const colorBox = document.getElementById('colorContainer');
       colorBox.innerHTML = CATALOG_DATA.colors.map((col, idx) => {
         const imgPath = `./${encodeURIComponent(col.file)}`;
@@ -594,7 +607,6 @@
         `;
       }).join('');
 
-      // טעינת זכוכיות
       const glassBox = document.getElementById('glassContainer');
       const folderName = encodeURIComponent("סוגי זכוכיות");
 
@@ -620,7 +632,6 @@
         `;
       }).join('');
 
-      // האזנה למקשי מקלדת לניווט בגלריה
       window.addEventListener('keydown', (e) => {
         const modal = document.getElementById('zoomModal');
         if (!modal.classList.contains('hidden')) {
@@ -659,7 +670,6 @@
       }
     }
 
-    // פתיחת תמונה בודדת
     function zoomSingleImage(e, title, imgSrc) {
       e.stopPropagation();
       document.getElementById('zoomTitle').innerText = title;
@@ -670,7 +680,6 @@
       document.getElementById('zoomModal').classList.remove('hidden');
     }
 
-    // פתיחת תמונת גלריה עם אפשרות ניווט ימינה ושמאלה
     function openGalleryModal(index) {
       if (!currentGalleryImages || currentGalleryImages.length === 0) return;
       currentModalIndex = index;
@@ -693,7 +702,6 @@
       document.getElementById('zoomModal').classList.remove('hidden');
     }
 
-    // ניווט בין תמונות
     function navigateGallery(direction) {
       if (!currentGalleryImages || currentGalleryImages.length <= 1) return;
       currentModalIndex = (currentModalIndex + direction + currentGalleryImages.length) % currentGalleryImages.length;
@@ -845,7 +853,6 @@
       tryNext();
     }
 
-    // טעינת גלריית לקוחות מהשטח ועדכון מערך התמונות עבור הניווט
     async function loadCustomerGallery(model) {
       const gallerySection = document.getElementById('customerGallerySection');
       const galleryGrid = document.getElementById('galleryGrid');
@@ -894,7 +901,6 @@
         console.warn("GitHub API fetch skipped, using static fallback.");
       }
 
-      // מנגנון גיבוי מקומי (Fallback)
       for (let i = 1; i <= 12; i++) {
         const basePath = `gallery/${modelFolder}/${i}`;
         const fallbackSrc = `./${basePath}.jpg`;
@@ -1089,7 +1095,6 @@
       document.getElementById('finalPriceDisplay').innerText = catalogRetailPrice.toLocaleString() + ' ₪';
       document.getElementById('finalPriceDisplay').className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1";
 
-      // לוגיקת דמי התקנה
       let installPrice = 600;
       let installText = "תשלום בסך 600 ₪ ישולם ישירות למתקין במעמד ההתקנה.";
 
@@ -1190,7 +1195,6 @@
 
       document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('he-IL');
       
-      // התאמת כותרת ולוגו ב-PDF לפי החנות הפעילה
       if (activeStore) {
         document.getElementById('pdfTitleMain').innerText = activeStore.name;
         document.getElementById('pdfTitleSub').innerText = 'טופס מפרט והזמנת מקלחון בהתאמה אישית (בשיתוף MTI)';
