@@ -27,7 +27,7 @@
       background: #94a3b8;
     }
 
-    /* הגדרות קשיחות לתבנית ה-PDF בלבד למניעת שיבושי עברית */
+    /* הגדרות לתבנית ה-PDF למניעת שיבושי עברית והידבקויות */
     #pdfTemplate {
       font-family: Arial, Tahoma, Helvetica, sans-serif !important;
       direction: rtl !important;
@@ -351,7 +351,7 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- תבנית PDF נקייה ומיושרת לחלוטין (מבנה טבלאי מבודד ללא היפוך אותיות) -->
+  <!-- תבנית PDF מבודדת לחלוטין ללא שום היפוך אותיות או הידבקות מילים -->
   <!-- ========================================================================= -->
   <div style="position: absolute; left: -9999px; top: -9999px;">
     <div id="pdfTemplate" style="width: 760px; padding: 32px; background-color: #ffffff; color: #0f172a; direction: rtl; text-align: right;">
@@ -383,7 +383,7 @@
         מפרט&nbsp;טכני&nbsp;של&nbsp;המוצר
       </div>
 
-      <!-- טבלת נתוני המקלחון (מבנה שורות מרווח ומסודר ללא שום היפוך) -->
+      <!-- טבלת נתוני המקלחון -->
       <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 24px;">
         <tbody>
           <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
@@ -454,48 +454,53 @@
 
   <script>
     // ==========================================
-    // רשימת החנויות והמיתוג האישי
+    // מנגנון מיתוג חנויות אוטומטי לחלוטין
     // ==========================================
-    const STORES_CONFIG = {
-      "harash": {
-        name: "חרש",
-        logo: "./stores/harash.png"
-      },
-      "tuboul": {
-        name: "טובול קרמיקה",
-        logo: "./stores/tuboul.svg"
-      }
+    const DEFAULT_STORES_MAP = {
+      "harash": { name: "חרש", logo: "./stores/harash.png" },
+      "tuboul": { name: "טובול קרמיקה", logo: "./stores/tuboul.svg" },
+      "aaceramica": { name: "א.א. קרמיקה", logo: "./stores/aaceramica.png" },
+      "noy": { name: "בית נוי קרמיקה", logo: "./stores/noy.avif" }
     };
 
     let activeStore = null;
 
-    // פונקציית עזר להמרת כל הרווחים לרווחים בלתי-שבירים (מונע הידבקות מילים ב-PDF)
     function toNbsp(str) {
       if (!str) return '';
       return String(str).replace(/ /g, '\u00A0');
     }
 
-    // בדיקת פרמטר ?store בכל צורת כתיבה
+    // בדיקת פרמטר ?store באופן דינמי ואוטומטי לכל חנות שתוסיף בעתיד
     function checkStoreParameter() {
-      let storeKey = null;
-
       const urlParams = new URLSearchParams(window.location.search);
-      storeKey = urlParams.get('store');
+      let storeKey = urlParams.get('store');
+      let customName = urlParams.get('name'); // מאפשר הגדרת שם חנות ישירות מה-URL ללא עדכון קוד
 
       if (!storeKey && window.location.href.includes('store=')) {
         const match = window.location.href.match(/[?&]store=([^&#]+)/);
-        if (match && match[1]) {
-          storeKey = decodeURIComponent(match[1]);
-        }
+        if (match && match[1]) storeKey = decodeURIComponent(match[1]);
+      }
+
+      if (!customName && window.location.href.includes('name=')) {
+        const match = window.location.href.match(/[?&]name=([^&#]+)/);
+        if (match && match[1]) customName = decodeURIComponent(match[1]).replace(/\+/g, ' ');
       }
 
       if (storeKey) {
         storeKey = storeKey.toLowerCase().trim();
-      }
-
-      if (storeKey && STORES_CONFIG[storeKey]) {
-        activeStore = STORES_CONFIG[storeKey];
         
+        // בדיקה אם קיים במפה הידועה או יצירת הגדרה אוטומטית לפי שם הקובץ
+        if (DEFAULT_STORES_MAP[storeKey]) {
+          activeStore = { ...DEFAULT_STORES_MAP[storeKey] };
+          if (customName) activeStore.name = customName;
+        } else {
+          // מנגנון אוטומטי לחלוטין לחנויות חדשות שתעלה לתיקיית stores/
+          activeStore = {
+            name: customName || storeKey.toUpperCase(),
+            logo: `./stores/${storeKey}.png` // ננסה png כברירת מחדל
+          };
+        }
+
         // החלפת לוגו וכותרת בעמוד
         document.getElementById('defaultHeaderArea').classList.add('hidden');
         const storeArea = document.getElementById('storeHeaderArea');
@@ -504,6 +509,26 @@
         const storeImg = document.getElementById('storeLogoImg');
         storeImg.src = activeStore.logo;
         storeImg.alt = activeStore.name;
+
+        // מנגנון בדיקת סיומות אוטומטי אם הועלה בפורמט אחר (svg, avif, webp, jpg)
+        storeImg.onerror = function() {
+          if (!this.dataset.step) {
+            this.dataset.step = 'svg';
+            this.src = `./stores/${storeKey}.svg`;
+          } else if (this.dataset.step === 'svg') {
+            this.dataset.step = 'avif';
+            this.src = `./stores/${storeKey}.avif`;
+          } else if (this.dataset.step === 'avif') {
+            this.dataset.step = 'webp';
+            this.src = `./stores/${storeKey}.webp`;
+          } else if (this.dataset.step === 'webp') {
+            this.dataset.step = 'jpg';
+            this.src = `./stores/${storeKey}.jpg`;
+          } else if (this.dataset.step === 'jpg') {
+            this.dataset.step = 'jpeg';
+            this.src = `./stores/${storeKey}.jpeg`;
+          }
+        };
 
         // באנר מיתוג עליון
         const welcomeBanner = document.getElementById('storeWelcomeBanner');
@@ -861,7 +886,7 @@
         `MTI-${model.id}.jpg`,
         `MTI_${model.id}.jpg`,
         `MTI-${model.id}.png`,
-        `MTI_${model.id}.png`
+        `MTI-${model.id}.png`
       ].filter(Boolean);
 
       let step = 0;
@@ -1208,9 +1233,7 @@
       pdfBtn.className = "w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg";
     }
 
-    // ==========================================
-    // הפקת PDF נקייה ומבוצרת (ללא שום היפוך אותיות או הידבקות)
-    // ==========================================
+    // הפקת ה-PDF
     function generateOrderPDF() {
       const category = document.getElementById('categorySelect').value;
       const modelName = document.getElementById('currentModelBadge').innerText;
@@ -1225,9 +1248,11 @@
       const installPrice = document.getElementById('installPriceDisplay').innerText;
       const installNote = document.getElementById('installNoteDisplay').innerText;
 
-      // תאריך מבודד שלא מתהפך
+      // תאריך מבודד
       const now = new Date();
-      const formattedDate = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()}`;
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const formattedDate = `${day}.${month}.${now.getFullYear()}`;
       document.getElementById('pdfDate').innerText = formattedDate;
       
       // כותרת ולוגו ב-PDF לפי החנות
@@ -1243,7 +1268,6 @@
         document.getElementById('pdfSignatureText').innerText = toNbsp('חתימת הלקוח / אישור הזמנה');
       }
 
-      // הזרקת הנתונים עם רווחים מובטחים
       document.getElementById('pdfCategory').innerText = toNbsp(category);
       document.getElementById('pdfModel').innerText = toNbsp(modelName);
 
@@ -1270,7 +1294,7 @@
         html2canvas:  { 
           scale: 2, 
           useCORS: true, 
-          letterRendering: false, // ביטול מכוון כדי למנוע הידבקות אותיות בעברית
+          letterRendering: false,
           scrollX: 0, 
           scrollY: 0 
         },
