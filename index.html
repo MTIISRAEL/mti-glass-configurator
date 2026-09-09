@@ -1487,23 +1487,19 @@
     // אתחול המערכת
     // ==========================================
     window.onload = function() {
-      try {
-        checkStoreParameter();
-        initShowersTab();
-        initBathsTab();
-        initTraysTab();
+      try { checkStoreParameter(); } catch (e) { console.warn(e); }
+      try { initShowersTab(); } catch (e) { console.error("Showers init error:", e); }
+      try { initBathsTab(); } catch (e) { console.error("Baths init error:", e); }
+      try { initTraysTab(); } catch (e) { console.error("Trays init error:", e); }
 
-        window.addEventListener('keydown', (e) => {
-          const modal = document.getElementById('zoomModal');
-          if (!modal.classList.contains('hidden')) {
-            if (e.key === 'ArrowRight') navigateGallery(-1);
-            else if (e.key === 'ArrowLeft') navigateGallery(1);
-            else if (e.key === 'Escape') closeZoomModal();
-          }
-        });
-      } catch (e) {
-        console.error("Initialization error:", e);
-      }
+      window.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('zoomModal');
+        if (!modal.classList.contains('hidden')) {
+          if (e.key === 'ArrowRight') navigateGallery(-1);
+          else if (e.key === 'ArrowLeft') navigateGallery(1);
+          else if (e.key === 'Escape') closeZoomModal();
+        }
+      });
     };
   </script>
 </body>
