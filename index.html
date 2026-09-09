@@ -64,20 +64,17 @@
       </div>
     </div>
 
-    <!-- מתג 3 לשוניות ראשי -->
+    <!-- מתג 3 לשוניות -->
     <div class="bg-slate-100/90 border-t border-slate-200 px-4 md:px-8">
       <div class="max-w-[1600px] w-full mx-auto flex gap-2 md:gap-3 pt-2 overflow-x-auto">
         <button id="tabBtnShowers" onclick="switchMainTab('showers')" class="px-5 md:px-6 py-3 font-extrabold text-sm md:text-base border-b-2 border-blue-600 text-blue-600 bg-white rounded-t-xl shadow-sm transition flex items-center gap-2 whitespace-nowrap">
-          <span>🚿</span>
-          <span>מקלחונים ומחיצות</span>
+          <span>🚿</span><span>מקלחונים ומחיצות</span>
         </button>
         <button id="tabBtnBaths" onclick="switchMainTab('baths')" class="px-5 md:px-6 py-3 font-bold text-sm md:text-base border-b-2 border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-t-xl transition flex items-center gap-2 whitespace-nowrap">
-          <span>🛁</span>
-          <span>אמבטיות וג'קוזי</span>
+          <span>🛁</span><span>אמבטיות וג'קוזי</span>
         </button>
         <button id="tabBtnTrays" onclick="switchMainTab('trays')" class="px-5 md:px-6 py-3 font-bold text-sm md:text-base border-b-2 border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-t-xl transition flex items-center gap-2 whitespace-nowrap">
-          <span>◽</span>
-          <span>אגניות למקלחון</span>
+          <span>◽</span><span>אגניות למקלחון</span>
         </button>
       </div>
     </div>
@@ -576,7 +573,6 @@
         <img id="zoomImage" src="" alt="תצוגה מוגדלת" class="max-h-full max-w-full object-contain drop-shadow-md transition duration-150" />
         <button id="nextImgBtn" onclick="navigateGallery(1)" class="hidden absolute left-3 md:left-5 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/90 hover:bg-white text-slate-800 rounded-full shadow-lg border border-slate-200 flex items-center justify-center text-xl font-bold transition hover:scale-110 active:scale-95 z-10">←</button>
       </div>
-      <p class="text-xs text-slate-400 font-semibold">ניתן להשתמש גם במקשי החיצים במקלדת (➔ / ←) או ב-ESC לסגירה</p>
     </div>
   </div>
 
@@ -642,7 +638,9 @@
   </div>
 
   <script>
+    // ==========================================
     // מאגר החנויות
+    // ==========================================
     const DEFAULT_STORES_MAP = {
       "harash": { name: "חרש", logo: "./stores/harash.png" },
       "tuboul": { name: "טובול קרמיקה", logo: "./stores/tuboul.svg" },
@@ -734,14 +732,114 @@
     }
 
     function resetCurrentTab() {
-      if (activeMainTab === 'showers') resetConfigurator();
-      else if (activeMainTab === 'baths') resetBathConfigurator();
-      else resetTrayConfigurator();
+      if (activeMainTab === 'showers') {
+        resetConfigurator();
+      } else if (activeMainTab === 'baths') {
+        resetBathConfigurator();
+      } else {
+        resetTrayConfigurator();
+      }
     }
 
     // =========================================================================
-    // הגדרת מקלחונים ואתחולם
+    // נתוני מקלחונים (איתחול)
     // =========================================================================
+    const CATALOG_DATA = {
+      categories: [
+        { id: "front", name: "מקלחון חזיתי", isCorner: false },
+        { id: "corner", name: "מקלחון פינתי", isCorner: true },
+        { id: "bath_partial", name: "אמבטיון סגירה חלקית", isCorner: false },
+        { id: "bath_full_front", name: "אמבטיון סגירה מלאה חזיתי", isCorner: false },
+        { id: "bath_full_corner", name: "אמבטיון סגירה מלאה פינתי", isCorner: true },
+        { id: "slide_pipe_front", name: "מקלחון הזזה צינור חזיתי", isCorner: false },
+        { id: "slide_cnc_front", name: "מקלחון הזזה CNC חזיתי", isCorner: false },
+        { id: "slide_cnc_corner", name: "מקלחון הזזה CNC פינתי", isCorner: true },
+        { id: "slide_hidden_front", name: "מקלחון הזזה מסילה מוסתרת חזיתי", isCorner: false },
+        { id: "slide_hidden_corner", name: "מקלחון הזזה מסילה מוסתרת פינתי", isCorner: true }
+      ],
+      models: [
+        { cat: "מקלחון חזיתי", id: "718", name: "MTI-718 - דלת", cost: 138, file: "MTI_718_animated.gif", widths: [50,55,60,65,70,75,80,85,90] },
+        { cat: "מקלחון חזיתי", id: "719", name: "MTI-719 - קבוע WALK-IN", cost: 160, file: "MTI-720 - top view-1.jpg", widths: [80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "720", name: "MTI-720 - קבוע", cost: 122, file: "MTI-720 - top view-1.jpg", widths: [40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "721", name: "MTI-721 - קבוע ודלת", cost: 241, file: "MTI_721_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190] },
+        { cat: "מקלחון חזיתי", id: "722", name: "MTI-722 - שתי דלתות", cost: 275, file: "MTI_722_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "מקלחון חזיתי", id: "723", name: "MTI-723 - הרמוניקה שתי דלתות", cost: 282, file: "MTI_723_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "מקלחון חזיתי", id: "724", name: "MTI-724 - שני קבועים ודלת", cost: 385, file: "MTI_724_animated_fix1.gif", widths: [80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220] },
+        { cat: "מקלחון חזיתי", id: "725", name: "MTI-725 - קבוע ושתי דלתות", cost: 419, file: "MTI_725_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "מקלחון חזיתי", id: "726", name: "MTI-726 - קבוע והרמוניקה 2 דלתות", cost: 369, file: "MTI_726_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "מקלחון חזיתי", id: "727", name: "MTI-727 - שני קבועים ושתי דלתות", cost: 563, file: "MTI_727_animated.gif", widths: [90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,240,245,250,255,260] },
+        { cat: "מקלחון חזיתי", id: "728", name: "MTI-728 - הרמוניקה ארבע דלתות", cost: 531, file: "MTI_728_animated.gif", widths: [120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "מקלחון חזיתי", id: "729", name: "MTI-729 - קבוע דלת ודלת הרמוניקה", cost: 547, file: "MTI_729_animated.gif", widths: [100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230] },
+        { cat: "מקלחון חזיתי", id: "730", name: "MTI-730 - דלת ודלת הרמוניקה", cost: 403, file: "MTI_730_animated.gif", widths: [90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190] },
+        { cat: "מקלחון פינתי", id: "740", name: "MTI-740 - שתי דלתות", cost: 275, file: "MTI_740_animated.gif", widths: [60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "741", name: "MTI-741 - קבוע ודלת", cost: 241, file: "MTI_741_animated_fix1.gif", widths: [55,60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "742", name: "MTI-742 - קבוע ושתי דלתות", cost: 419, file: "MTI_742.gif", widths: [55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "743", name: "MTI-743 - שני קבועים ודלת", cost: 385, file: "MTI_743_animated.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "744", name: "MTI-744 - קבוע והרמוניקה 2 דלתות", cost: 369, file: "MTI_744_animated_fix1.gif", widths: [60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "745", name: "MTI-745 - דלת ודלת הרמוניקה", cost: 403, file: "MTI_745_animated_fix1.gif", widths: [50,55,60,65,70,75,80,85,90,95,100] },
+        { cat: "מקלחון פינתי", id: "746", name: "MTI-746 - שני קבועים ושתי דלתות", cost: 563, file: "MTI_746_animated_fix1.gif", widths: [50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140] },
+        { cat: "מקלחון פינתי", id: "747", name: "MTI-747 - שתי דלתות הרמוניקה מתקפלות", cost: 531, file: "MTI_747_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110] },
+        { cat: "מקלחון פינתי", id: "748", name: "MTI-748 - קבוע ודלת ודלת הרמוניקה", cost: 547, file: "MTI_748_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "749", name: "MTI-749 - קבוע ושתי דלתות בחזית", cost: 453, file: "MTI_749_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "מקלחון פינתי", id: "750", name: "MTI-750 - קבוע וקבוע ושתי דלתות בחזית", cost: 551, file: "MTI_750_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195] },
+        { cat: "אמבטיון סגירה חלקית", id: "760", name: "MTI-760 - דלת", cost: 130, file: "MTI_760_animated_fix1.gif", widths: [30,35,40,45,50,55,60,65,70,75,80,85,90] },
+        { cat: "אמבטיון סגירה חלקית", id: "761", name: "MTI-761 - קבוע", cost: 122, file: "MTI-761 - top view-1.jpg", widths: [30,35,40,45,50,55,60,65,70,75,80,85,90,95,100] },
+        { cat: "אמבטיון סגירה חלקית", id: "762", name: "MTI-762 - קבוע ודלת", cost: 274, file: "MTI_762_animated_fix1.gif", widths: [45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "763", name: "MTI-763 - שתי דלתות", cost: 275, file: "MTI_763_animated_fix1.gif", widths: [110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "אמבטיון סגירה חלקית", id: "764", name: "MTI-764 - הרמוניקה שתי דלתות", cost: 274, file: "MTI_764_animated.gif", widths: [60,65,70,75,80,85,90,95,100,105,110,115,120] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "765", name: "MTI-765 - שני קבועים ודלת", cost: 385, file: "MTI_765_animated_fix1.gif", widths: [105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "766", name: "MTI-766 - קבוע ושתי דלתות", cost: 419, file: "MTI_766_animated_fix1.gif", widths: [120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "767", name: "MTI-767 - קבוע והרמוניקה 2 דלתות", cost: 369, file: "MTI_767_animated.gif", widths: [115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "768", name: "MTI-768 - שני קבועים שתי דלתות", cost: 563, file: "MTI_768_animated_fix1.gif", widths: [140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "769", name: "MTI-769 - הרמוניקה ארבע דלתות", cost: 531, file: "MTI_769_animated.gif", widths: [120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "770", name: "MTI-770 - קבוע דלת ודלת הרמוניקה", cost: 547, file: "MTI_770_animated.gif", widths: [145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "771", name: "MTI-771 - דלת ודלת הרמוניקה", cost: 403, file: "MTI_771_animated.gif", widths: [100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "אמבטיון סגירה מלאה חזיתי", id: "772", name: "MTI-772 - קבוע ודלת", cost: 275, file: "MTI_772_animated.gif", widths: [95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180] },
+        { cat: "אמבטיון סגירה מלאה פינתי", id: "781", name: "MTI-781 - שני קבועים ודלת", cost: 385, file: "MTI_781_animated_fix1.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130] },
+        { cat: "אמבטיון סגירה מלאה פינתי", id: "782", name: "MTI-782 - שני קבועים ושתי דלתות", cost: 563, file: "MTI_782_animated_fix1.gif", widths: [70,75,80,85,90,95,100,105,110,115,120,125,130,135,140] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "800", name: "MTI-800 - קבוע ודלת", cost: 450, file: "MTI_800_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "801", name: "MTI-801 - שני קבועים ודלת", cost: 550, file: "MTI_801_animated.gif", widths: [140,150,160,170,180,190,200] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "840", name: "MTI-840 - אמבטיון קבוע ודלת", cost: 450, file: "MTI_840_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה צינור חזיתי", id: "841", name: "MTI-841 - אמבטיון 2 קבועים ודלת", cost: 550, file: "MTI_841_animated.gif", widths: [140,150,160,170,180,190,200] },
+        { cat: "מקלחון הזזה CNC חזיתי", id: "830", name: "MTI-830 - חזית קבוע ודלת", cost: 270, file: "MTI_830_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה CNC חזיתי", id: "831", name: "MTI-831 - חזית 2 קבועים ו-2 דלתות", cost: 540, file: "MTI_831_animated.gif", widths: [120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה CNC פינתי", id: "832", name: "MTI-832 - פינתי 2 קבועים ו-2 דלתות", cost: 540, file: "MTI_832_animated.gif", widths: [70,80,90,100,110,120] },
+        { cat: "מקלחון הזזה CNC חזיתי", id: "833", name: "MTI-833 - אמבטיון חזית קבוע ודלת", cost: 270, file: "MTI_833_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה CNC חזיתי", id: "834", name: "MTI-834 - אמבטיון 2 קבועים ו-2 דלתות", cost: 540, file: "MTI_834_animated.gif", widths: [120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה מסילה מוסתרת חזיתי", id: "880", name: "MTI-880 - חזית קבוע ודלת", cost: 380, file: "MTI_820_animated.gif", widths: [100,110,120,130,140,150,160,170,180] },
+        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "881", name: "MTI-881 - פינתי 2 קבועים ודלת", cost: 244, extraRetail: 500, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] },
+        { cat: "מקלחון הזזה מסילה מוסתרת פינתי", id: "882", name: "MTI-882 - פינתי 2 קבועים ו-2 דלתות", cost: 380, extraRetail: 500, file: "MTI_821_animated.gif", widths: [70,80,90,100,110,120] }
+      ],
+      glasses: [
+        { name: "שקופה", cost: 160 },
+        { name: "אקסטרה קליר", cost: 210 },
+        { name: "גרניט", cost: 205 },
+        { name: "פפיטה", cost: 205 },
+        { name: "אנטי סאן אפור", cost: 210 },
+        { name: "אנטי סאן חום", cost: 240 },
+        { name: "אסיד", cost: 210 },
+        { name: "אסיד אקסטרה קליר", cost: 340 },
+        { name: "פסים בהתזת חול", cost: 230 },
+        { name: "גלינה אקסטרה קליר", cost: 360 }
+      ],
+      colors: [
+        { name: "ניקל", mult: 1.0, file: "ניקל.png" },
+        { name: "ניקל מוברש", mult: 1.2, file: "ניקל מוברש.png" },
+        { name: "שחור", mult: 1.2, file: "שחור.png" },
+        { name: "ברונזה אדומה", mult: 1.35, file: "ברונזה אדומה.png" },
+        { name: "זהב מוברש", mult: 1.35, file: "זהב מוברש.png" },
+        { name: "גרפיט", mult: 1.35, file: "גרפיט.png" }
+      ]
+    };
+
+    let selectedColor = null;
+    let selectedGlassIndex = null;
+    let selectedNano = null;
+    let selectedCut = null;
+    let isCurrentCorner = false;
+    let currentGalleryImages = [];
+    let currentModalIndex = 0;
+
     function initShowersTab() {
       const catSelect = document.getElementById('categorySelect');
       if (catSelect && CATALOG_DATA && CATALOG_DATA.categories) {
@@ -968,7 +1066,7 @@
         `MTI-${model.id}.jpg`,
         `MTI_${model.id}.jpg`,
         `MTI-${model.id}.png`,
-        `MTI_${model.id}.png`
+        `MTI-${model.id}.png`
       ].filter(Boolean);
 
       let step = 0;
@@ -1361,11 +1459,11 @@
       html2pdf().set(opt).from(element).save();
     }
 
-    // =========================================================================
-    // הפעלה מיידית בלתי תלויה של כל חלקי המערכת
-    // =========================================================================
-    function initAll() {
-      try { checkStoreParameter(); } catch (e) { console.warn(e); }
+    // ==========================================
+    // הפעלה מיידית בלתי תלויה של כל המערכת
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', () => {
+      try { checkStoreParameter(); } catch (e) { console.warn("Store check error:", e); }
       try { initShowersTab(); } catch (e) { console.error("Showers init error:", e); }
       try { initBathsTab(); } catch (e) { console.error("Baths init error:", e); }
       try { initTraysTab(); } catch (e) { console.error("Trays init error:", e); }
@@ -1378,14 +1476,7 @@
           else if (e.key === 'Escape') closeZoomModal();
         }
       });
-    }
-
-    // הפעלה בטוחה מיד עם יצירת ה-DOM ללא תלות בטעינת תמונות
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initAll);
-    } else {
-      initAll();
-    }
+    });
   </script>
 </body>
 </html>
