@@ -66,22 +66,26 @@
       </div>
     </div>
 
-    <!-- מתג לשוניות ראשי (Tabs) -->
+    <!-- מתג 3 לשוניות ראשי -->
     <div class="bg-slate-100/90 border-t border-slate-200 px-4 md:px-8">
-      <div class="max-w-[1600px] w-full mx-auto flex gap-3 pt-2">
-        <button id="tabBtnShowers" onclick="switchMainTab('showers')" class="px-6 py-3 font-extrabold text-sm md:text-base border-b-2 border-blue-600 text-blue-600 bg-white rounded-t-xl shadow-sm transition flex items-center gap-2">
+      <div class="max-w-[1600px] w-full mx-auto flex gap-2 md:gap-3 pt-2 overflow-x-auto">
+        <button id="tabBtnShowers" onclick="switchMainTab('showers')" class="px-5 md:px-6 py-3 font-extrabold text-sm md:text-base border-b-2 border-blue-600 text-blue-600 bg-white rounded-t-xl shadow-sm transition flex items-center gap-2 whitespace-nowrap">
           <span>🚿</span>
-          <span>מקלחונים ומחיצות זכוכית</span>
+          <span>מקלחונים ומחיצות</span>
         </button>
-        <button id="tabBtnBaths" onclick="switchMainTab('baths')" class="px-6 py-3 font-bold text-sm md:text-base border-b-2 border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-t-xl transition flex items-center gap-2">
+        <button id="tabBtnBaths" onclick="switchMainTab('baths')" class="px-5 md:px-6 py-3 font-bold text-sm md:text-base border-b-2 border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-t-xl transition flex items-center gap-2 whitespace-nowrap">
           <span>🛁</span>
-          <span>אמבטיות ומערכות ג'קוזי</span>
+          <span>אמבטיות וג'קוזי</span>
+        </button>
+        <button id="tabBtnTrays" onclick="switchMainTab('trays')" class="px-5 md:px-6 py-3 font-bold text-sm md:text-base border-b-2 border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-t-xl transition flex items-center gap-2 whitespace-nowrap">
+          <span>◽</span>
+          <span>אגניות למקלחון</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- באנר מיתוג חנות עליון -->
+  <!-- באנר מיתוג עליון -->
   <div id="storeWelcomeBanner" class="hidden bg-gradient-to-r from-blue-900 via-slate-900 to-slate-900 text-white border-b border-blue-800/40 shadow-sm">
     <div class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs md:text-sm">
       <div class="flex items-center gap-2">
@@ -98,7 +102,6 @@
 
   <!-- לשונית 1: מקלחונים -->
   <main id="tabContentShowers" class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-1">
-    
     <section class="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
       <div>
         <label class="block text-base font-bold text-slate-800 mb-2">1. סוג מקלחון <span class="text-red-500">*</span></label>
@@ -129,7 +132,7 @@
 
           <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 hidden" id="dimBox2">
             <div class="flex justify-between items-center mb-1.5">
-              <span class="text-xs md:text-sm font-bold text-slate-500">עומק (צלע ב')</span>
+              <span id="dimLabel2" class="text-xs md:text-sm font-bold text-slate-500">עומק (צלע ב')</span>
               <span id="wDisplay2" class="text-xs md:text-sm font-extrabold text-blue-600">--</span>
             </div>
             <select id="widthSelect2" onchange="calculateShowerPrice()" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500">
@@ -144,19 +147,7 @@
             </div>
             <select id="heightSelect" onchange="calculateShowerPrice()" class="w-full p-2.5 bg-white border border-slate-200 rounded-lg text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500">
               <option value="" disabled selected>-- בחר גובה --</option>
-              <option value="140">140 ס"מ</option>
-              <option value="150">150 ס"מ</option>
-              <option value="160">160 ס"מ</option>
-              <option value="170">170 ס"מ</option>
-              <option value="180">180 ס"מ</option>
-              <option value="190">190 ס"מ (סטנדרט)</option>
-              <option value="200">200 ס"מ</option>
-              <option value="210">210 ס"מ</option>
-              <option value="220">220 ס"מ</option>
-              <option value="230">230 ס"מ (חריג)</option>
-              <option value="240">240 ס"מ (חריג)</option>
-              <option value="250">250 ס"מ (חריג)</option>
-              <option value="260">260 ס"מ (חריג)</option>
+              <option value="140">140 ס"מ</option><option value="150">150 ס"מ</option><option value="160">160 ס"מ</option><option value="170">170 ס"מ</option><option value="180">180 ס"מ</option><option value="190">190 ס"מ (סטנדרט)</option><option value="200">200 ס"מ</option><option value="210">210 ס"מ</option><option value="220">220 ס"מ</option><option value="230">230 ס"מ (חריג)</option><option value="240">240 ס"מ (חריג)</option><option value="250">250 ס"מ (חריג)</option><option value="260">260 ס"מ (חריג)</option>
             </select>
           </div>
         </div>
@@ -222,7 +213,7 @@
       </div>
     </section>
 
-    <!-- פנל תצוגה וסיכום מקלחונים (שמאל) -->
+    <!-- פנל תצוגה מקלחונים -->
     <section class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
       <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
@@ -279,23 +270,14 @@
 
   <!-- לשונית 2: אמבטיות ומערכות ג'קוזי -->
   <main id="tabContentBaths" class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-1 hidden">
-    
     <section class="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
       <div>
         <label class="block text-base font-bold text-slate-800 mb-2">1. סגנון וצורת האמבטיה <span class="text-red-500">*</span></label>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <button type="button" onclick="selectBathType('rect')" id="bathTypeBtn_rect" class="bath-type-btn p-3.5 rounded-2xl border border-blue-600 bg-blue-50/50 text-blue-700 font-extrabold text-sm text-center transition">
-            אמבטיה מלבנית
-          </button>
-          <button type="button" onclick="selectBathType('corner')" id="bathTypeBtn_corner" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">
-            אמבטיה פינתית
-          </button>
-          <button type="button" onclick="selectBathType('round')" id="bathTypeBtn_round" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">
-            אמבטיה עגולה (Q)
-          </button>
-          <button type="button" onclick="selectBathType('oval')" id="bathTypeBtn_oval" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">
-            אמבטיה אובלית
-          </button>
+          <button type="button" onclick="selectBathType('rect')" id="bathTypeBtn_rect" class="bath-type-btn p-3.5 rounded-2xl border border-blue-600 bg-blue-50/50 text-blue-700 font-extrabold text-sm text-center transition">אמבטיה מלבנית</button>
+          <button type="button" onclick="selectBathType('corner')" id="bathTypeBtn_corner" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">אמבטיה פינתית</button>
+          <button type="button" onclick="selectBathType('round')" id="bathTypeBtn_round" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">אמבטיה עגולה (Q)</button>
+          <button type="button" onclick="selectBathType('oval')" id="bathTypeBtn_oval" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">אמבטיה אובלית</button>
         </div>
       </div>
 
@@ -439,10 +421,9 @@
           </label>
         </div>
       </div>
-
     </section>
 
-    <!-- פנל תצוגה וסיכום אמבטיות (שמאל) -->
+    <!-- פנל תצוגה אמבטיות -->
     <section class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
       <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
@@ -482,6 +463,103 @@
         <button id="downloadBathPdfBtn" onclick="generateBathOrderPDF()" disabled class="w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg">
           <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
           <span>הורדת טופס הזמנת אמבטיה (PDF)</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- לשונית 3: אגניות למקלחון -->
+  <main id="tabContentTrays" class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-1 hidden">
+    <section class="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
+      <div>
+        <label class="block text-base font-bold text-slate-800 mb-2">1. סדרת אגניות <span class="text-red-500">*</span></label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <button type="button" onclick="selectTraySeries('classic')" id="traySeriesBtn_classic" class="tray-series-btn p-3 rounded-2xl border border-blue-600 bg-blue-50/50 text-blue-700 font-extrabold text-sm text-center transition">סדרה קלאסית</button>
+          <button type="button" onclick="selectTraySeries('urban')" id="traySeriesBtn_urban" class="tray-series-btn p-3 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">סדרת אורבן (URBAN)</button>
+          <button type="button" onclick="selectTraySeries('drain')" id="traySeriesBtn_drain" class="tray-series-btn p-3 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">תעלת ניקוז נסתרת</button>
+          <button type="button" onclick="selectTraySeries('solid')" id="traySeriesBtn_solid" class="tray-series-btn p-3 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">אגניות מלאות / סלים</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-base font-bold text-slate-800 mb-2">2. דגם ומידת אגנית <span class="text-red-500">*</span></label>
+        <select id="trayModelSelect" onchange="onTrayModelChange()" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm md:text-base transition">
+          <option value="" disabled selected>-- בחר דגם ומידה --</option>
+        </select>
+      </div>
+
+      <div class="border-t pt-5 space-y-3">
+        <div class="flex justify-between items-center">
+          <label class="block text-base font-extrabold text-slate-800">3. אביק וסיפון מקורי</label>
+          <span id="trayWasteStatusBadge" class="text-xs md:text-sm font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">כלול בדגם</span>
+        </div>
+        
+        <div id="trayWasteManualBox" class="hidden p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2">
+          <p class="text-xs text-slate-500">דגמי הסדרה הקלאסית מגיעים ללא אביק וסיפון כברירת מחדל. ניתן להוסיף אביק מקורי ייעודי:</p>
+          <label class="flex items-center justify-between cursor-pointer pt-1">
+            <div class="flex items-center gap-2.5">
+              <input type="checkbox" id="chkClassicWaste" onchange="calculateTrayPrice()" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+              <span class="text-sm font-bold text-slate-800">הוספת אביק וסיפון מקורי MTI</span>
+            </div>
+            <span class="text-sm font-extrabold text-blue-600">+215 ₪</span>
+          </label>
+        </div>
+      </div>
+
+      <div id="traySolidOptionBox" class="border-t pt-5 space-y-3 hidden">
+        <label class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 transition">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="chkTrayLegs" onchange="calculateTrayPrice()" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+            <div>
+              <span class="text-sm font-bold text-slate-800 block">קונסטרוקציה + רגלי פילוס ייעודיות לאגנית</span>
+              <span class="text-xs text-slate-400">להתקנה מדוייקת וקלה על גבי הריצוף</span>
+            </div>
+          </div>
+          <span class="text-sm font-extrabold text-blue-600">+450 ₪</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- פנל תצוגה אגניות -->
+    <section class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
+      <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
+        <div class="w-full flex justify-between items-center mb-4">
+          <span class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider">תצוגת אגנית</span>
+          <span id="currentTrayBadge" class="text-xs md:text-sm px-3 py-1 bg-slate-100 text-slate-700 font-extrabold rounded-lg truncate max-w-[240px]">טרם נבחר דגם</span>
+        </div>
+        
+        <div class="w-full h-80 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+          <div class="w-20 h-20 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-4xl mb-3">◽</div>
+          <h4 id="trayPreviewTitle" class="text-base font-extrabold text-slate-800">בחר דגם אגנית לצפייה במפרט</h4>
+          <p id="trayPreviewSpecs" class="text-xs text-slate-400 mt-1">אגניות אקריליות איכותיות כולל משטח אנטי-סליפ נגד החלקה</p>
+        </div>
+      </div>
+
+      <div class="relative bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/80 text-white p-6 md:p-8 rounded-3xl shadow-2xl shadow-blue-950/20 border border-blue-500/20 space-y-5 overflow-hidden">
+        <div class="flex items-center justify-between">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-400/20 text-blue-300 text-xs font-bold rounded-full">
+            <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+            <span>סיכום הזמנת אגנית</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-medium">מחירון רשמי</span>
+        </div>
+
+        <div class="pt-1">
+          <span class="text-slate-400 text-xs md:text-sm font-semibold tracking-wide">מחיר מחירון רשמי (לא כולל מע״מ)</span>
+          <div id="finalTrayPriceDisplay" class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200">יש לבחור דגם אגנית</div>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 backdrop-blur-sm p-4 rounded-2xl space-y-1.5">
+          <div class="flex items-center justify-between text-sm md:text-base font-bold text-amber-400">
+            <span class="flex items-center gap-1.5"><span>🚚</span><span>אספקה והובלה:</span></span>
+            <span class="text-base font-extrabold">בתיאום סניף</span>
+          </div>
+          <p class="text-xs text-slate-300 font-medium leading-relaxed">מוצר מדף סטנדרטי באספקה מהירה מסניפי MTI.</p>
+        </div>
+
+        <button id="downloadTrayPdfBtn" onclick="generateTrayOrderPDF()" disabled class="w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg">
+          <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+          <span>הורדת טופס הזמנת אגנית (PDF)</span>
         </button>
       </div>
     </section>
@@ -566,9 +644,7 @@
   </div>
 
   <script>
-    // ==========================================
-    // מאגר החנויות והמיתוג
-    // ==========================================
+    // מאגר החנויות
     const DEFAULT_STORES_MAP = {
       "harash": { name: "חרש", logo: "./stores/harash.png" },
       "tuboul": { name: "טובול קרמיקה", logo: "./stores/tuboul.svg" },
@@ -643,30 +719,26 @@
 
     function switchMainTab(tab) {
       activeMainTab = tab;
-      const btnShowers = document.getElementById('tabBtnShowers');
-      const btnBaths = document.getElementById('tabBtnBaths');
-      const contentShowers = document.getElementById('tabContentShowers');
-      const contentBaths = document.getElementById('tabContentBaths');
-
-      if (tab === 'showers') {
-        btnShowers.className = "px-6 py-3 font-extrabold text-sm md:text-base border-b-2 border-blue-600 text-blue-600 bg-white rounded-t-xl shadow-sm transition flex items-center gap-2";
-        btnBaths.className = "px-6 py-3 font-bold text-sm md:text-base border-b-2 border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-t-xl transition flex items-center gap-2";
-        contentShowers.classList.remove('hidden');
-        contentBaths.classList.add('hidden');
-      } else {
-        btnBaths.className = "px-6 py-3 font-extrabold text-sm md:text-base border-b-2 border-blue-600 text-blue-600 bg-white rounded-t-xl shadow-sm transition flex items-center gap-2";
-        btnShowers.className = "px-6 py-3 font-bold text-sm md:text-base border-b-2 border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-t-xl transition flex items-center gap-2";
-        contentBaths.classList.remove('hidden');
-        contentShowers.classList.add('hidden');
-      }
+      const tabs = ['showers', 'baths', 'trays'];
+      
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        const content = document.getElementById(`tabContent${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        
+        if (t === tab) {
+          btn.className = "px-5 md:px-6 py-3 font-extrabold text-sm md:text-base border-b-2 border-blue-600 text-blue-600 bg-white rounded-t-xl shadow-sm transition flex items-center gap-2 whitespace-nowrap";
+          content.classList.remove('hidden');
+        } else {
+          btn.className = "px-5 md:px-6 py-3 font-bold text-sm md:text-base border-b-2 border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-t-xl transition flex items-center gap-2 whitespace-nowrap";
+          content.classList.add('hidden');
+        }
+      });
     }
 
     function resetCurrentTab() {
-      if (activeMainTab === 'showers') {
-        resetConfigurator();
-      } else {
-        resetBathConfigurator();
-      }
+      if (activeMainTab === 'showers') resetConfigurator();
+      else if (activeMainTab === 'baths') resetBathConfigurator();
+      else resetTrayConfigurator();
     }
 
     // ==========================================
@@ -677,6 +749,7 @@
         checkStoreParameter();
         initShowersTab();
         initBathsTab();
+        initTraysTab();
 
         window.addEventListener('keydown', (e) => {
           const modal = document.getElementById('zoomModal');
