@@ -331,13 +331,37 @@
         </div>
       </div>
 
+      <div id="constructionSection" class="hidden border-t pt-5 space-y-3">
+        <div class="flex justify-between items-center">
+          <label class="block text-base font-extrabold text-slate-800">4. קונסטרוקציה (מיטת תמיכה מפלדה)</label>
+          <span class="text-xs md:text-sm font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">מומלץ ברוב המקרים</span>
+        </div>
+        <p class="text-xs text-slate-500 leading-relaxed">קונסטרוקציית תמיכה מפלדה מתחת לאמבטיה מקלה משמעותית על עבודת ההתקנה, מבטיחה פילוס מדויק ושומרת על יציבות האמבטיה ואטימותה לאורך שנים - ברוב המקרים זו הבחירה הנכונה.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button type="button" onclick="selectConstruction(true)" id="constructionBtn_yes" class="construction-btn p-4 rounded-2xl border-2 text-right transition cursor-pointer">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-extrabold text-sm md:text-base">כן, כולל קונסטרוקציה</span>
+              <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
+            </div>
+            <p class="text-xs opacity-80">+500 ₪ &middot; מומלץ</p>
+          </button>
+          <button type="button" onclick="selectConstruction(false)" id="constructionBtn_no" class="construction-btn p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-extrabold text-slate-800 text-sm md:text-base">ללא קונסטרוקציה</span>
+              <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
+            </div>
+            <p class="text-xs text-slate-400">אמבטיה בלבד</p>
+          </button>
+        </div>
+      </div>
+
       <div id="wasteSection" class="border-t pt-5 space-y-4">
         <div class="flex justify-between items-center">
-          <label class="block text-base font-extrabold text-slate-800">4. אביק / פיית מילוי וגוון גימור</label>
+          <label class="block text-base font-extrabold text-slate-800">5. אביק / פיית מילוי וגוון גימור</label>
           <span id="selectedWasteBadge" class="text-xs md:text-sm font-bold text-blue-600">ללא אביק</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div id="wasteTypeChoice" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <button type="button" onclick="selectWasteOption('none')" id="wasteOpt_none" class="waste-opt-btn p-3.5 rounded-2xl border border-blue-600 bg-blue-50/50 text-blue-700 font-extrabold text-sm text-right transition">
             <div class="flex justify-between items-center">
               <span>ללא אביק נוסף</span>
@@ -362,6 +386,10 @@
           </button>
         </div>
 
+        <div id="wasteIncludedNote" class="hidden p-3.5 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs md:text-sm font-bold">
+          אביק עם פיית מילוי כלול במערכת הג'קוזי בגימור ניקל - ניתן לשדרג גוון בתוספת מחיר
+        </div>
+
         <div id="wasteColorPalette" class="hidden pt-3 space-y-2">
           <div class="flex justify-between items-center">
             <span class="text-xs md:text-sm font-bold text-slate-700">בחר גוון גימור לאביק:</span>
@@ -372,20 +400,9 @@
       </div>
 
       <div id="bathAddonsSection" class="border-t pt-5 space-y-4">
-        <h3 class="text-base font-extrabold text-slate-800">5. שדרוגים ותוספות מקוריות</h3>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <label id="optSupportBox" class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 transition">
-            <div class="flex items-center gap-3">
-              <input type="checkbox" id="chkSupport" onchange="calculateBathPrice()" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
-              <div>
-                <span class="text-sm font-bold text-slate-800 block">קונסטרוקציה (מיטת תמיכה מפלדה)</span>
-                <span class="text-xs text-slate-400">בסיס רגליים מחוזק לפילוס מושלם</span>
-              </div>
-            </div>
-            <span class="text-sm font-extrabold text-blue-600">+500 ₪</span>
-          </label>
+        <h3 class="text-base font-extrabold text-slate-800">6. שדרוגים ותוספות מקוריות</h3>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <label class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 transition">
             <div class="flex items-center gap-3">
               <input type="checkbox" id="chkPanel" onchange="calculateBathPrice()" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
@@ -1563,9 +1580,11 @@
     let selectedWasteColor = 'chrome';
     let selectedJetsFinish = 'standard';
     const JETS_FINISH_WHITE_SURCHARGE = 1250;
+    let selectedConstruction = true;
 
     function initBathsTab() {
       renderWasteColorPalette();
+      selectConstruction(true);
       selectBathType('rect');
     }
 
@@ -1637,22 +1656,49 @@
       };
       document.getElementById('selectedSystemBadge').innerText = sysNames[sys] || '--';
 
-      const optSupportBox = document.getElementById('optSupportBox');
-      const chkSupport = document.getElementById('chkSupport');
+      const constructionSection = document.getElementById('constructionSection');
+      const jetsFinishSection = document.getElementById('jetsFinishSection');
+      const wasteTypeChoice = document.getElementById('wasteTypeChoice');
+      const wasteIncludedNote = document.getElementById('wasteIncludedNote');
+
       if (sys === 'body') {
-        optSupportBox.classList.remove('opacity-40', 'pointer-events-none');
+        constructionSection.classList.remove('hidden');
+        jetsFinishSection.classList.add('hidden');
+        selectedJetsFinish = 'standard';
+
+        wasteTypeChoice.classList.remove('hidden');
+        wasteIncludedNote.classList.add('hidden');
+        selectWasteOption('none');
       } else {
-        optSupportBox.classList.add('opacity-40', 'pointer-events-none');
-        chkSupport.checked = false;
+        constructionSection.classList.add('hidden');
+        jetsFinishSection.classList.remove('hidden');
+
+        // ג'קוזי (BASIC/TITANIUM) תמיד כולל קונסטרוקציה ואביק עם פיית מילוי בגימור ניקל -
+        // אין בחירה, אפשר רק לשדרג את הגוון
+        wasteTypeChoice.classList.add('hidden');
+        wasteIncludedNote.classList.remove('hidden');
+        selectWasteOption('spout');
+        selectWasteColor(selectedJetsFinish === 'white' ? 'white_mat' : 'chrome');
       }
 
-      const jetsFinishSection = document.getElementById('jetsFinishSection');
-      if (sys === 'basic' || sys === 'titanium') {
-        jetsFinishSection.classList.remove('hidden');
-      } else {
-        jetsFinishSection.classList.add('hidden');
-        selectJetsFinish('standard');
-        return;
+      calculateBathPrice();
+    }
+
+    function selectConstruction(withConstruction) {
+      selectedConstruction = withConstruction;
+      document.querySelectorAll('.construction-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/40');
+        btn.classList.add('border-slate-200', 'bg-white');
+        const dot = btn.querySelector('.check-dot span');
+        if (dot) dot.classList.add('hidden');
+      });
+
+      const activeBtn = document.getElementById(withConstruction ? 'constructionBtn_yes' : 'constructionBtn_no');
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-200', 'bg-white');
+        activeBtn.classList.add('border-blue-600', 'bg-blue-50/40');
+        const dot = activeBtn.querySelector('.check-dot span');
+        if (dot) dot.classList.remove('hidden');
       }
 
       calculateBathPrice();
@@ -1672,6 +1718,10 @@
       }
 
       document.getElementById('selectedJetsFinishBadge').innerText = finish === 'white' ? `לבן (+${JETS_FINISH_WHITE_SURCHARGE.toLocaleString()} ₪)` : 'גרפיט / ניקל';
+
+      if (selectedBathSystem === 'basic' || selectedBathSystem === 'titanium') {
+        selectWasteColor(finish === 'white' ? 'white_mat' : 'chrome');
+      }
 
       calculateBathPrice();
     }
@@ -1754,19 +1804,27 @@
       else if (selectedBathSystem === 'basic') total = bath.basic;
       else if (selectedBathSystem === 'titanium') total = bath.titanium;
 
-      if (selectedWasteOption === 'drain') total += 215;
-      else if (selectedWasteOption === 'spout') total += 450;
+      const isJacuzzi = selectedBathSystem === 'basic' || selectedBathSystem === 'titanium';
+
+      // באמבטיה בלבד האביק הוא תוספת בחירה; בג'קוזי הוא כלול תמיד (S-95, גימור ניקל כברירת מחדל)
+      if (!isJacuzzi) {
+        if (selectedWasteOption === 'drain') total += 215;
+        else if (selectedWasteOption === 'spout') total += 450;
+      }
 
       if (selectedWasteOption !== 'none') {
         const col = WASTE_COLORS.find(c => c.id === selectedWasteColor);
-        if (col && col.price) total += col.price;
+        const isWhiteColor = selectedWasteColor === 'white_mat' || selectedWasteColor === 'white_gloss';
+        // כשבוחרים גימור לבן לג'טים, גוון לבן לאביק כלול באותה תוספת - ללא חיוב כפול
+        const bundledFree = isJacuzzi && selectedJetsFinish === 'white' && isWhiteColor;
+        if (col && col.price && !bundledFree) total += col.price;
       }
 
-      if ((selectedBathSystem === 'basic' || selectedBathSystem === 'titanium') && selectedJetsFinish === 'white') {
+      if (isJacuzzi && selectedJetsFinish === 'white') {
         total += JETS_FINISH_WHITE_SURCHARGE;
       }
 
-      if (document.getElementById('chkSupport').checked) total += 500;
+      if (selectedBathSystem === 'body' && selectedConstruction) total += 500;
       if (document.getElementById('chkPanel').checked) total += 4500;
       if (document.getElementById('chkLight').checked) total += 600;
       if (document.getElementById('chkTaps').checked) total += 1680;
@@ -1782,6 +1840,8 @@
     function resetBathConfigurator() {
       selectBathType('rect');
       selectedBathSystem = null;
+      document.getElementById('wasteTypeChoice').classList.remove('hidden');
+      document.getElementById('wasteIncludedNote').classList.add('hidden');
       selectWasteOption('none');
       selectWasteColor('chrome');
       document.getElementById('bathModelSelect').selectedIndex = 0;
@@ -1794,11 +1854,13 @@
         if (dot) dot.classList.add('hidden');
       });
 
-      document.getElementById('chkSupport').checked = false;
       document.getElementById('chkPanel').checked = false;
       document.getElementById('chkLight').checked = false;
       document.getElementById('chkTaps').checked = false;
       document.getElementById('chkPillow').checked = false;
+
+      document.getElementById('constructionSection').classList.add('hidden');
+      selectConstruction(true);
 
       document.getElementById('jetsFinishSection').classList.add('hidden');
       selectJetsFinish('standard');
@@ -1826,14 +1888,15 @@
       };
 
       let addonsList = [];
-      if (document.getElementById('chkSupport').checked) addonsList.push('קונסטרוקציה מפלדה (מיטת תמיכה)');
       if (document.getElementById('chkPanel').checked) addonsList.push('פאנל חיפוי דקורטיבי');
       if (document.getElementById('chkLight').checked) addonsList.push('תאורת כרומותרפיה מתחלפת 7 צבעים');
       if (document.getElementById('chkTaps').checked) addonsList.push('סט ברזים מדופן האמבטיה');
       if (document.getElementById('chkPillow').checked) addonsList.push('כרית ראש אורתופדית');
 
       let systemText = sysNames[selectedBathSystem];
-      if ((selectedBathSystem === 'basic' || selectedBathSystem === 'titanium')) {
+      if (selectedBathSystem === 'body') {
+        systemText += selectedConstruction ? ` | כולל קונסטרוקציה (מיטת תמיכה)` : ` | ללא קונסטרוקציה`;
+      } else {
         systemText += selectedJetsFinish === 'white' ? ` | גימור ג'טים: לבן (+${JETS_FINISH_WHITE_SURCHARGE.toLocaleString()} ₪)` : ` | גימור ג'טים: גרפיט/ניקל`;
       }
 
@@ -1841,7 +1904,8 @@
       if (selectedWasteOption !== 'none') {
         const wasteName = selectedWasteOption === 'drain' ? 'אביק דריכה S-160' : 'אביק משולב פיית מילוי S-95';
         const col = WASTE_COLORS.find(c => c.id === selectedWasteColor);
-        wasteText = `${wasteName} (גוון: ${col ? col.name : 'כרום/ניקל'})`;
+        const includedSuffix = (selectedBathSystem === 'basic' || selectedBathSystem === 'titanium') ? ' - כלול במערכת הג\'קוזי' : '';
+        wasteText = `${wasteName} (גוון: ${col ? col.name : 'כרום/ניקל'})${includedSuffix}`;
       }
 
       const now = new Date();
