@@ -209,7 +209,7 @@
     </section>
 
     <!-- פנל תצוגה מקלחונים -->
-    <section class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
+    <section class="order-first lg:order-none lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-24">
       <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
           <span class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider">הדמיית פתיחה</span>
@@ -406,8 +406,9 @@
           <label class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 transition">
             <div class="flex items-center gap-3">
               <input type="checkbox" id="chkPanel" onchange="calculateBathPrice()" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 shrink-0" />
-              <div class="w-14 h-14 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-1 overflow-hidden shrink-0">
+              <div class="relative w-14 h-14 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-1 overflow-hidden shrink-0">
                 <img src="./%D7%AA%D7%95%D7%A1%D7%A4%D7%95%D7%AA%20%D7%90%D7%9E%D7%91%D7%98%D7%99%D7%94/%D7%A4%D7%90%D7%A0%D7%9C%20%D7%97%D7%99%D7%A4%D7%95%D7%99%20%D7%93%D7%A7%D7%95%D7%A8%D7%98%D7%99%D7%91%D7%99.jpeg" alt="פאנל חיפוי דקורטיבי" class="max-w-full max-h-full object-contain" onerror="handleAddonImgError(this, 'תוספות אמבטיה', 'פאנל חיפוי דקורטיבי')" />
+                <button type="button" onclick="zoomAddonFromButton(event, this, 'פאנל חיפוי דקורטיבי')" class="absolute top-0.5 left-0.5 w-4 h-4 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[8px] shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
               </div>
               <div>
                 <span class="text-sm font-bold text-slate-800 block">פאנל חיפוי דקורטיבי</span>
@@ -454,7 +455,7 @@
     </section>
 
     <!-- פנל תצוגה אמבטיות -->
-    <section class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
+    <section class="order-first lg:order-none lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-24">
       <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
           <span class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider">תצוגת מפרט</span>
@@ -551,7 +552,7 @@
     </section>
 
     <!-- פנל תצוגה אגניות -->
-    <section class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
+    <section class="order-first lg:order-none lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-24">
       <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
           <span class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider">תצוגת אגנית</span>
@@ -947,6 +948,14 @@
     function zoomGlassFromButton(e, btn, title) {
       e.stopPropagation();
       const parent = btn.closest('.glass-btn');
+      const img = parent ? parent.querySelector('img') : null;
+      openSingleZoom(title, img ? (img.currentSrc || img.src) : '');
+    }
+
+    function zoomAddonFromButton(e, btn, title) {
+      e.preventDefault();
+      e.stopPropagation();
+      const parent = btn.closest('.relative');
       const img = parent ? parent.querySelector('img') : null;
       openSingleZoom(title, img ? (img.currentSrc || img.src) : '');
     }
