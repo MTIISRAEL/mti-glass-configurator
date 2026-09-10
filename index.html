@@ -1459,6 +1459,649 @@
       html2pdf().set(opt).from(element).save();
     }
 
+
+    const BATHS_CATALOG = [
+      { type: 'rect', id: 'MTI-73', size: '105X70', title: 'MTI-73 (105X70 ס"מ)', liters: 85, body: 1500, basic: 7025, titanium: 7975 },
+      { type: 'rect', id: 'MTI-74', size: '105X70', title: 'MTI-74 ישיבה (105X70 ס"מ)', liters: 85, body: 1500, basic: 7025, titanium: 7975 },
+      { type: 'rect', id: 'MTI-01', size: '120X70', title: 'MTI-01 (120X70 ס"מ)', liters: 90, body: 1500, basic: 7025, titanium: 7975 },
+      { type: 'rect', id: 'MTI-24', size: '120X70', title: 'MTI-24 ישיבה (120X70 ס"מ)', liters: 75, body: 1500, basic: 7025, titanium: 7975 },
+      { type: 'rect', id: 'MTI-113', size: '130X70', title: 'MTI-113 (130X70 ס"מ)', liters: 110, body: 1500, basic: 7025, titanium: 7975 },
+      { type: 'rect', id: 'MTI-81', size: '140X70', title: 'MTI-81 (140X70 ס"מ)', liters: 120, body: 1500, basic: 7025, titanium: 7975 },
+      { type: 'rect', id: 'MTI-114', size: '140X70', title: 'MTI-114 (140X70 ס"מ)', liters: 120, body: 1500, basic: 7025, titanium: 7975 },
+      { type: 'rect', id: 'MTI-25', size: '140X70', title: 'MTI-25 ישיבה (140X70 ס"מ)', liters: 95, body: 1500, basic: 7025, titanium: 7975 },
+      { type: 'rect', id: 'MTI-91', size: '150X70', title: 'MTI-91 (150X70 ס"מ)', liters: 120, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-60', size: '150X70', title: 'MTI-60 (150X70 ס"מ)', liters: 138, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-115', size: '150X70', title: 'MTI-115 (150X70 ס"מ)', liters: 130, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-04', size: '150X70', title: 'MTI-04 (150X70 ס"מ)', liters: 130, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-92', size: '160X70', title: 'MTI-92 (160X70 ס"מ)', liters: 150, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-82', size: '160X70', title: 'MTI-82 (160X70 ס"מ)', liters: 143, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-61', size: '160X70', title: 'MTI-61 (160X70 ס"מ)', liters: 140, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-116', size: '160X70', title: 'MTI-116 (160X70 ס"מ)', liters: 130, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-06', size: '160X70', title: 'MTI-06 (160X70 ס"מ)', liters: 140, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-90', size: '160X75', title: 'MTI-90 (160X75 ס"מ)', liters: 150, body: 1950, basic: 7750, titanium: 9000 },
+      { type: 'rect', id: 'MTI-68', size: '160X80', title: 'MTI-68 (160X80 ס"מ)', liters: 165, body: 1950, basic: 7750, titanium: 9000 },
+      { type: 'rect', id: 'MTI-93', size: '170X70', title: 'MTI-93 (170X70 ס"מ)', liters: 160, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-83', size: '170X70', title: 'MTI-83 (170X70 ס"מ)', liters: 155, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-62', size: '170X70', title: 'MTI-62 (170X70 ס"מ)', liters: 158, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-117', size: '170X70', title: 'MTI-117 (170X70 ס"מ)', liters: 145, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-07', size: '170X70', title: 'MTI-07 (170X70 ס"מ)', liters: 150, body: 1500, basic: 7525, titanium: 8500 },
+      { type: 'rect', id: 'MTI-63', size: '170X75', title: 'MTI-63 (170X75 ס"מ)', liters: 165, body: 1950, basic: 7750, titanium: 9000 },
+      { type: 'rect', id: 'MTI-84', size: '170X75', title: 'MTI-84 (170X75 ס"מ)', liters: 155, body: 1950, basic: 7750, titanium: 9000 },
+      { type: 'rect', id: 'MTI-69', size: '170X75', title: 'MTI-69 (170X75 ס"מ)', liters: 155, body: 1950, basic: 7750, titanium: 9000 },
+      { type: 'rect', id: 'MTI-80', size: '170X80', title: 'MTI-80 (170X80 ס"מ)', liters: 170, body: 1950, basic: 7750, titanium: 9000 },
+      { type: 'rect', id: 'MTI-85', size: '170X80', title: 'MTI-85 (170X80 ס"מ)', liters: 165, body: 1950, basic: 7750, titanium: 9000 },
+      { type: 'rect', id: 'MTI-71', size: '180X70', title: 'MTI-71 (180X70 ס"מ)', liters: 150, body: 1950, basic: 7750, titanium: 9000 },
+      { type: 'rect', id: 'MTI-64', size: '180X80', title: 'MTI-64 (180X80 ס"מ)', liters: 165, body: 2450, basic: 8500, titanium: 9500 },
+      { type: 'rect', id: 'MTI-18', size: '180X80', title: 'MTI-18 (180X80 ס"מ)', liters: 145, body: 2450, basic: 8500, titanium: 9500 },
+      { type: 'rect', id: 'MTI-72', size: '180X80', title: 'MTI-72 (180X80 ס"מ)', liters: 145, body: 2450, basic: 8500, titanium: 9500 },
+      { type: 'rect', id: 'MTI-78', size: '180X80', title: 'MTI-78 (180X80 ס"מ)', liters: 185, body: 2450, basic: 8500, titanium: 9500 },
+      { type: 'rect', id: 'MTI-65', size: '180X80', title: 'MTI-65 (180X80 ס"מ)', liters: 175, body: 2450, basic: 8500, titanium: 9500 },
+      { type: 'rect', id: 'MTI-19', size: '180X90', title: 'MTI-19 (180X90 ס"מ)', liters: 185, body: 2450, basic: 8500, titanium: 9500 },
+      { type: 'rect', id: 'MTI-79', size: '180X90', title: 'MTI-79 (180X90 ס"מ)', liters: 185, body: 2450, basic: 8500, titanium: 9500 },
+      { type: 'rect', id: 'MTI-70', size: '190X90', title: 'MTI-70 (190X90 ס"מ)', liters: 195, body: 3000, basic: 9250, titanium: 10500 },
+      { type: 'rect', id: 'MTI-23', size: '185X95', title: 'MTI-23 (185X95 ס"מ)', liters: 190, body: 3700, basic: 10000, titanium: 11250 },
+      { type: 'rect', id: 'MTI-48', size: '200X100', title: 'MTI-48 (200X100 ס"מ)', liters: 220, body: 5175, basic: 11375, titanium: 12750 },
+      { type: 'rect', id: 'MTI-106', size: '200X120', title: 'MTI-106 (200X120 ס"מ)', liters: 265, body: 11500, basic: 22500, titanium: 24500 },
+      { type: 'rect', id: 'MTI-21', size: '180X140', title: 'MTI-21 זוגית (180X140 ס"מ)', liters: 300, body: 6000, basic: 11250, titanium: 12900 },
+      { type: 'rect', id: 'MTI-96', size: '190X160', title: 'MTI-96 זוגית (190X160 ס"מ)', liters: 550, body: 8000, basic: 16200, titanium: 17100 },
+      { type: 'corner', id: 'MTI-52', size: '150/160X100', title: 'MTI-52 פינתית (150/160X100 ס"מ)', liters: 158, body: 2250, basic: 8000, titanium: 9375 },
+      { type: 'corner', id: 'MTI-53', size: '150X90/160X100', title: 'MTI-53 פינתית', liters: 158, body: 2250, basic: 8000, titanium: 9375 },
+      { type: 'corner', id: 'MTI-28', size: '160X100', title: 'MTI-28 פינתית (160X100 ס"מ)', liters: 145, body: 2250, basic: 8000, titanium: 9375 },
+      { type: 'corner', id: 'MTI-26', size: '170X110', title: 'MTI-26 פינתית (170X110 ס"מ)', liters: 158, body: 2500, basic: 8500, titanium: 9600 },
+      { type: 'corner', id: 'MTI-59', size: '175X120', title: 'MTI-59 פינתית (175X120 ס"מ)', liters: 180, body: 6400, basic: 11000, titanium: 14250 },
+      { type: 'corner', id: 'MTI-29', size: '170X130', title: 'MTI-29 פינתית (170X130 ס"מ)', liters: 180, body: 7250, basic: 14000, titanium: 16000 },
+      { type: 'corner', id: 'MTI-31', size: '110X110', title: 'MTI-31 פינתית (110X110 ס"מ)', liters: 110, body: 2250, basic: 7800, titanium: 9175 },
+      { type: 'corner', id: 'MTI-32', size: '120X120', title: 'MTI-32 פינתית (120X120 ס"מ)', liters: 125, body: 2250, basic: 7800, titanium: 9175 },
+      { type: 'corner', id: 'MTI-57', size: '130X130', title: 'MTI-57 פינתית (130X130 ס"מ)', liters: 135, body: 2250, basic: 8000, titanium: 9375 },
+      { type: 'corner', id: 'MTI-88', size: '135X135', title: 'MTI-88 פינתית (135X135 ס"מ)', liters: 140, body: 2475, basic: 8000, titanium: 9375 },
+      { type: 'corner', id: 'MTI-89', size: '140X140', title: 'MTI-89 פינתית (140X140 ס"מ)', liters: 155, body: 2475, basic: 8000, titanium: 9375 },
+      { type: 'corner', id: 'MTI-34', size: '140X140', title: 'MTI-34 פינתית (140X140 ס"מ)', liters: 150, body: 2475, basic: 8000, titanium: 9375 },
+      { type: 'corner', id: 'MTI-41', size: '145X145', title: 'MTI-41 פינתית (145X145 ס"מ)', liters: 157, body: 2475, basic: 8000, titanium: 9375 },
+      { type: 'corner', id: 'MTI-39', size: '145X145', title: 'MTI-39 פינתית (145X145 ס"מ)', liters: 155, body: 2475, basic: 8000, titanium: 9375 },
+      { type: 'corner', id: 'MTI-35', size: '150X150', title: 'MTI-35 פינתית (150X150 ס"מ)', liters: 165, body: 2475, basic: 8200, titanium: 9575 },
+      { type: 'corner', id: 'MTI-43', size: '150X150', title: 'MTI-43 פינתית (150X150 ס"מ)', liters: 165, body: 2475, basic: 8200, titanium: 9575 },
+      { type: 'round', id: 'MTI-50', size: '150Q', title: 'MTI-50 עגולה (קוטר 150 ס"מ)', liters: 185, body: 5000, basic: 12175, titanium: 16600 },
+      { type: 'round', id: 'MTI-95', size: '150Q', title: 'MTI-95 עגולה (קוטר 150 ס"מ)', liters: 170, body: 5000, basic: 10200, titanium: 16800 },
+      { type: 'round', id: 'MTI-66', size: '164Q', title: 'MTI-66 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14925, titanium: 21200 },
+      { type: 'round', id: 'MTI-67', size: '164Q', title: 'MTI-67 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14125, titanium: 21200 },
+      { type: 'round', id: 'MTI-51', size: '180Q', title: 'MTI-51 עגולה (קוטר 180 ס"מ)', liters: 200, body: 9000, basic: 13875, titanium: 21200 },
+      { type: 'round', id: 'MTI-99', size: '180Q', title: 'MTI-99 עגולה (קוטר 180 ס"מ)', liters: 230, body: 9000, basic: 16625, titanium: 22760 },
+      { type: 'round', id: 'MTI-100', size: '200Q', title: 'MTI-100 עגולה (קוטר 200 ס"מ)', liters: 450, body: 9250, basic: 18075, titanium: 24550 },
+      { type: 'oval', id: 'MTI-27', size: '180X110', title: 'MTI-27 אובלית (180X110 ס"מ)', liters: 180, body: 3750, basic: 10250, titanium: 16500 },
+      { type: 'oval', id: 'MTI-97', size: '200X140', title: 'MTI-97 אובלית (200X140 ס"מ)', liters: 400, body: 9000, basic: 12500, titanium: 20500 }
+    ];
+
+    const WASTE_COLORS = [
+      { id: 'chrome', name: 'כרום / ניקל', price: 0, bg: 'bg-slate-200 border-slate-300 text-slate-800' },
+      { id: 'bronze_red', name: 'ברונזה אדומה (רוז גולד)', price: 180, bg: 'bg-amber-100 border-amber-300 text-amber-900' },
+      { id: 'bronze_old', name: 'ברונזה עתיק (זהב מט)', price: 180, bg: 'bg-yellow-100 border-yellow-300 text-yellow-900' },
+      { id: 'graphite', name: 'גרפיט', price: 180, bg: 'bg-stone-200 border-stone-400 text-stone-800' },
+      { id: 'white_gloss', name: 'לבן מבריק', price: 150, bg: 'bg-white border-slate-300 text-slate-800' },
+      { id: 'white_mat', name: 'לבן מט', price: 150, bg: 'bg-slate-50 border-slate-300 text-slate-700' },
+      { id: 'nickel_brushed', name: 'ניקל מוברש', price: 180, bg: 'bg-zinc-200 border-zinc-400 text-zinc-800' },
+      { id: 'black_mat', name: 'שחור מט', price: 180, bg: 'bg-slate-900 border-slate-950 text-white' }
+    ];
+
+    let selectedBathType = 'rect';
+    let selectedBathSystem = null;
+    let selectedWasteOption = 'none';
+    let selectedWasteColor = 'chrome';
+
+    function initBathsTab() {
+      renderWasteColorPalette();
+      selectBathType('rect');
+    }
+
+    function selectBathType(type) {
+      selectedBathType = type;
+      document.querySelectorAll('.bath-type-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+        btn.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
+      });
+
+      const activeBtn = document.getElementById(`bathTypeBtn_${type}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
+        activeBtn.classList.add('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+      }
+
+      const filtered = BATHS_CATALOG.filter(b => b.type === type);
+      const modelSelect = document.getElementById('bathModelSelect');
+      modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם ומידה --</option>' +
+        filtered.map(b => `<option value="${b.id}">${b.title} [${b.id}]</option>`).join('');
+
+      onBathModelChange();
+    }
+
+    function onBathModelChange() {
+      const modelId = document.getElementById('bathModelSelect').value;
+      const bath = BATHS_CATALOG.find(b => b.id === modelId);
+
+      const previewBadge = document.getElementById('currentBathBadge');
+      const previewTitle = document.getElementById('bathPreviewTitle');
+      const previewSpecs = document.getElementById('bathPreviewSpecs');
+
+      if (!bath) {
+        previewBadge.innerText = 'טרם נבחר דגם';
+        previewTitle.innerText = 'בחר דגם אמבטיה לצפייה במפרט';
+        previewSpecs.innerText = 'המערכת תציג נתונים טכניים, ליטר מים ומידות פנים וחוץ';
+        calculateBathPrice();
+        return;
+      }
+
+      previewBadge.innerText = bath.id;
+      previewTitle.innerText = bath.title;
+      previewSpecs.innerText = `קיבולת מים: ${bath.liters} ליטר | כולל חיזוק פלדה היקפי ואנטי-סליפ`;
+
+      calculateBathPrice();
+    }
+
+    function selectBathSystem(sys) {
+      selectedBathSystem = sys;
+      document.querySelectorAll('.sys-card').forEach(c => {
+        c.classList.remove('border-blue-600', 'bg-blue-50/40', 'ring-2', 'ring-blue-600');
+        c.classList.add('border-slate-200', 'bg-white');
+        const dot = c.querySelector('.check-dot span');
+        if (dot) dot.classList.add('hidden');
+      });
+
+      const activeCard = document.getElementById(`sysCard_${sys}`);
+      if (activeCard) {
+        activeCard.classList.remove('border-slate-200', 'bg-white');
+        activeCard.classList.add('border-blue-600', 'bg-blue-50/40', 'ring-2', 'ring-blue-600');
+        const dot = activeCard.querySelector('.check-dot span');
+        if (dot) dot.classList.remove('hidden');
+      }
+
+      const sysNames = {
+        'body': 'אמבטיה בלבד (ללא ג\'קוזי)',
+        'basic': 'מערכת ג\'קוזי BASIC',
+        'titanium': 'מערכת ג\'קוזי TITANIUM'
+      };
+      document.getElementById('selectedSystemBadge').innerText = sysNames[sys] || '--';
+
+      const optSupportBox = document.getElementById('optSupportBox');
+      const chkSupport = document.getElementById('chkSupport');
+      if (sys === 'body') {
+        optSupportBox.classList.remove('opacity-40', 'pointer-events-none');
+      } else {
+        optSupportBox.classList.add('opacity-40', 'pointer-events-none');
+        chkSupport.checked = false;
+      }
+
+      calculateBathPrice();
+    }
+
+    function selectWasteOption(opt) {
+      selectedWasteOption = opt;
+      document.querySelectorAll('.waste-opt-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+        btn.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
+      });
+
+      const activeBtn = document.getElementById(`wasteOpt_${opt}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
+        activeBtn.classList.add('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+      }
+
+      const palette = document.getElementById('wasteColorPalette');
+      const badge = document.getElementById('selectedWasteBadge');
+
+      if (opt === 'none') {
+        palette.classList.add('hidden');
+        badge.innerText = 'ללא אביק';
+      } else if (opt === 'drain') {
+        palette.classList.remove('hidden');
+        badge.innerText = 'אביק דריכה S-160';
+      } else if (opt === 'spout') {
+        palette.classList.remove('hidden');
+        badge.innerText = 'אביק עם פיית מילוי S-95';
+      }
+
+      calculateBathPrice();
+    }
+
+    function renderWasteColorPalette() {
+      const container = document.getElementById('wasteColorCards');
+      container.innerHTML = WASTE_COLORS.map(c => `
+        <button type="button" onclick="selectWasteColor('${c.id}')" id="wasteColorBtn_${c.id}" class="waste-color-item p-2.5 rounded-xl border flex items-center justify-between transition ${c.bg} ${c.id === 'chrome' ? 'ring-2 ring-blue-600 border-blue-600 font-extrabold' : 'opacity-90 hover:opacity-100'}">
+          <span class="text-xs font-bold truncate">${c.name}</span>
+          ${c.price > 0 ? `<span class="text-[10px] font-bold opacity-80">+${c.price} ₪</span>` : ''}
+        </button>
+      `).join('');
+    }
+
+    function selectWasteColor(colorId) {
+      selectedWasteColor = colorId;
+      const col = WASTE_COLORS.find(c => c.id === colorId);
+      document.getElementById('selectedWasteColorName').innerText = col ? col.name : '';
+
+      document.querySelectorAll('.waste-color-item').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'font-extrabold');
+        btn.classList.add('opacity-90');
+      });
+
+      const activeBtn = document.getElementById(`wasteColorBtn_${colorId}`);
+      if (activeBtn) {
+        activeBtn.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'font-extrabold');
+        activeBtn.classList.remove('opacity-90');
+      }
+
+      calculateBathPrice();
+    }
+
+    function calculateBathPrice() {
+      const modelId = document.getElementById('bathModelSelect').value;
+      const bath = BATHS_CATALOG.find(b => b.id === modelId);
+      const priceDisplay = document.getElementById('finalBathPriceDisplay');
+      const downloadBtn = document.getElementById('downloadBathPdfBtn');
+
+      if (!bath || !selectedBathSystem) {
+        priceDisplay.innerText = 'יש לבחור דגם אמבטיה ומערכת';
+        priceDisplay.className = "text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200";
+        downloadBtn.disabled = true;
+        downloadBtn.className = "w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg";
+        return;
+      }
+
+      let total = 0;
+      if (selectedBathSystem === 'body') total = bath.body;
+      else if (selectedBathSystem === 'basic') total = bath.basic;
+      else if (selectedBathSystem === 'titanium') total = bath.titanium;
+
+      if (selectedWasteOption === 'drain') total += 215;
+      else if (selectedWasteOption === 'spout') total += 450;
+
+      if (selectedWasteOption !== 'none') {
+        const col = WASTE_COLORS.find(c => c.id === selectedWasteColor);
+        if (col && col.price) total += col.price;
+      }
+
+      if (document.getElementById('chkSupport').checked) total += 500;
+      if (document.getElementById('chkPanel').checked) total += 4500;
+      if (document.getElementById('chkLight').checked) total += 600;
+      if (document.getElementById('chkTaps').checked) total += 1680;
+      if (document.getElementById('chkPillow').checked) total += 750;
+
+      priceDisplay.innerText = total.toLocaleString() + ' ₪';
+      priceDisplay.className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1 transition-all duration-200";
+
+      downloadBtn.disabled = false;
+      downloadBtn.className = "w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.98] text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-blue-600/30 border border-blue-400/30 transition-all cursor-pointer text-sm md:text-base";
+    }
+
+    function resetBathConfigurator() {
+      selectBathType('rect');
+      selectedBathSystem = null;
+      selectWasteOption('none');
+      selectWasteColor('chrome');
+      document.getElementById('bathModelSelect').selectedIndex = 0;
+      document.getElementById('selectedSystemBadge').innerText = '--';
+      
+      document.querySelectorAll('.sys-card').forEach(c => {
+        c.classList.remove('border-blue-600', 'bg-blue-50/40', 'ring-2', 'ring-blue-600');
+        c.classList.add('border-slate-200', 'bg-white');
+        const dot = c.querySelector('.check-dot span');
+        if (dot) dot.classList.add('hidden');
+      });
+
+      document.getElementById('chkSupport').checked = false;
+      document.getElementById('chkPanel').checked = false;
+      document.getElementById('chkLight').checked = false;
+      document.getElementById('chkTaps').checked = false;
+      document.getElementById('chkPillow').checked = false;
+
+      calculateBathPrice();
+    }
+
+    function generateBathOrderPDF() {
+      const modelId = document.getElementById('bathModelSelect').value;
+      const bath = BATHS_CATALOG.find(b => b.id === modelId);
+      if (!bath || !selectedBathSystem) return;
+
+      const finalPrice = document.getElementById('finalBathPriceDisplay').innerText;
+      const sysNames = {
+        'body': 'אמבטיה בלבד (ללא ג\'קוזי)',
+        'basic': 'מערכת ג\'קוזי BASIC',
+        'titanium': 'מערכת ג\'קוזי TITANIUM'
+      };
+
+      const typeHebrew = {
+        'rect': 'אמבטיה מלבנית',
+        'corner': 'אמבטיה פינתית',
+        'round': 'אמבטיה עגולה (Q)',
+        'oval': 'אמבטיה אובלית'
+      };
+
+      let addonsList = [];
+      if (document.getElementById('chkSupport').checked) addonsList.push('קונסטרוקציה מפלדה (מיטת תמיכה)');
+      if (document.getElementById('chkPanel').checked) addonsList.push('פאנל חיפוי דקורטיבי');
+      if (document.getElementById('chkLight').checked) addonsList.push('תאורת כרומותרפיה מתחלפת 7 צבעים');
+      if (document.getElementById('chkTaps').checked) addonsList.push('סט ברזים מדופן האמבטיה');
+      if (document.getElementById('chkPillow').checked) addonsList.push('כרית ראש אורתופדית');
+
+      let wasteText = 'ללא אביק נוסף';
+      if (selectedWasteOption !== 'none') {
+        const wasteName = selectedWasteOption === 'drain' ? 'אביק דריכה S-160' : 'אביק משולב פיית מילוי S-95';
+        const col = WASTE_COLORS.find(c => c.id === selectedWasteColor);
+        wasteText = `${wasteName} (גוון: ${col ? col.name : 'כרום/ניקל'})`;
+      }
+
+      const now = new Date();
+      const formattedDate = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+      document.getElementById('pdfDate').innerText = formattedDate;
+
+      if (activeStore) {
+        document.getElementById('pdfTitleMain').innerText = toNbsp(activeStore.name);
+        document.getElementById('pdfTitleSub').innerText = toNbsp('טופס מפרט והזמנת אמבטיה ומערכות ג\'קוזי (בשיתוף רשמי עם MTI)');
+        document.getElementById('pdfLogoImg').src = activeStore.logo;
+        document.getElementById('pdfSignatureText').innerText = toNbsp(`אישור הזמנה ומפרט - ${activeStore.name}`);
+      } else {
+        document.getElementById('pdfTitleMain').innerText = toNbsp('MTI Bath Gallery');
+        document.getElementById('pdfTitleSub').innerText = toNbsp('טופס מפרט והזמנת אמבטיות ומערכות ג\'קוזי');
+        document.getElementById('pdfLogoImg').src = './mtilogo.jpg';
+        document.getElementById('pdfSignatureText').innerText = toNbsp('חתימת הלקוח / אישור הזמנה');
+      }
+
+      document.getElementById('pdfSectionHeader').innerText = toNbsp('מפרט טכני של האמבטיה והמערכת');
+      document.getElementById('pdfExtraPriceLabel').innerText = toNbsp('הובלה ואספקה: ');
+      document.getElementById('pdfExtraPriceVal').innerText = toNbsp('בתיאום סניף');
+      document.getElementById('pdfInstallNote').innerText = toNbsp('התקנת אינסטלציה וחשמל ע״י בעל מקצוע מוסמך בהתאם להוראות MTI.');
+      document.getElementById('pdfFinalPrice').innerText = toNbsp(finalPrice);
+
+      const specsBody = document.getElementById('pdfSpecsBody');
+      specsBody.innerHTML = `
+        <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">סגנון האמבטיה</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(typeHebrew[bath.type])}</td>
+        </tr>
+        <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">דגם ומידה</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(bath.title)}</td>
+        </tr>
+        <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">קיבולת מים</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(bath.liters + ' ליטר')}</td>
+        </tr>
+        <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">מערכת נבחרת</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(sysNames[selectedBathSystem])}</td>
+        </tr>
+        <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">אביק / פיית מילוי וגימור</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(wasteText)}</td>
+        </tr>
+        <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">תוספות ושדרוגים</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(addonsList.length > 0 ? addonsList.join(' | ') : 'ללא תוספות')}</td>
+        </tr>
+      `;
+
+      const storePrefix = activeStore ? `${activeStore.name}_` : '';
+      const element = document.getElementById('pdfTemplate');
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `הזמנת_אמבטיה_${storePrefix}MTI_${bath.id}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: false, scrollX: 0, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
+
+    // =========================================================================
+    // נתוני אגניות
+    // =========================================================================
+    const TRAYS_CATALOG = [
+      { series: 'classic', id: 'MTI 206', shape: 'מרובע', size: '70X70', price: 950, hasWaste: false },
+      { series: 'classic', id: 'MTI 203', shape: 'מרובע', size: '80X80', price: 1000, hasWaste: false },
+      { series: 'classic', id: 'MTI 202', shape: 'חצי עיגול', size: '80X80', price: 1000, hasWaste: false },
+      { series: 'classic', id: 'MTI 201', shape: 'מרובע', size: '90X90', price: 1050, hasWaste: false },
+      { series: 'classic', id: 'MTI 200', shape: 'חצי עיגול', size: '90X90', price: 1050, hasWaste: false },
+      { series: 'classic', id: 'MTI 204', shape: 'מלבני', size: '75X100', price: 1300, hasWaste: false },
+      { series: 'classic', id: 'MTI 205', shape: 'מלבני', size: '80X120', price: 1375, hasWaste: false },
+      { series: 'solid', id: 'MTI 220', shape: 'סלים מלבני', size: '110X75', price: 2200, hasWaste: true },
+      { series: 'solid', id: 'MTI 221', shape: 'סלים מלבני', size: '120X75', price: 2300, hasWaste: true },
+      { series: 'urban', id: 'MTI 180', shape: 'מרובע', size: '80X80', price: 1550, hasWaste: true },
+      { series: 'urban', id: 'MTI 181', shape: 'מלבני', size: '90X80', price: 1700, hasWaste: true },
+      { series: 'urban', id: 'MTI 182', shape: 'מלבני', size: '100X80', price: 1850, hasWaste: true },
+      { series: 'urban', id: 'MTI 183', shape: 'מלבני', size: '110X80', price: 2000, hasWaste: true },
+      { series: 'urban', id: 'MTI 184', shape: 'מלבני', size: '120X80', price: 2150, hasWaste: true },
+      { series: 'urban', id: 'MTI 185', shape: 'מלבני', size: '130X80', price: 2300, hasWaste: true },
+      { series: 'urban', id: 'MTI 186', shape: 'מלבני', size: '140X80', price: 2450, hasWaste: true },
+      { series: 'urban', id: 'MTI 187', shape: 'מלבני', size: '150X80', price: 2600, hasWaste: true },
+      { series: 'urban', id: 'MTI 188', shape: 'מלבני', size: '160X80', price: 2750, hasWaste: true },
+      { series: 'urban', id: 'MTI 189', shape: 'מרובע', size: '90X90', price: 1850, hasWaste: true },
+      { series: 'urban', id: 'MTI 190', shape: 'מלבני', size: '100X90', price: 2000, hasWaste: true },
+      { series: 'urban', id: 'MTI 191', shape: 'מלבני', size: '110X90', price: 2150, hasWaste: true },
+      { series: 'urban', id: 'MTI 192', shape: 'מלבני', size: '120X90', price: 2300, hasWaste: true },
+      { series: 'urban', id: 'MTI 193', shape: 'מלבני', size: '130X90', price: 2450, hasWaste: true },
+      { series: 'urban', id: 'MTI 194', shape: 'מלבני', size: '140X90', price: 2600, hasWaste: true },
+      { series: 'urban', id: 'MTI 195', shape: 'מלבני', size: '150X90', price: 2750, hasWaste: true },
+      { series: 'urban', id: 'MTI 196', shape: 'מלבני', size: '160X90', price: 2900, hasWaste: true },
+      { series: 'drain', id: 'MTI 260/261', shape: 'תעלת ניקוז', size: '100X70', price: 2000, hasWaste: true },
+      { series: 'drain', id: 'MTI 262/263', shape: 'תעלת ניקוז', size: '110X70', price: 2150, hasWaste: true },
+      { series: 'drain', id: 'MTI 264/265', shape: 'תעלת ניקוז', size: '120X70', price: 2300, hasWaste: true },
+      { series: 'drain', id: 'MTI 266/267', shape: 'תעלת ניקוז', size: '130X70', price: 2450, hasWaste: true },
+      { series: 'drain', id: 'MTI 268/269', shape: 'תעלת ניקוז', size: '140X70', price: 2600, hasWaste: true },
+      { series: 'drain', id: 'MTI 270/271', shape: 'תעלת ניקוז', size: '150X70', price: 2750, hasWaste: true },
+      { series: 'drain', id: 'MTI 272/273', shape: 'תעלת ניקוז', size: '160X70', price: 2900, hasWaste: true },
+      { series: 'drain', id: 'MTI 274/275', shape: 'תעלת ניקוז', size: '170X70', price: 3050, hasWaste: true },
+      { series: 'drain', id: 'MTI 227', shape: 'תעלת ניקוז מרובע', size: '80X80', price: 1850, hasWaste: true },
+      { series: 'drain', id: 'MTI 228', shape: 'תעלת ניקוז מרובע', size: '90X90', price: 2150, hasWaste: true },
+      { series: 'drain', id: 'MTI 229', shape: 'תעלת ניקוז מרובע', size: '100X100', price: 3050, hasWaste: true },
+      { series: 'drain', id: 'MTI 280/281', shape: 'תעלת ניקוז', size: '100X80', price: 2150, hasWaste: true },
+      { series: 'drain', id: 'MTI 282/230', shape: 'תעלת ניקוז', size: '110X80', price: 2300, hasWaste: true },
+      { series: 'drain', id: 'MTI 284/285', shape: 'תעלת ניקוז', size: '120X80', price: 2450, hasWaste: true },
+      { series: 'drain', id: 'MTI 286/231', shape: 'תעלת ניקוז', size: '130X80', price: 2600, hasWaste: true },
+      { series: 'drain', id: 'MTI 288/289', shape: 'תעלת ניקוז', size: '140X80', price: 2750, hasWaste: true },
+      { series: 'drain', id: 'MTI 290/232', shape: 'תעלת ניקוז', size: '150X80', price: 2900, hasWaste: true },
+      { series: 'drain', id: 'MTI 292/293', shape: 'תעלת ניקוז', size: '160X80', price: 3050, hasWaste: true },
+      { series: 'drain', id: 'MTI 294/233', shape: 'תעלת ניקוז', size: '170X80', price: 3200, hasWaste: true },
+      { series: 'drain', id: 'MTI 240/244', shape: 'תעלת ניקוז', size: '100X90', price: 2300, hasWaste: true },
+      { series: 'drain', id: 'MTI 248/251', shape: 'תעלת ניקוז', size: '110X90', price: 2450, hasWaste: true },
+      { series: 'drain', id: 'MTI 245/241', shape: 'תעלת ניקוז', size: '120X90', price: 2600, hasWaste: true },
+      { series: 'drain', id: 'MTI 249/252', shape: 'תעלת ניקוז', size: '130X90', price: 2750, hasWaste: true },
+      { series: 'drain', id: 'MTI 246/242', shape: 'תעלת ניקוז', size: '140X90', price: 2900, hasWaste: true },
+      { series: 'drain', id: 'MTI 250/253', shape: 'תעלת ניקוז', size: '150X90', price: 3050, hasWaste: true },
+      { series: 'drain', id: 'MTI 247/243', shape: 'תעלת ניקוז', size: '160X90', price: 3200, hasWaste: true },
+      { series: 'solid', id: 'MTI 210', shape: 'יציקה מלאה מרובע', size: '80X80', price: 2200, hasWaste: true },
+      { series: 'solid', id: 'MTI 211', shape: 'יציקה מלאה מרובע', size: '90X90', price: 2300, hasWaste: true },
+      { series: 'solid', id: 'MTI 212', shape: 'יציקה מלאה מלבני', size: '100X80', price: 2300, hasWaste: true },
+      { series: 'solid', id: 'MTI 214', shape: 'יציקה מלאה מלבני', size: '140X80', price: 2650, hasWaste: true },
+      { series: 'solid', id: 'MTI 215', shape: 'יציקה מלאה מלבני', size: '110X90', price: 2500, hasWaste: true },
+      { series: 'solid', id: 'MTI 213', shape: 'יציקה מלאה מלבני', size: '120X90', price: 2500, hasWaste: true },
+      { series: 'solid', id: 'MTI 216', shape: 'יציקה מלאה מלבני', size: '130X90', price: 2650, hasWaste: true },
+      { series: 'solid', id: 'MTI 217', shape: 'יציקה מלאה מלבני', size: '150X90', price: 2800, hasWaste: true }
+    ];
+
+    let selectedTraySeries = 'classic';
+
+    function initTraysTab() {
+      selectTraySeries('classic');
+    }
+
+    function selectTraySeries(series) {
+      selectedTraySeries = series;
+      document.querySelectorAll('.tray-series-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+        btn.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
+      });
+
+      const activeBtn = document.getElementById(`traySeriesBtn_${series}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
+        activeBtn.classList.add('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+      }
+
+      const filtered = TRAYS_CATALOG.filter(t => t.series === series);
+      const modelSelect = document.getElementById('trayModelSelect');
+      modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם ומידה --</option>' +
+        filtered.map(t => `<option value="${t.id}">${t.id} - ${t.shape} (${t.size} ס"מ)</option>`).join('');
+
+      const solidOptionBox = document.getElementById('traySolidOptionBox');
+      if (series === 'solid') {
+        solidOptionBox.classList.remove('hidden');
+      } else {
+        solidOptionBox.classList.add('hidden');
+        document.getElementById('chkTrayLegs').checked = false;
+      }
+
+      onTrayModelChange();
+    }
+
+    function onTrayModelChange() {
+      const modelId = document.getElementById('trayModelSelect').value;
+      const tray = TRAYS_CATALOG.find(t => t.id === modelId);
+
+      const previewBadge = document.getElementById('currentTrayBadge');
+      const previewTitle = document.getElementById('trayPreviewTitle');
+      const previewSpecs = document.getElementById('trayPreviewSpecs');
+      const wasteStatusBadge = document.getElementById('trayWasteStatusBadge');
+      const wasteManualBox = document.getElementById('trayWasteManualBox');
+
+      if (!tray) {
+        previewBadge.innerText = 'טרם נבחר דגם';
+        previewTitle.innerText = 'בחר דגם אגנית לצפייה במפרט';
+        previewSpecs.innerText = 'אגניות אקריליות איכותיות כולל משטח אנטי-סליפ נגד החלקה';
+        calculateTrayPrice();
+        return;
+      }
+
+      previewBadge.innerText = tray.id;
+      previewTitle.innerText = `${tray.id} (${tray.size} ס"מ)`;
+      previewSpecs.innerText = `סגנון: ${tray.shape} | גובה התקנה תקני | כולל משטח נגד החלקה`;
+
+      if (tray.hasWaste) {
+        wasteStatusBadge.innerText = 'אביק וסיפון מקורי כלול בדגם';
+        wasteStatusBadge.className = 'text-xs md:text-sm font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full';
+        wasteManualBox.classList.add('hidden');
+        document.getElementById('chkClassicWaste').checked = false;
+      } else {
+        wasteStatusBadge.innerText = 'לא כולל אביק וסיפון';
+        wasteStatusBadge.className = 'text-xs md:text-sm font-bold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full';
+        wasteManualBox.classList.remove('hidden');
+      }
+
+      calculateTrayPrice();
+    }
+
+    function calculateTrayPrice() {
+      const modelId = document.getElementById('trayModelSelect').value;
+      const tray = TRAYS_CATALOG.find(t => t.id === modelId);
+      const priceDisplay = document.getElementById('finalTrayPriceDisplay');
+      const downloadBtn = document.getElementById('downloadTrayPdfBtn');
+
+      if (!tray) {
+        priceDisplay.innerText = 'יש לבחור דגם אגנית';
+        priceDisplay.className = "text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200";
+        downloadBtn.disabled = true;
+        downloadBtn.className = "w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg";
+        return;
+      }
+
+      let total = tray.price;
+
+      if (!tray.hasWaste && document.getElementById('chkClassicWaste').checked) {
+        total += 215;
+      }
+
+      if (tray.series === 'solid' && document.getElementById('chkTrayLegs').checked) {
+        total += 450;
+      }
+
+      priceDisplay.innerText = total.toLocaleString() + ' ₪';
+      priceDisplay.className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1 transition-all duration-200";
+
+      downloadBtn.disabled = false;
+      downloadBtn.className = "w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.98] text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-blue-600/30 border border-blue-400/30 transition-all cursor-pointer text-sm md:text-base";
+    }
+
+    function resetTrayConfigurator() {
+      selectTraySeries('classic');
+      document.getElementById('trayModelSelect').selectedIndex = 0;
+      document.getElementById('chkClassicWaste').checked = false;
+      document.getElementById('chkTrayLegs').checked = false;
+      calculateTrayPrice();
+    }
+
+    function generateTrayOrderPDF() {
+      const modelId = document.getElementById('trayModelSelect').value;
+      const tray = TRAYS_CATALOG.find(t => t.id === modelId);
+      if (!tray) return;
+
+      const finalPrice = document.getElementById('finalTrayPriceDisplay').innerText;
+      const seriesNames = {
+        'classic': 'סדרה קלאסית',
+        'urban': 'סדרת אורבן (URBAN)',
+        'drain': 'סדרת תעלות ניקוז נסתרות',
+        'solid': 'סדרת אגניות מלאות / סלים'
+      };
+
+      let wasteInfo = tray.hasWaste ? 'אביק וסיפון מקורי כלול במחיר הדגם' : (document.getElementById('chkClassicWaste').checked ? 'כולל תוספת אביק וסיפון מקורי' : 'ללא אביק וסיפון');
+      let legsInfo = (tray.series === 'solid' && document.getElementById('chkTrayLegs').checked) ? 'כולל קונסטרוקציה ורגלי פילוס' : 'התקנה סטנדרטית';
+
+      const now = new Date();
+      const formattedDate = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+      document.getElementById('pdfDate').innerText = formattedDate;
+
+      if (activeStore) {
+        document.getElementById('pdfTitleMain').innerText = toNbsp(activeStore.name);
+        document.getElementById('pdfTitleSub').innerText = toNbsp('טופס מפרט והזמנת אגנית למקלחון (בשיתוף רשמי עם MTI)');
+        document.getElementById('pdfLogoImg').src = activeStore.logo;
+        document.getElementById('pdfSignatureText').innerText = toNbsp(`אישור הזמנה ומפרט - ${activeStore.name}`);
+      } else {
+        document.getElementById('pdfTitleMain').innerText = toNbsp('MTI Bath Gallery');
+        document.getElementById('pdfTitleSub').innerText = toNbsp('טופס מפרט והזמנת אגניות למקלחון');
+        document.getElementById('pdfLogoImg').src = './mtilogo.jpg';
+        document.getElementById('pdfSignatureText').innerText = toNbsp('חתימת הלקוח / אישור הזמנה');
+      }
+
+      document.getElementById('pdfSectionHeader').innerText = toNbsp('מפרט טכני של האגנית');
+      document.getElementById('pdfExtraPriceLabel').innerText = toNbsp('אספקה והובלה: ');
+      document.getElementById('pdfExtraPriceVal').innerText = toNbsp('בתיאום סניף');
+      document.getElementById('pdfInstallNote').innerText = toNbsp('משטח אנטי-סליפ מקורי מובנה נגד החלקה.');
+      document.getElementById('pdfFinalPrice').innerText = toNbsp(finalPrice);
+
+      const specsBody = document.getElementById('pdfSpecsBody');
+      specsBody.innerHTML = `
+        <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">סדרת אגניות</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(seriesNames[tray.series])}</td>
+        </tr>
+        <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">דגם וסגנון</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(tray.id + ' | ' + tray.shape)}</td>
+        </tr>
+        <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">מידות (ס״מ)</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(tray.size + ' ס״מ')}</td>
+        </tr>
+        <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">אביק וסיפון</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(wasteInfo)}</td>
+        </tr>
+        <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">תוספות ופילוס</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(legsInfo)}</td>
+        </tr>
+      `;
+
+      const storePrefix = activeStore ? `${activeStore.name}_` : '';
+      const element = document.getElementById('pdfTemplate');
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `הזמנת_אגנית_${storePrefix}MTI_${tray.id.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: false, scrollX: 0, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
+
     // ==========================================
     // הפעלה מיידית בלתי תלויה של כל המערכת
     // ==========================================
