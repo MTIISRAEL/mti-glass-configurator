@@ -5,14 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>פורטל קטלוג והזמנות - MTI Bath Gallery</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blue: { 50:'#FBF3E3', 100:'#F3E4C4', 200:'#E8CE9A', 300:'#DAB56D', 400:'#C89A48', 500:'#A47738', 600:'#8C6530', 700:'#7C5623', 800:'#634319', 900:'#4A3212', 950:'#2E1E0A' },
+            slate: { 50:'#F7F1E6', 100:'#F0E7D6', 200:'#E3D5BC', 300:'#C9B89E', 400:'#9B8E7A', 500:'#776C5C', 600:'#5C5245', 700:'#45392C', 800:'#2C2219', 900:'#1B140D', 950:'#0D0906' },
+            amber: { 50:'#FBF3E3', 100:'#F3E1BE', 200:'#E9CA8C', 300:'#DCB466', 400:'#C9A24B', 500:'#B08737', 600:'#93702E', 700:'#755925', 800:'#57421C', 900:'#3A2C12' },
+            indigo: { 50:'#F3EADC', 100:'#E4D2B3', 200:'#D1B685', 300:'#B99757', 400:'#9C7B3E', 500:'#7C5623', 600:'#634319', 700:'#4A3212', 800:'#34240D', 900:'#221808' }
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body { font-family: 'Assistant', sans-serif; font-size: 16px; }
+    .font-display { font-family: 'Frank Ruhl Libre', serif; }
     .gallery-scroll-x::-webkit-scrollbar { height: 6px; }
-    .gallery-scroll-x::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
-    .gallery-scroll-x::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
-    .gallery-scroll-x::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .gallery-scroll-x::-webkit-scrollbar-track { background: #F0E7D6; border-radius: 8px; }
+    .gallery-scroll-x::-webkit-scrollbar-thumb { background: #C9B89E; border-radius: 8px; }
+    .gallery-scroll-x::-webkit-scrollbar-thumb:hover { background: #9B8E7A; }
 
     #pdfTemplate {
       font-family: Arial, Tahoma, Helvetica, sans-serif !important;
@@ -45,7 +61,7 @@
         </div>
 
         <div class="hidden sm:block border-r border-slate-200 pr-4">
-          <h1 id="headerTitleText" class="text-lg md:text-xl font-extrabold text-slate-900 leading-tight">קטלוג דיגיטלי אינטראקטיבי</h1>
+          <h1 id="headerTitleText" class="font-display text-lg md:text-xl font-bold text-slate-900 leading-tight">קטלוג דיגיטלי אינטראקטיבי</h1>
           <p class="text-xs md:text-sm text-slate-500 font-semibold">מחירון רשמי לצרכן 2026</p>
         </div>
       </div>
@@ -244,7 +260,7 @@
 
         <div class="pt-1">
           <span class="text-slate-400 text-xs md:text-sm font-semibold tracking-wide">מחיר מחירון רשמי (לא כולל מע״מ)</span>
-          <div id="finalPriceDisplay" class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200">יש להשלים את כל שלבי הבחירה</div>
+          <div id="finalPriceDisplay" class="font-display text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200">יש להשלים את כל שלבי הבחירה</div>
         </div>
 
         <div class="bg-white/5 border border-white/10 backdrop-blur-sm p-4 rounded-2xl space-y-1.5">
@@ -480,7 +496,7 @@
 
         <div class="pt-1">
           <span class="text-slate-400 text-xs md:text-sm font-semibold tracking-wide">מחיר מחירון רשמי (לא כולל מע״מ)</span>
-          <div id="finalBathPriceDisplay" class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200">יש לבחור דגם אמבטיה ומערכת</div>
+          <div id="finalBathPriceDisplay" class="font-display text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200">יש לבחור דגם אמבטיה ומערכת</div>
         </div>
 
         <div class="bg-white/5 border border-white/10 backdrop-blur-sm p-4 rounded-2xl space-y-1.5">
@@ -577,7 +593,7 @@
 
         <div class="pt-1">
           <span class="text-slate-400 text-xs md:text-sm font-semibold tracking-wide">מחיר מחירון רשמי (לא כולל מע״מ)</span>
-          <div id="finalTrayPriceDisplay" class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200">יש לבחור דגם אגנית</div>
+          <div id="finalTrayPriceDisplay" class="font-display text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200">יש לבחור דגם אגנית</div>
         </div>
 
         <div class="bg-white/5 border border-white/10 backdrop-blur-sm p-4 rounded-2xl space-y-1.5">
@@ -1316,7 +1332,7 @@
 
       if (!isComplete) {
         document.getElementById('finalPriceDisplay').innerText = 'יש להשלים את כל שלבי הבחירה';
-        document.getElementById('finalPriceDisplay').className = "text-xl md:text-2xl font-extrabold text-amber-400 mt-1";
+        document.getElementById('finalPriceDisplay').className = "font-display text-xl md:text-2xl font-extrabold text-amber-400 mt-1";
         document.getElementById('installPriceDisplay').innerText = '--';
         document.getElementById('installNoteDisplay').innerText = 'המחיר וההתקנה יחושבו במלואם לאחר בחירת כל הפרמטרים.';
         if (pdfBtn) {
@@ -1341,7 +1357,7 @@
       let catalogRetailPrice = Math.round(totalCost * (2.1 / 0.4)) + extraRetail;
 
       document.getElementById('finalPriceDisplay').innerText = catalogRetailPrice.toLocaleString() + ' ₪';
-      document.getElementById('finalPriceDisplay').className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1";
+      document.getElementById('finalPriceDisplay').className = "font-display text-3xl md:text-4xl font-extrabold text-blue-400 mt-1";
 
       let installPrice = 600;
       let installText = "תשלום בסך 600 ₪ ישולם ישירות למתקין במעמד ההתקנה.";
@@ -1408,7 +1424,7 @@
       document.getElementById('wDisplay2').innerText = '--';
       document.getElementById('hDisplay').innerText = '--';
       document.getElementById('finalPriceDisplay').innerText = 'יש להשלים את כל שלבי הבחירה';
-      document.getElementById('finalPriceDisplay').className = "text-xl md:text-2xl font-extrabold text-amber-400 mt-1";
+      document.getElementById('finalPriceDisplay').className = "font-display text-xl md:text-2xl font-extrabold text-amber-400 mt-1";
       document.getElementById('installPriceDisplay').innerText = '--';
       document.getElementById('installNoteDisplay').innerText = 'המחיר וההתקנה יחושבו במלואם לאחר בחירת כל הפרמטרים.';
 
@@ -1816,7 +1832,7 @@
 
       if (!bath || !selectedBathSystem) {
         priceDisplay.innerText = 'יש לבחור דגם אמבטיה ומערכת';
-        priceDisplay.className = "text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200";
+        priceDisplay.className = "font-display text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200";
         downloadBtn.disabled = true;
         downloadBtn.className = "w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg";
         return;
@@ -1854,7 +1870,7 @@
       if (document.getElementById('chkPillow').checked) total += 750;
 
       priceDisplay.innerText = total.toLocaleString() + ' ₪';
-      priceDisplay.className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1 transition-all duration-200";
+      priceDisplay.className = "font-display text-3xl md:text-4xl font-extrabold text-blue-400 mt-1 transition-all duration-200";
 
       downloadBtn.disabled = false;
       downloadBtn.className = "w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.98] text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-blue-600/30 border border-blue-400/30 transition-all cursor-pointer text-sm md:text-base";
@@ -2139,7 +2155,7 @@
 
       if (!tray) {
         priceDisplay.innerText = 'יש לבחור דגם אגנית';
-        priceDisplay.className = "text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200";
+        priceDisplay.className = "font-display text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200";
         downloadBtn.disabled = true;
         downloadBtn.className = "w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg";
         return;
@@ -2156,7 +2172,7 @@
       }
 
       priceDisplay.innerText = total.toLocaleString() + ' ₪';
-      priceDisplay.className = "text-3xl md:text-4xl font-extrabold text-blue-400 mt-1 transition-all duration-200";
+      priceDisplay.className = "font-display text-3xl md:text-4xl font-extrabold text-blue-400 mt-1 transition-all duration-200";
 
       downloadBtn.disabled = false;
       downloadBtn.className = "w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.98] text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-blue-600/30 border border-blue-400/30 transition-all cursor-pointer text-sm md:text-base";
