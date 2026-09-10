@@ -314,6 +314,21 @@
             <p class="text-xs text-slate-500 leading-relaxed">חבילת פרימיום מוגדלת ג'טים (10-16 ג'טים) + גוף חימום מובנה</p>
           </button>
         </div>
+
+        <div id="jetsFinishSection" class="hidden pt-3 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs md:text-sm font-bold text-slate-700">גימור ג'טים:</span>
+            <span id="selectedJetsFinishBadge" class="text-xs md:text-sm font-extrabold text-blue-600">גרפיט / ניקל</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <button type="button" onclick="selectJetsFinish('standard')" id="jetsFinishBtn_standard" class="jets-finish-btn p-3 rounded-2xl border border-blue-600 bg-blue-50/50 text-blue-700 font-extrabold text-sm text-center transition">
+              גרפיט / ניקל
+            </button>
+            <button type="button" onclick="selectJetsFinish('white')" id="jetsFinishBtn_white" class="jets-finish-btn p-3 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">
+              לבן <span class="text-xs font-bold opacity-80">(+1,250 ₪)</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <div id="wasteSection" class="border-t pt-5 space-y-4">
@@ -1546,6 +1561,8 @@
     let selectedBathSystem = null;
     let selectedWasteOption = 'none';
     let selectedWasteColor = 'chrome';
+    let selectedJetsFinish = 'standard';
+    const JETS_FINISH_WHITE_SURCHARGE = 1250;
 
     function initBathsTab() {
       renderWasteColorPalette();
@@ -1628,6 +1645,33 @@
         optSupportBox.classList.add('opacity-40', 'pointer-events-none');
         chkSupport.checked = false;
       }
+
+      const jetsFinishSection = document.getElementById('jetsFinishSection');
+      if (sys === 'basic' || sys === 'titanium') {
+        jetsFinishSection.classList.remove('hidden');
+      } else {
+        jetsFinishSection.classList.add('hidden');
+        selectJetsFinish('standard');
+        return;
+      }
+
+      calculateBathPrice();
+    }
+
+    function selectJetsFinish(finish) {
+      selectedJetsFinish = finish;
+      document.querySelectorAll('.jets-finish-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+        btn.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
+      });
+
+      const activeBtn = document.getElementById(`jetsFinishBtn_${finish}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
+        activeBtn.classList.add('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+      }
+
+      document.getElementById('selectedJetsFinishBadge').innerText = finish === 'white' ? `לבן (+${JETS_FINISH_WHITE_SURCHARGE.toLocaleString()} ₪)` : 'גרפיט / ניקל';
 
       calculateBathPrice();
     }
@@ -1718,6 +1762,10 @@
         if (col && col.price) total += col.price;
       }
 
+      if ((selectedBathSystem === 'basic' || selectedBathSystem === 'titanium') && selectedJetsFinish === 'white') {
+        total += JETS_FINISH_WHITE_SURCHARGE;
+      }
+
       if (document.getElementById('chkSupport').checked) total += 500;
       if (document.getElementById('chkPanel').checked) total += 4500;
       if (document.getElementById('chkLight').checked) total += 600;
@@ -1752,6 +1800,9 @@
       document.getElementById('chkTaps').checked = false;
       document.getElementById('chkPillow').checked = false;
 
+      document.getElementById('jetsFinishSection').classList.add('hidden');
+      selectJetsFinish('standard');
+
       calculateBathPrice();
     }
 
@@ -1780,6 +1831,11 @@
       if (document.getElementById('chkLight').checked) addonsList.push('תאורת כרומותרפיה מתחלפת 7 צבעים');
       if (document.getElementById('chkTaps').checked) addonsList.push('סט ברזים מדופן האמבטיה');
       if (document.getElementById('chkPillow').checked) addonsList.push('כרית ראש אורתופדית');
+
+      let systemText = sysNames[selectedBathSystem];
+      if ((selectedBathSystem === 'basic' || selectedBathSystem === 'titanium')) {
+        systemText += selectedJetsFinish === 'white' ? ` | גימור ג'טים: לבן (+${JETS_FINISH_WHITE_SURCHARGE.toLocaleString()} ₪)` : ` | גימור ג'טים: גרפיט/ניקל`;
+      }
 
       let wasteText = 'ללא אביק נוסף';
       if (selectedWasteOption !== 'none') {
@@ -1826,7 +1882,7 @@
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
           <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">מערכת נבחרת</td>
-          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(sysNames[selectedBathSystem])}</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(systemText)}</td>
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
           <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">אביק / פיית מילוי וגימור</td>
