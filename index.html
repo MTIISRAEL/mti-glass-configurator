@@ -1568,7 +1568,7 @@
       const filtered = BATHS_CATALOG.filter(b => b.type === type);
       const modelSelect = document.getElementById('bathModelSelect');
       modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם ומידה --</option>' +
-        filtered.map(b => `<option value="${b.id}">${b.title} [${b.id}]</option>`).join('');
+        filtered.map(b => `<option value="${b.id}">${b.title}</option>`).join('');
 
       onBathModelChange();
     }
