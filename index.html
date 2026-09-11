@@ -449,7 +449,7 @@
         </h3>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <label class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 transition">
+          <label id="optPanelBox" class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 transition">
             <div class="flex items-center gap-3">
               <input type="checkbox" id="chkPanel" onchange="calculateBathPrice()" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 shrink-0" />
               <div class="relative w-14 h-14 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-1 overflow-hidden shrink-0">
@@ -1713,6 +1713,15 @@
       const modelSelect = document.getElementById('bathModelSelect');
       modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם ומידה --</option>' +
         filtered.map(b => `<option value="${b.id}">${b.title}</option>`).join('');
+
+      // אמבטיה עגולה מותקנת חופשי - אין לה פאנל חיפוי
+      const optPanelBox = document.getElementById('optPanelBox');
+      if (type === 'round') {
+        optPanelBox.classList.add('hidden');
+        document.getElementById('chkPanel').checked = false;
+      } else {
+        optPanelBox.classList.remove('hidden');
+      }
 
       onBathModelChange();
     }
