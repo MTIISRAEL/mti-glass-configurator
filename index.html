@@ -1714,9 +1714,9 @@
       modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם ומידה --</option>' +
         filtered.map(b => `<option value="${b.id}">${b.title}</option>`).join('');
 
-      // אמבטיה עגולה מותקנת חופשי - אין לה פאנל חיפוי
+      // אמבטיה עגולה ואובלית מותקנות חופשי - אין להן פאנל חיפוי
       const optPanelBox = document.getElementById('optPanelBox');
-      if (type === 'round') {
+      if (type === 'round' || type === 'oval') {
         optPanelBox.classList.add('hidden');
         document.getElementById('chkPanel').checked = false;
       } else {
