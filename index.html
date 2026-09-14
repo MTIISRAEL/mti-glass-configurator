@@ -1635,8 +1635,10 @@
       { type: 'rect', id: 'MTI-106', size: '200X120', title: 'MTI-106 (200X120 ס"מ)', liters: 265, body: 11500, basic: 22500, titanium: 24500, jetsBasic: 12, jetsTitanium: 16 },
       { type: 'rect', id: 'MTI-21', size: '180X140', title: 'MTI-21 זוגית (180X140 ס"מ)', liters: 300, body: 6000, basic: 11250, titanium: 12900, jetsBasic: 10, jetsTitanium: 14 },
       { type: 'rect', id: 'MTI-96', size: '190X160', title: 'MTI-96 זוגית (190X160 ס"מ)', liters: 550, body: 8000, basic: 16200, titanium: 17100, jetsBasic: 10, jetsTitanium: 14 },
-      { type: 'corner', id: 'MTI-52', size: '150/160X100', title: 'MTI-52 פינתית (150/160X100 ס"מ)', liters: 158, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
-      { type: 'corner', id: 'MTI-53', size: '150X90/160X100', title: 'MTI-53 פינתית', liters: 158, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-52-150X100', code: 'MTI-52', size: '150X100', title: 'MTI-52 פינתית (150X100 ס"מ)', liters: 158, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-52-160X100', code: 'MTI-52', size: '160X100', title: 'MTI-52 פינתית (160X100 ס"מ)', liters: 158, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-53-150X90', code: 'MTI-53', size: '150X90', title: 'MTI-53 פינתית (150X90 ס"מ)', liters: 158, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-53-160X100', code: 'MTI-53', size: '160X100', title: 'MTI-53 פינתית (160X100 ס"מ)', liters: 158, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
       { type: 'corner', id: 'MTI-28', size: '160X100', title: 'MTI-28 פינתית (160X100 ס"מ)', liters: 145, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
       { type: 'corner', id: 'MTI-26', size: '170X110', title: 'MTI-26 פינתית (170X110 ס"מ)', liters: 158, body: 2500, basic: 8500, titanium: 9600, jetsBasic: 8, jetsTitanium: 12 },
       { type: 'corner', id: 'MTI-59', size: '175X120', title: 'MTI-59 פינתית (175X120 ס"מ)', liters: 180, body: 6400, basic: 11000, titanium: 14250, jetsBasic: 10, jetsTitanium: 14 },
@@ -1967,7 +1969,7 @@
         return;
       }
 
-      previewBadge.innerText = bath.id;
+      previewBadge.innerText = bath.code || bath.id;
       previewTitle.innerText = bath.title;
       previewSpecs.innerText = `קיבולת מים: ${bath.liters} ליטר | כולל חיזוק פלדה היקפי ואנטי-סליפ`;
 
@@ -2335,7 +2337,7 @@
       const element = document.getElementById('pdfTemplate');
       const opt = {
         margin: [10, 10, 10, 10],
-        filename: `הזמנת_אמבטיה_${storePrefix}MTI_${bath.id}.pdf`,
+        filename: `הזמנת_אמבטיה_${storePrefix}MTI_${bath.code || bath.id}_${bath.size}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, letterRendering: false, scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
