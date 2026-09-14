@@ -340,7 +340,7 @@
               <span class="font-extrabold text-slate-800 text-sm md:text-base">ג'קוזי BASIC</span>
               <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
             </div>
-            <p class="text-xs text-slate-500 leading-relaxed">משאבה, גוף חימום מובנה, ג'טים נירוסטה, קונסטרוקציה, אביק ופיית מילוי</p>
+            <p id="sysDescBasic" class="text-xs text-slate-500 leading-relaxed">משאבה, גוף חימום מובנה, ג'טים נירוסטה, קונסטרוקציה, אביק ופיית מילוי</p>
           </button>
 
           <button type="button" onclick="selectBathSystem('titanium')" id="sysCard_titanium" class="sys-card p-4 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer">
@@ -348,7 +348,7 @@
               <span class="font-extrabold text-slate-800 text-sm md:text-base">ג'קוזי TITANIUM</span>
               <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
             </div>
-            <p class="text-xs text-slate-500 leading-relaxed">מנוע עוצמתי, ריבוי ג'טים (10-16), גוף חימום מובנה, קונסטרוקציה, אביק ופיית מילוי</p>
+            <p id="sysDescTitanium" class="text-xs text-slate-500 leading-relaxed">מנוע עוצמתי, ריבוי ג'טים, גוף חימום מובנה, קונסטרוקציה, אביק ופיית מילוי</p>
           </button>
         </div>
 
@@ -459,6 +459,7 @@
               <div>
                 <span class="text-sm font-bold text-slate-800 block">פאנל חיפוי דקורטיבי</span>
                 <span class="text-xs text-slate-400">להתקנה נקייה על גבי הריצוף</span>
+                <span class="text-[11px] text-amber-700 block mt-0.5">שימו לב: הפאנל בולט 2-3 ס"מ מעבר למידות החוץ של האמבטיה</span>
               </div>
             </div>
             <span class="text-sm font-extrabold text-blue-600">+4,500 ₪</span>
@@ -1601,74 +1602,74 @@
 
 
     const BATHS_CATALOG = [
-      { type: 'rect', id: 'MTI-73', size: '105X70', title: 'MTI-73 (105X70 ס"מ)', liters: 85, body: 1500, basic: 7025, titanium: 7975 },
-      { type: 'rect', id: 'MTI-74', size: '105X70', title: 'MTI-74 ישיבה (105X70 ס"מ)', liters: 85, body: 1500, basic: 7025, titanium: 7975 },
-      { type: 'rect', id: 'MTI-01', size: '120X70', title: 'MTI-01 (120X70 ס"מ)', liters: 90, body: 1500, basic: 7025, titanium: 7975 },
-      { type: 'rect', id: 'MTI-24', size: '120X70', title: 'MTI-24 ישיבה (120X70 ס"מ)', liters: 75, body: 1500, basic: 7025, titanium: 7975 },
-      { type: 'rect', id: 'MTI-113', size: '130X70', title: 'MTI-113 (130X70 ס"מ)', liters: 110, body: 1500, basic: 7025, titanium: 7975 },
-      { type: 'rect', id: 'MTI-81', size: '140X70', title: 'MTI-81 (140X70 ס"מ)', liters: 120, body: 1500, basic: 7025, titanium: 7975 },
-      { type: 'rect', id: 'MTI-114', size: '140X70', title: 'MTI-114 (140X70 ס"מ)', liters: 120, body: 1500, basic: 7025, titanium: 7975 },
-      { type: 'rect', id: 'MTI-25', size: '140X70', title: 'MTI-25 ישיבה (140X70 ס"מ)', liters: 95, body: 1500, basic: 7025, titanium: 7975 },
-      { type: 'rect', id: 'MTI-91', size: '150X70', title: 'MTI-91 (150X70 ס"מ)', liters: 120, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-60', size: '150X70', title: 'MTI-60 (150X70 ס"מ)', liters: 138, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-115', size: '150X70', title: 'MTI-115 (150X70 ס"מ)', liters: 130, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-04', size: '150X70', title: 'MTI-04 (150X70 ס"מ)', liters: 130, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-92', size: '160X70', title: 'MTI-92 (160X70 ס"מ)', liters: 150, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-82', size: '160X70', title: 'MTI-82 (160X70 ס"מ)', liters: 143, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-61', size: '160X70', title: 'MTI-61 (160X70 ס"מ)', liters: 140, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-116', size: '160X70', title: 'MTI-116 (160X70 ס"מ)', liters: 130, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-06', size: '160X70', title: 'MTI-06 (160X70 ס"מ)', liters: 140, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-90', size: '160X75', title: 'MTI-90 (160X75 ס"מ)', liters: 150, body: 1950, basic: 7750, titanium: 9000 },
-      { type: 'rect', id: 'MTI-68', size: '160X80', title: 'MTI-68 (160X80 ס"מ)', liters: 165, body: 1950, basic: 7750, titanium: 9000 },
-      { type: 'rect', id: 'MTI-93', size: '170X70', title: 'MTI-93 (170X70 ס"מ)', liters: 160, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-83', size: '170X70', title: 'MTI-83 (170X70 ס"מ)', liters: 155, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-62', size: '170X70', title: 'MTI-62 (170X70 ס"מ)', liters: 158, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-117', size: '170X70', title: 'MTI-117 (170X70 ס"מ)', liters: 145, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-07', size: '170X70', title: 'MTI-07 (170X70 ס"מ)', liters: 150, body: 1500, basic: 7525, titanium: 8500 },
-      { type: 'rect', id: 'MTI-63', size: '170X75', title: 'MTI-63 (170X75 ס"מ)', liters: 165, body: 1950, basic: 7750, titanium: 9000 },
-      { type: 'rect', id: 'MTI-84', size: '170X75', title: 'MTI-84 (170X75 ס"מ)', liters: 155, body: 1950, basic: 7750, titanium: 9000 },
-      { type: 'rect', id: 'MTI-69', size: '170X75', title: 'MTI-69 (170X75 ס"מ)', liters: 155, body: 1950, basic: 7750, titanium: 9000 },
-      { type: 'rect', id: 'MTI-80', size: '170X80', title: 'MTI-80 (170X80 ס"מ)', liters: 170, body: 1950, basic: 7750, titanium: 9000 },
-      { type: 'rect', id: 'MTI-85', size: '170X80', title: 'MTI-85 (170X80 ס"מ)', liters: 165, body: 1950, basic: 7750, titanium: 9000 },
-      { type: 'rect', id: 'MTI-71', size: '180X70', title: 'MTI-71 (180X70 ס"מ)', liters: 150, body: 1950, basic: 7750, titanium: 9000 },
-      { type: 'rect', id: 'MTI-64', size: '180X80', title: 'MTI-64 (180X80 ס"מ)', liters: 165, body: 2450, basic: 8500, titanium: 9500 },
-      { type: 'rect', id: 'MTI-18', size: '180X80', title: 'MTI-18 (180X80 ס"מ)', liters: 145, body: 2450, basic: 8500, titanium: 9500 },
-      { type: 'rect', id: 'MTI-72', size: '180X80', title: 'MTI-72 (180X80 ס"מ)', liters: 145, body: 2450, basic: 8500, titanium: 9500 },
-      { type: 'rect', id: 'MTI-78', size: '180X80', title: 'MTI-78 (180X80 ס"מ)', liters: 185, body: 2450, basic: 8500, titanium: 9500 },
-      { type: 'rect', id: 'MTI-65', size: '180X80', title: 'MTI-65 (180X80 ס"מ)', liters: 175, body: 2450, basic: 8500, titanium: 9500 },
-      { type: 'rect', id: 'MTI-19', size: '180X90', title: 'MTI-19 (180X90 ס"מ)', liters: 185, body: 2450, basic: 8500, titanium: 9500 },
-      { type: 'rect', id: 'MTI-79', size: '180X90', title: 'MTI-79 (180X90 ס"מ)', liters: 185, body: 2450, basic: 8500, titanium: 9500 },
-      { type: 'rect', id: 'MTI-70', size: '190X90', title: 'MTI-70 (190X90 ס"מ)', liters: 195, body: 3000, basic: 9250, titanium: 10500 },
-      { type: 'rect', id: 'MTI-23', size: '185X95', title: 'MTI-23 (185X95 ס"מ)', liters: 190, body: 3700, basic: 10000, titanium: 11250 },
-      { type: 'rect', id: 'MTI-48', size: '200X100', title: 'MTI-48 (200X100 ס"מ)', liters: 220, body: 5175, basic: 11375, titanium: 12750 },
-      { type: 'rect', id: 'MTI-106', size: '200X120', title: 'MTI-106 (200X120 ס"מ)', liters: 265, body: 11500, basic: 22500, titanium: 24500 },
-      { type: 'rect', id: 'MTI-21', size: '180X140', title: 'MTI-21 זוגית (180X140 ס"מ)', liters: 300, body: 6000, basic: 11250, titanium: 12900 },
-      { type: 'rect', id: 'MTI-96', size: '190X160', title: 'MTI-96 זוגית (190X160 ס"מ)', liters: 550, body: 8000, basic: 16200, titanium: 17100 },
-      { type: 'corner', id: 'MTI-52', size: '150/160X100', title: 'MTI-52 פינתית (150/160X100 ס"מ)', liters: 158, body: 2250, basic: 8000, titanium: 9375 },
-      { type: 'corner', id: 'MTI-53', size: '150X90/160X100', title: 'MTI-53 פינתית', liters: 158, body: 2250, basic: 8000, titanium: 9375 },
-      { type: 'corner', id: 'MTI-28', size: '160X100', title: 'MTI-28 פינתית (160X100 ס"מ)', liters: 145, body: 2250, basic: 8000, titanium: 9375 },
-      { type: 'corner', id: 'MTI-26', size: '170X110', title: 'MTI-26 פינתית (170X110 ס"מ)', liters: 158, body: 2500, basic: 8500, titanium: 9600 },
-      { type: 'corner', id: 'MTI-59', size: '175X120', title: 'MTI-59 פינתית (175X120 ס"מ)', liters: 180, body: 6400, basic: 11000, titanium: 14250 },
-      { type: 'corner', id: 'MTI-29', size: '170X130', title: 'MTI-29 פינתית (170X130 ס"מ)', liters: 180, body: 7250, basic: 14000, titanium: 16000 },
-      { type: 'corner', id: 'MTI-31', size: '110X110', title: 'MTI-31 פינתית (110X110 ס"מ)', liters: 110, body: 2250, basic: 7800, titanium: 9175 },
-      { type: 'corner', id: 'MTI-32', size: '120X120', title: 'MTI-32 פינתית (120X120 ס"מ)', liters: 125, body: 2250, basic: 7800, titanium: 9175 },
-      { type: 'corner', id: 'MTI-57', size: '130X130', title: 'MTI-57 פינתית (130X130 ס"מ)', liters: 135, body: 2250, basic: 8000, titanium: 9375 },
-      { type: 'corner', id: 'MTI-88', size: '135X135', title: 'MTI-88 פינתית (135X135 ס"מ)', liters: 140, body: 2475, basic: 8000, titanium: 9375 },
-      { type: 'corner', id: 'MTI-89', size: '140X140', title: 'MTI-89 פינתית (140X140 ס"מ)', liters: 155, body: 2475, basic: 8000, titanium: 9375 },
-      { type: 'corner', id: 'MTI-34', size: '140X140', title: 'MTI-34 פינתית (140X140 ס"מ)', liters: 150, body: 2475, basic: 8000, titanium: 9375 },
-      { type: 'corner', id: 'MTI-41', size: '145X145', title: 'MTI-41 פינתית (145X145 ס"מ)', liters: 157, body: 2475, basic: 8000, titanium: 9375 },
-      { type: 'corner', id: 'MTI-39', size: '145X145', title: 'MTI-39 פינתית (145X145 ס"מ)', liters: 155, body: 2475, basic: 8000, titanium: 9375 },
-      { type: 'corner', id: 'MTI-35', size: '150X150', title: 'MTI-35 פינתית (150X150 ס"מ)', liters: 165, body: 2475, basic: 8200, titanium: 9575 },
-      { type: 'corner', id: 'MTI-43', size: '150X150', title: 'MTI-43 פינתית (150X150 ס"מ)', liters: 165, body: 2475, basic: 8200, titanium: 9575 },
-      { type: 'round', id: 'MTI-50', size: '150Q', title: 'MTI-50 עגולה (קוטר 150 ס"מ)', liters: 185, body: 5000, basic: 12175, titanium: 16600 },
-      { type: 'round', id: 'MTI-95', size: '150Q', title: 'MTI-95 עגולה (קוטר 150 ס"מ)', liters: 170, body: 5000, basic: 10200, titanium: 16800 },
-      { type: 'round', id: 'MTI-66', size: '164Q', title: 'MTI-66 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14925, titanium: 21200 },
-      { type: 'round', id: 'MTI-67', size: '164Q', title: 'MTI-67 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14125, titanium: 21200 },
-      { type: 'round', id: 'MTI-51', size: '180Q', title: 'MTI-51 עגולה (קוטר 180 ס"מ)', liters: 200, body: 9000, basic: 13875, titanium: 21200 },
-      { type: 'round', id: 'MTI-99', size: '180Q', title: 'MTI-99 עגולה (קוטר 180 ס"מ)', liters: 230, body: 9000, basic: 16625, titanium: 22760 },
-      { type: 'round', id: 'MTI-100', size: '200Q', title: 'MTI-100 עגולה (קוטר 200 ס"מ)', liters: 450, body: 9250, basic: 18075, titanium: 24550 },
-      { type: 'oval', id: 'MTI-27', size: '180X110', title: 'MTI-27 אובלית (180X110 ס"מ)', liters: 180, body: 3750, basic: 10250, titanium: 16500 },
-      { type: 'oval', id: 'MTI-97', size: '200X140', title: 'MTI-97 אובלית (200X140 ס"מ)', liters: 400, body: 9000, basic: 12500, titanium: 20500 }
+      { type: 'rect', id: 'MTI-73', size: '105X70', title: 'MTI-73 (105X70 ס"מ)', liters: 85, body: 1500, basic: 7025, titanium: 7975, jetsBasic: 6, jetsTitanium: null },
+      { type: 'rect', id: 'MTI-74', size: '105X70', title: 'MTI-74 ישיבה (105X70 ס"מ)', liters: 85, body: 1500, basic: 7025, titanium: 7975, jetsBasic: 6, jetsTitanium: null },
+      { type: 'rect', id: 'MTI-01', size: '120X70', title: 'MTI-01 (120X70 ס"מ)', liters: 90, body: 1500, basic: 7025, titanium: 7975, jetsBasic: 6, jetsTitanium: null },
+      { type: 'rect', id: 'MTI-24', size: '120X70', title: 'MTI-24 ישיבה (120X70 ס"מ)', liters: 75, body: 1500, basic: 7025, titanium: 7975, jetsBasic: 6, jetsTitanium: null },
+      { type: 'rect', id: 'MTI-113', size: '130X70', title: 'MTI-113 (130X70 ס"מ)', liters: 110, body: 1500, basic: 7025, titanium: 7975, jetsBasic: 6, jetsTitanium: 10 },
+      { type: 'rect', id: 'MTI-81', size: '140X70', title: 'MTI-81 (140X70 ס"מ)', liters: 120, body: 1500, basic: 7025, titanium: 7975, jetsBasic: 6, jetsTitanium: 10 },
+      { type: 'rect', id: 'MTI-114', size: '140X70', title: 'MTI-114 (140X70 ס"מ)', liters: 120, body: 1500, basic: 7025, titanium: 7975, jetsBasic: 6, jetsTitanium: 10 },
+      { type: 'rect', id: 'MTI-25', size: '140X70', title: 'MTI-25 ישיבה (140X70 ס"מ)', liters: 95, body: 1500, basic: 7025, titanium: 7975, jetsBasic: 6, jetsTitanium: null },
+      { type: 'rect', id: 'MTI-91', size: '150X70', title: 'MTI-91 (150X70 ס"מ)', liters: 120, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-60', size: '150X70', title: 'MTI-60 (150X70 ס"מ)', liters: 138, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-115', size: '150X70', title: 'MTI-115 (150X70 ס"מ)', liters: 130, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-04', size: '150X70', title: 'MTI-04 (150X70 ס"מ)', liters: 130, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-92', size: '160X70', title: 'MTI-92 (160X70 ס"מ)', liters: 150, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-82', size: '160X70', title: 'MTI-82 (160X70 ס"מ)', liters: 143, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-61', size: '160X70', title: 'MTI-61 (160X70 ס"מ)', liters: 140, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-116', size: '160X70', title: 'MTI-116 (160X70 ס"מ)', liters: 130, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-06', size: '160X70', title: 'MTI-06 (160X70 ס"מ)', liters: 140, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-90', size: '160X75', title: 'MTI-90 (160X75 ס"מ)', liters: 150, body: 1950, basic: 7750, titanium: 9000, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-68', size: '160X80', title: 'MTI-68 (160X80 ס"מ)', liters: 165, body: 1950, basic: 7750, titanium: 9000, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-93', size: '170X70', title: 'MTI-93 (170X70 ס"מ)', liters: 160, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-83', size: '170X70', title: 'MTI-83 (170X70 ס"מ)', liters: 155, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-62', size: '170X70', title: 'MTI-62 (170X70 ס"מ)', liters: 158, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-117', size: '170X70', title: 'MTI-117 (170X70 ס"מ)', liters: 145, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-07', size: '170X70', title: 'MTI-07 (170X70 ס"מ)', liters: 150, body: 1500, basic: 7525, titanium: 8500, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'rect', id: 'MTI-63', size: '170X75', title: 'MTI-63 (170X75 ס"מ)', liters: 165, body: 1950, basic: 7750, titanium: 9000, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-84', size: '170X75', title: 'MTI-84 (170X75 ס"מ)', liters: 155, body: 1950, basic: 7750, titanium: 9000, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-69', size: '170X75', title: 'MTI-69 (170X75 ס"מ)', liters: 155, body: 1950, basic: 7750, titanium: 9000, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-80', size: '170X80', title: 'MTI-80 (170X80 ס"מ)', liters: 170, body: 1950, basic: 7750, titanium: 9000, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-85', size: '170X80', title: 'MTI-85 (170X80 ס"מ)', liters: 165, body: 1950, basic: 7750, titanium: 9000, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-71', size: '180X70', title: 'MTI-71 (180X70 ס"מ)', liters: 150, body: 1950, basic: 7750, titanium: 9000, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-64', size: '180X80', title: 'MTI-64 (180X80 ס"מ)', liters: 165, body: 2450, basic: 8500, titanium: 9500, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-18', size: '180X80', title: 'MTI-18 (180X80 ס"מ)', liters: 145, body: 2450, basic: 8500, titanium: 9500, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-72', size: '180X80', title: 'MTI-72 (180X80 ס"מ)', liters: 145, body: 2450, basic: 8500, titanium: 9500, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-78', size: '180X80', title: 'MTI-78 (180X80 ס"מ)', liters: 185, body: 2450, basic: 8500, titanium: 9500, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-65', size: '180X80', title: 'MTI-65 (180X80 ס"מ)', liters: 175, body: 2450, basic: 8500, titanium: 9500, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-19', size: '180X90', title: 'MTI-19 (180X90 ס"מ)', liters: 185, body: 2450, basic: 8500, titanium: 9500, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-79', size: '180X90', title: 'MTI-79 (180X90 ס"מ)', liters: 185, body: 2450, basic: 8500, titanium: 9500, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-70', size: '190X90', title: 'MTI-70 (190X90 ס"מ)', liters: 195, body: 3000, basic: 9250, titanium: 10500, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-23', size: '185X95', title: 'MTI-23 (185X95 ס"מ)', liters: 190, body: 3700, basic: 10000, titanium: 11250, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-48', size: '200X100', title: 'MTI-48 (200X100 ס"מ)', liters: 220, body: 5175, basic: 11375, titanium: 12750, jetsBasic: 12, jetsTitanium: 16 },
+      { type: 'rect', id: 'MTI-106', size: '200X120', title: 'MTI-106 (200X120 ס"מ)', liters: 265, body: 11500, basic: 22500, titanium: 24500, jetsBasic: 12, jetsTitanium: 16 },
+      { type: 'rect', id: 'MTI-21', size: '180X140', title: 'MTI-21 זוגית (180X140 ס"מ)', liters: 300, body: 6000, basic: 11250, titanium: 12900, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'rect', id: 'MTI-96', size: '190X160', title: 'MTI-96 זוגית (190X160 ס"מ)', liters: 550, body: 8000, basic: 16200, titanium: 17100, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'corner', id: 'MTI-52', size: '150/160X100', title: 'MTI-52 פינתית (150/160X100 ס"מ)', liters: 158, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-53', size: '150X90/160X100', title: 'MTI-53 פינתית', liters: 158, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-28', size: '160X100', title: 'MTI-28 פינתית (160X100 ס"מ)', liters: 145, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-26', size: '170X110', title: 'MTI-26 פינתית (170X110 ס"מ)', liters: 158, body: 2500, basic: 8500, titanium: 9600, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-59', size: '175X120', title: 'MTI-59 פינתית (175X120 ס"מ)', liters: 180, body: 6400, basic: 11000, titanium: 14250, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'corner', id: 'MTI-29', size: '170X130', title: 'MTI-29 פינתית (170X130 ס"מ)', liters: 180, body: 7250, basic: 14000, titanium: 16000, jetsBasic: 12, jetsTitanium: 16 },
+      { type: 'corner', id: 'MTI-31', size: '110X110', title: 'MTI-31 פינתית (110X110 ס"מ)', liters: 110, body: 2250, basic: 7800, titanium: 9175, jetsBasic: 6, jetsTitanium: 10 },
+      { type: 'corner', id: 'MTI-32', size: '120X120', title: 'MTI-32 פינתית (120X120 ס"מ)', liters: 125, body: 2250, basic: 7800, titanium: 9175, jetsBasic: 6, jetsTitanium: 10 },
+      { type: 'corner', id: 'MTI-57', size: '130X130', title: 'MTI-57 פינתית (130X130 ס"מ)', liters: 135, body: 2250, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-88', size: '135X135', title: 'MTI-88 פינתית (135X135 ס"מ)', liters: 140, body: 2475, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-89', size: '140X140', title: 'MTI-89 פינתית (140X140 ס"מ)', liters: 155, body: 2475, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-34', size: '140X140', title: 'MTI-34 פינתית (140X140 ס"מ)', liters: 150, body: 2475, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-41', size: '145X145', title: 'MTI-41 פינתית (145X145 ס"מ)', liters: 157, body: 2475, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-39', size: '145X145', title: 'MTI-39 פינתית (145X145 ס"מ)', liters: 155, body: 2475, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12 },
+      { type: 'corner', id: 'MTI-35', size: '150X150', title: 'MTI-35 פינתית (150X150 ס"מ)', liters: 165, body: 2475, basic: 8200, titanium: 9575, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'corner', id: 'MTI-43', size: '150X150', title: 'MTI-43 פינתית (150X150 ס"מ)', liters: 165, body: 2475, basic: 8200, titanium: 9575, jetsBasic: 10, jetsTitanium: 14 },
+      { type: 'round', id: 'MTI-50', size: '150Q', title: 'MTI-50 עגולה (קוטר 150 ס"מ)', liters: 185, body: 5000, basic: 12175, titanium: 16600, jetsBasic: 8, jetsTitanium: 16 },
+      { type: 'round', id: 'MTI-95', size: '150Q', title: 'MTI-95 עגולה (קוטר 150 ס"מ)', liters: 170, body: 5000, basic: 10200, titanium: 16800, jetsBasic: 8, jetsTitanium: 16 },
+      { type: 'round', id: 'MTI-66', size: '164Q', title: 'MTI-66 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14925, titanium: 21200, jetsBasic: 8, jetsTitanium: 16 },
+      { type: 'round', id: 'MTI-67', size: '164Q', title: 'MTI-67 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14125, titanium: 21200, jetsBasic: 8, jetsTitanium: 16 },
+      { type: 'round', id: 'MTI-51', size: '180Q', title: 'MTI-51 עגולה (קוטר 180 ס"מ)', liters: 200, body: 9000, basic: 13875, titanium: 21200, jetsBasic: 10, jetsTitanium: 18 },
+      { type: 'round', id: 'MTI-99', size: '180Q', title: 'MTI-99 עגולה (קוטר 180 ס"מ)', liters: 230, body: 9000, basic: 16625, titanium: 22760, jetsBasic: 10, jetsTitanium: 18 },
+      { type: 'round', id: 'MTI-100', size: '200Q', title: 'MTI-100 עגולה (קוטר 200 ס"מ)', liters: 450, body: 9250, basic: 18075, titanium: 24550, jetsBasic: 10, jetsTitanium: 18 },
+      { type: 'oval', id: 'MTI-27', size: '180X110', title: 'MTI-27 אובלית (180X110 ס"מ)', liters: 180, body: 3750, basic: 10250, titanium: 16500, jetsBasic: 8, jetsTitanium: 16 },
+      { type: 'oval', id: 'MTI-97', size: '200X140', title: 'MTI-97 אובלית (200X140 ס"מ)', liters: 400, body: 9000, basic: 12500, titanium: 20500, jetsBasic: 10, jetsTitanium: 18 }
     ];
 
     const WASTE_COLORS = [
@@ -1739,6 +1740,7 @@
         previewBadge.innerText = 'טרם נבחר דגם';
         previewTitle.innerText = 'בחר דגם אמבטיה לצפייה במפרט';
         previewSpecs.innerText = 'המערכת תציג נתונים טכניים, ליטר מים ומידות פנים וחוץ';
+        updateJetCounts(null);
         calculateBathPrice();
         return;
       }
@@ -1747,7 +1749,27 @@
       previewTitle.innerText = bath.title;
       previewSpecs.innerText = `קיבולת מים: ${bath.liters} ליטר | כולל חיזוק פלדה היקפי ואנטי-סליפ`;
 
+      updateJetCounts(bath);
       calculateBathPrice();
+    }
+
+    function updateJetCounts(bath) {
+      const basicJets = bath && bath.jetsBasic ? `${bath.jetsBasic} ג'טים נירוסטה` : "ג'טים נירוסטה";
+      document.getElementById('sysDescBasic').innerText =
+        `משאבה, גוף חימום מובנה, ${basicJets}, קונסטרוקציה, אביק ופיית מילוי`;
+
+      const titaniumJets = bath && bath.jetsTitanium ? `${bath.jetsTitanium} ג'טים נירוסטה` : "ריבוי ג'טים";
+      document.getElementById('sysDescTitanium').innerText =
+        `מנוע עוצמתי, ${titaniumJets}, גוף חימום מובנה, קונסטרוקציה, אביק ופיית מילוי`;
+
+      // חמישה דגמים קטנים מגיעים בקטלוג עם BASIC בלבד
+      const titaniumCard = document.getElementById('sysCard_titanium');
+      if (bath && !bath.jetsTitanium) {
+        titaniumCard.classList.add('hidden');
+        if (selectedBathSystem === 'titanium') selectBathSystem('basic');
+      } else {
+        titaniumCard.classList.remove('hidden');
+      }
     }
 
     function selectBathSystem(sys) {
