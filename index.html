@@ -792,7 +792,11 @@
 
     function toNbsp(str) {
       if (!str) return '';
-      return String(str).replace(/ /g, '\u00A0');
+      return String(str)
+        .replace(/ /g, '\u00A0')
+        // \u05D4\u05DE\u05E4\u05E8\u05D9\u05D3 "|" \u05D4\u05D5\u05D0 \u05EA\u05D5 \u05E0\u05D9\u05D8\u05E8\u05DC\u05D9 \u05D5\u05E7\u05D5\u05E4\u05E5 \u05DC\u05DE\u05E7\u05D5\u05DD \u05E9\u05D2\u05D5\u05D9 \u05D1\u05D8\u05E7\u05E1\u05D8 \u05DE\u05D9\u05DE\u05D9\u05DF \u05DC\u05E9\u05DE\u05D0\u05DC -
+        // \u05E1\u05D9\u05DE\u05E0\u05D9 RLM \u05DE\u05E9\u05E0\u05D9 \u05E6\u05D3\u05D3\u05D9\u05D5 \u05DE\u05E7\u05D1\u05E2\u05D9\u05DD \u05D0\u05D5\u05EA\u05D5 \u05D1\u05DE\u05E7\u05D5\u05DE\u05D5
+        .replace(/\|/g, '\u200F|\u200F');
     }
 
     function checkStoreParameter() {
@@ -1576,31 +1580,31 @@
       const specsBody = document.getElementById('pdfSpecsBody');
       specsBody.innerHTML = `
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">סוג מקלחון</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">${toNbsp('סוג מקלחון')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(category)}</td>
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">דגם מקלחון</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('דגם מקלחון')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(modelName)}</td>
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">מידות בס״מ</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('מידות בס״מ')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(dimText)}</td>
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">גוון פרזול</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('גוון פרזול')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(colorName)}</td>
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">סוג ועובי זכוכית</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('סוג ועובי זכוכית')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(glass + ' | 8 מ"מ מחוסמת')}</td>
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">ציפוי ננו דוחה אבנית</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('ציפוי ננו דוחה אבנית')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(nano)}</td>
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">חיתוך / גריעה</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('חיתוך / גריעה')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(cut)}</td>
         </tr>
       `;
@@ -2456,27 +2460,27 @@
       const specsBody = document.getElementById('pdfSpecsBody');
       specsBody.innerHTML = `
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">סגנון האמבטיה</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">${toNbsp('סגנון האמבטיה')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(typeHebrew[bath.type])}</td>
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">דגם ומידה</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('דגם ומידה')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(bath.title + (selectedSide ? ` | כיוון ${selectedSide}` : ''))}</td>
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">קיבולת מים</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('קיבולת מים')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(bath.liters + ' ליטר')}</td>
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">מערכת נבחרת</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('מערכת נבחרת')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(systemText)}</td>
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">אביק / פיית מילוי וגימור</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('אביק / פיית מילוי וגימור')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(wasteText)}</td>
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">תוספות ושדרוגים</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('תוספות ושדרוגים')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(addonsList.length > 0 ? addonsList.join(' | ') : 'ללא תוספות')}</td>
         </tr>
       `;
@@ -2711,23 +2715,23 @@
       const specsBody = document.getElementById('pdfSpecsBody');
       specsBody.innerHTML = `
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">סדרת אגניות</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">${toNbsp('סדרת אגניות')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(seriesNames[tray.series])}</td>
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">דגם וסגנון</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('דגם וסגנון')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(tray.id + ' | ' + tray.shape)}</td>
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">מידות (ס״מ)</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('מידות (ס״מ)')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(tray.size + ' ס״מ')}</td>
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">אביק וסיפון</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('אביק וסיפון')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(wasteInfo)}</td>
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">תוספות ופילוס</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('תוספות ופילוס')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(legsInfo)}</td>
         </tr>
       `;
