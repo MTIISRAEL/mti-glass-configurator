@@ -494,6 +494,17 @@
             </div>
           </div>
 
+          <div id="hatchSection" class="hidden sm:col-span-2 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <span class="text-sm font-bold text-slate-800 block">פתח שירות למנוע</span>
+                <span class="text-xs text-slate-400">גישה למשאבה לצורך תחזוקה</span>
+              </div>
+              <span id="selectedHatchBadge" class="text-xs md:text-sm font-extrabold text-slate-400">ללא פתח שירות</span>
+            </div>
+            <div id="hatchOptions" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+          </div>
+
           <div class="sm:col-span-2 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">
             <div class="flex items-center justify-between mb-3">
               <div>
@@ -1678,6 +1689,14 @@
 
     const TAP_FOLDER = 'תוספות אמבטיה/סט ברזים';
 
+    const HATCH_FOLDER = 'תוספות אמבטיה/פתח שירות';
+
+    const HATCHES = [
+      { id: 'alu30', img: 'תריס שירות אלומיניום', name: 'תריס אלומיניום 30X40', note: 'תריס שירות מאלומיניום', price: 330 },
+      { id: 'alu40', img: 'תריס שירות אלומיניום', name: 'תריס אלומיניום 40X40', note: 'תריס שירות מאלומיניום', price: 330 },
+      { id: 'ceramic', img: 'פתח שירות קרמיקה', name: 'פתח לחיפוי קרמיקה', note: 'למראה נקי ואחיד', price: 750 }
+    ];
+
     const WASTE_COLORS = [
       { id: 'chrome', name: 'כרום / ניקל', price: 0, bg: 'bg-slate-200 border-slate-300 text-slate-800' },
       { id: 'bronze_red', name: 'ברונזה אדומה (רוז גולד)', price: 180, bg: 'bg-amber-100 border-amber-300 text-amber-900' },
@@ -1700,13 +1719,63 @@
     let selectedPillow = null;
     let selectedTap = null;
     let selectedTapFinish = 'nickel';
+    let selectedHatch = null;
 
     function initBathsTab() {
       renderWasteColorPalette();
       renderPillowOptions();
       renderTapOptions();
+      renderHatchOptions();
       selectConstruction(true);
       selectBathType('rect');
+    }
+
+    function renderHatchOptions() {
+      const folder = HATCH_FOLDER.split('/').map(encodeURIComponent).join('/');
+      const none = `
+        <button type="button" onclick="selectHatch(null)" id="hatchBtn_none" class="hatch-btn p-2.5 rounded-2xl border border-blue-600 bg-blue-50/40 flex flex-col items-center justify-center gap-1 transition cursor-pointer min-h-[112px]">
+          <span class="text-xs md:text-sm font-extrabold text-blue-700">ללא פתח שירות</span>
+          <span class="text-[11px] text-slate-400">0 ₪</span>
+        </button>`;
+
+      document.getElementById('hatchOptions').innerHTML = none + HATCHES.map(h => `
+        <button type="button" onclick="selectHatch('${h.id}')" id="hatchBtn_${h.id}" class="hatch-btn relative p-2.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 flex flex-col items-center gap-1 transition cursor-pointer">
+          <div class="w-full h-14 flex items-center justify-center overflow-hidden">
+            <img src="./${folder}/${encodeURIComponent(h.img)}.jpg" alt="${h.name}" class="max-w-full max-h-full object-contain" onerror="handleAddonImgError(this, '${HATCH_FOLDER}', '${h.img}')" />
+          </div>
+          <span class="text-xs font-extrabold text-slate-800 text-center leading-tight">${h.name}</span>
+          <span class="text-[11px] text-slate-400 truncate w-full text-center">${h.note}</span>
+          <span class="text-[11px] font-bold text-blue-600">+${h.price} ₪</span>
+          <span onclick="zoomAddonFromButton(event, this, '${h.name}')" class="absolute top-1 left-1 w-4 h-4 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[8px] shadow-sm transition z-10" title="הגדל תמונה">🔍</span>
+        </button>
+      `).join('');
+    }
+
+    function selectHatch(id) {
+      selectedHatch = id ? HATCHES.find(h => h.id === id) : null;
+
+      document.querySelectorAll('.hatch-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/40');
+        btn.classList.add('border-slate-200', 'bg-white');
+        const label = btn.querySelector('.text-blue-700');
+        if (label) label.classList.replace('text-blue-700', 'text-slate-700');
+      });
+
+      const activeBtn = document.getElementById(`hatchBtn_${id || 'none'}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-200', 'bg-white');
+        activeBtn.classList.add('border-blue-600', 'bg-blue-50/40');
+        const label = activeBtn.querySelector('.text-slate-700');
+        if (label) label.classList.replace('text-slate-700', 'text-blue-700');
+      }
+
+      const badge = document.getElementById('selectedHatchBadge');
+      badge.innerText = selectedHatch ? `${selectedHatch.name} · ${selectedHatch.price} ₪` : 'ללא פתח שירות';
+      badge.className = selectedHatch
+        ? 'text-xs md:text-sm font-extrabold text-blue-600'
+        : 'text-xs md:text-sm font-extrabold text-slate-400';
+
+      calculateBathPrice();
     }
 
     function tapImgSrc(code, finishId) {
@@ -1954,6 +2023,10 @@
       const wasteTypeChoice = document.getElementById('wasteTypeChoice');
       const wasteIncludedNote = document.getElementById('wasteIncludedNote');
 
+      // פתח השירות נדרש רק כשיש מנוע
+      document.getElementById('hatchSection').classList.toggle('hidden', sys === 'body');
+      if (sys === 'body') selectHatch(null);
+
       if (sys === 'body') {
         constructionSection.classList.remove('hidden');
         jetsFinishSection.classList.add('hidden');
@@ -2121,6 +2194,7 @@
       if (document.getElementById('chkPanel').checked) total += 4500;
       if (document.getElementById('chkLight').checked) total += 600;
       if (selectedTap) total += selectedTap.prices[selectedTapFinish];
+      if (isJacuzzi && selectedHatch) total += selectedHatch.price;
       if (selectedPillow) total += selectedPillow.price;
 
       priceDisplay.innerText = total.toLocaleString() + ' ₪';
@@ -2151,6 +2225,7 @@
       document.getElementById('chkLight').checked = false;
       selectTapFinish('nickel');
       selectTap(null);
+      selectHatch(null);
       selectPillow(null);
 
       document.getElementById('constructionSection').classList.add('hidden');
@@ -2188,6 +2263,7 @@
         const tapFinish = TAP_FINISHES.find(f => f.id === selectedTapFinish);
         addonsList.push(`סט ברזים ${selectedTap.code} - ${selectedTap.name} (גימור ${tapFinish.name})`);
       }
+      if (selectedHatch && selectedBathSystem !== 'body') addonsList.push(`פתח שירות: ${selectedHatch.name}`);
       if (selectedPillow) addonsList.push(`כרית ראש ${selectedPillow.code} (${selectedPillow.kind})`);
 
       let systemText = sysNames[selectedBathSystem];
