@@ -476,16 +476,23 @@
             <span class="text-sm font-extrabold text-blue-600">+600 ₪</span>
           </label>
 
-          <label class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 transition">
-            <div class="flex items-center gap-3">
-              <input type="checkbox" id="chkTaps" onchange="calculateBathPrice()" class="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+          <div class="sm:col-span-2 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">
+            <div class="flex items-center justify-between mb-3">
               <div>
-                <span class="text-sm font-bold text-slate-800 block">סט ברזים מדופן האמבטיה</span>
-                <span class="text-xs text-slate-400">כולל מזלף ומנגנון מיקסר יוקרתי</span>
+                <span class="text-sm font-bold text-slate-800 block">סט ברזים להתקנה על האמבטיה</span>
+                <span class="text-xs text-slate-400">אינטרפוץ, כולל מזלף ומנגנון מיקסר</span>
               </div>
+              <span id="selectedTapBadge" class="text-xs md:text-sm font-extrabold text-slate-400">ללא ברזים</span>
             </div>
-            <span class="text-sm font-extrabold text-blue-600">+1,680 ₪</span>
-          </label>
+            <div id="tapOptions" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+            <div id="tapFinishRow" class="hidden pt-3 mt-3 border-t border-slate-200">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs md:text-sm font-bold text-slate-700">גימור הברז:</span>
+                <span id="selectedTapFinishName" class="text-xs md:text-sm font-extrabold text-blue-600">ניקל</span>
+              </div>
+              <div id="tapFinishOptions" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+            </div>
+          </div>
 
           <div class="sm:col-span-2 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">
             <div class="flex items-center justify-between mb-3">
@@ -1655,6 +1662,22 @@
 
     const PILLOW_FOLDER = 'תוספות אמבטיה/כרית ראש אורתופדית';
 
+    const TAP_FINISHES = [
+      { id: 'nickel', name: 'ניקל' },
+      { id: 'gold', name: 'זהב' },
+      { id: 'white', name: 'לבן מט' },
+      { id: 'black', name: 'שחור מט' }
+    ];
+
+    const TAPS = [
+      { code: 'S-41', name: 'אינטרפוץ 3 דרך', prices: { nickel: 600, gold: 835, white: 835, black: 835 } },
+      { code: 'S-42', name: 'אינטרפוץ 3 דרך (2 חלקים)', prices: { nickel: 835, gold: 1075, white: 1075, black: 1075 } },
+      { code: 'S-43', name: 'אינטרפוץ 4 דרך (3 חלקים)', prices: { nickel: 2025, gold: 2265, white: 2265, black: 2265 } },
+      { code: 'S-44', name: 'אינטרפוץ 4 דרך (4 חלקים)', prices: { nickel: 2025, gold: 2265, white: 2265, black: 2265 } }
+    ];
+
+    const TAP_FOLDER = 'תוספות אמבטיה/סט ברזים';
+
     const WASTE_COLORS = [
       { id: 'chrome', name: 'כרום / ניקל', price: 0, bg: 'bg-slate-200 border-slate-300 text-slate-800' },
       { id: 'bronze_red', name: 'ברונזה אדומה (רוז גולד)', price: 180, bg: 'bg-amber-100 border-amber-300 text-amber-900' },
@@ -1675,12 +1698,110 @@
     const JETS_FINISH_WHITE_SURCHARGE = 1250;
     let selectedConstruction = true;
     let selectedPillow = null;
+    let selectedTap = null;
+    let selectedTapFinish = 'nickel';
 
     function initBathsTab() {
       renderWasteColorPalette();
       renderPillowOptions();
+      renderTapOptions();
       selectConstruction(true);
       selectBathType('rect');
+    }
+
+    function tapImgSrc(code, finishId) {
+      const finish = TAP_FINISHES.find(f => f.id === finishId);
+      const folder = TAP_FOLDER.split('/').map(encodeURIComponent).join('/');
+      return `./${folder}/${encodeURIComponent(code + ' ' + finish.name)}.png`;
+    }
+
+    function renderTapOptions() {
+      const none = `
+        <button type="button" onclick="selectTap(null)" id="tapBtn_none" class="tap-btn p-2.5 rounded-2xl border border-blue-600 bg-blue-50/40 flex flex-col items-center justify-center gap-1 transition cursor-pointer min-h-[112px]">
+          <span class="text-xs md:text-sm font-extrabold text-blue-700">ללא ברזים</span>
+          <span class="text-[11px] text-slate-400">0 ₪</span>
+        </button>`;
+
+      document.getElementById('tapOptions').innerHTML = none + TAPS.map(t => `
+        <button type="button" onclick="selectTap('${t.code}')" id="tapBtn_${t.code}" class="tap-btn relative p-2.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 flex flex-col items-center gap-1 transition cursor-pointer">
+          <div class="w-full h-14 flex items-center justify-center overflow-hidden">
+            <img id="tapImg_${t.code}" src="${tapImgSrc(t.code, 'nickel')}" alt="ברז ${t.code}" class="max-w-full max-h-full object-contain" onerror="handleAddonImgError(this, '${TAP_FOLDER}', '${t.code} ניקל')" />
+          </div>
+          <span class="text-xs font-extrabold text-slate-800">${t.code}</span>
+          <span class="text-[11px] text-slate-400 leading-tight text-center">${t.name}</span>
+          <span class="text-[11px] font-bold text-blue-600">מ-${t.prices.nickel} ₪</span>
+          <span onclick="zoomAddonFromButton(event, this, 'ברז ${t.code}')" class="absolute top-1 left-1 w-4 h-4 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[8px] shadow-sm transition z-10" title="הגדל תמונה">🔍</span>
+        </button>
+      `).join('');
+
+      renderTapFinishOptions();
+    }
+
+    function renderTapFinishOptions() {
+      document.getElementById('tapFinishOptions').innerHTML = TAP_FINISHES.map(f => {
+        const price = selectedTap ? selectedTap.prices[f.id] : null;
+        const active = f.id === selectedTapFinish;
+        return `
+        <button type="button" onclick="selectTapFinish('${f.id}')" id="tapFinishBtn_${f.id}" class="tap-finish-btn p-2.5 rounded-xl border text-right transition ${active ? 'border-blue-600 bg-blue-50/40' : 'border-slate-200 bg-white hover:border-blue-400'}">
+          <span class="text-xs font-bold ${active ? 'text-blue-700' : 'text-slate-700'} block">${f.name}</span>
+          ${price ? `<span class="text-[11px] text-slate-400">${price.toLocaleString()} ₪</span>` : ''}
+        </button>`;
+      }).join('');
+    }
+
+    function selectTap(code) {
+      selectedTap = code ? TAPS.find(t => t.code === code) : null;
+
+      document.querySelectorAll('.tap-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/40');
+        btn.classList.add('border-slate-200', 'bg-white');
+        const label = btn.querySelector('.text-blue-700');
+        if (label) label.classList.replace('text-blue-700', 'text-slate-700');
+      });
+
+      const activeBtn = document.getElementById(`tapBtn_${code || 'none'}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-200', 'bg-white');
+        activeBtn.classList.add('border-blue-600', 'bg-blue-50/40');
+        const label = activeBtn.querySelector('.text-slate-700');
+        if (label) label.classList.replace('text-slate-700', 'text-blue-700');
+      }
+
+      document.getElementById('tapFinishRow').classList.toggle('hidden', !selectedTap);
+      renderTapFinishOptions();
+      updateTapBadge();
+      calculateBathPrice();
+    }
+
+    function selectTapFinish(finishId) {
+      selectedTapFinish = finishId;
+      const finish = TAP_FINISHES.find(f => f.id === finishId);
+      document.getElementById('selectedTapFinishName').innerText = finish.name;
+
+      TAPS.forEach(t => {
+        const img = document.getElementById(`tapImg_${t.code}`);
+        if (img) {
+          delete img.dataset.stepIndex;
+          img.setAttribute('onerror', `handleAddonImgError(this, '${TAP_FOLDER}', '${t.code} ${finish.name}')`);
+          img.src = tapImgSrc(t.code, finishId);
+        }
+      });
+
+      renderTapFinishOptions();
+      updateTapBadge();
+      calculateBathPrice();
+    }
+
+    function updateTapBadge() {
+      const badge = document.getElementById('selectedTapBadge');
+      if (!selectedTap) {
+        badge.innerText = 'ללא ברזים';
+        badge.className = 'text-xs md:text-sm font-extrabold text-slate-400';
+        return;
+      }
+      const finish = TAP_FINISHES.find(f => f.id === selectedTapFinish);
+      badge.innerText = `${selectedTap.code} · ${finish.name} · ${selectedTap.prices[selectedTapFinish].toLocaleString()} ₪`;
+      badge.className = 'text-xs md:text-sm font-extrabold text-blue-600';
     }
 
     function renderPillowOptions() {
@@ -1999,7 +2120,7 @@
       if (selectedBathSystem === 'body' && selectedConstruction) total += 500;
       if (document.getElementById('chkPanel').checked) total += 4500;
       if (document.getElementById('chkLight').checked) total += 600;
-      if (document.getElementById('chkTaps').checked) total += 1680;
+      if (selectedTap) total += selectedTap.prices[selectedTapFinish];
       if (selectedPillow) total += selectedPillow.price;
 
       priceDisplay.innerText = total.toLocaleString() + ' ₪';
@@ -2028,7 +2149,8 @@
 
       document.getElementById('chkPanel').checked = false;
       document.getElementById('chkLight').checked = false;
-      document.getElementById('chkTaps').checked = false;
+      selectTapFinish('nickel');
+      selectTap(null);
       selectPillow(null);
 
       document.getElementById('constructionSection').classList.add('hidden');
@@ -2062,7 +2184,10 @@
       let addonsList = [];
       if (document.getElementById('chkPanel').checked) addonsList.push('פאנל חיפוי דקורטיבי');
       if (document.getElementById('chkLight').checked) addonsList.push('תאורת כרומותרפיה מתחלפת 7 צבעים');
-      if (document.getElementById('chkTaps').checked) addonsList.push('סט ברזים מדופן האמבטיה');
+      if (selectedTap) {
+        const tapFinish = TAP_FINISHES.find(f => f.id === selectedTapFinish);
+        addonsList.push(`סט ברזים ${selectedTap.code} - ${selectedTap.name} (גימור ${tapFinish.name})`);
+      }
       if (selectedPillow) addonsList.push(`כרית ראש ${selectedPillow.code} (${selectedPillow.kind})`);
 
       let systemText = sysNames[selectedBathSystem];
