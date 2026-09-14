@@ -315,6 +315,17 @@
         <select id="bathModelSelect" onchange="onBathModelChange()" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm md:text-base transition">
           <option value="" disabled selected>-- בחר דגם ומידה --</option>
         </select>
+
+        <div id="bathSideSection" class="hidden mt-4 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-sm font-bold text-slate-800 block">כיוון האמבטיה <span class="text-red-500">*</span></span>
+              <span class="text-xs text-slate-400">לפי הצד שאליו צמוד הקיר</span>
+            </div>
+            <span id="selectedSideBadge" class="text-xs md:text-sm font-extrabold text-slate-400">טרם נבחר כיוון</span>
+          </div>
+          <div id="bathSideOptions" class="grid grid-cols-2 gap-3"></div>
+        </div>
       </div>
 
       <div id="bathSystemSection" class="border-t pt-5 space-y-4">
@@ -1693,6 +1704,10 @@
 
     const HATCH_FOLDER = 'תוספות אמבטיה/פתח שירות';
 
+    const SIDE_FOLDER = 'אמבטיות/כיוון';
+    // דגמים פינתיים א-סימטריים שמגיעים בכיוון ימין או שמאל
+    const HANDED_MODELS = ['MTI-52', 'MTI-53', 'MTI-28', 'MTI-26', 'MTI-59', 'MTI-29'];
+
     const HATCHES = [
       { id: 'alu30', img: 'תריס שירות אלומיניום', name: 'תריס אלומיניום 30X40', note: 'תריס שירות מאלומיניום', price: 330 },
       { id: 'alu40', img: 'תריס שירות אלומיניום', name: 'תריס אלומיניום 40X40', note: 'תריס שירות מאלומיניום', price: 330 },
@@ -1722,6 +1737,59 @@
     let selectedTap = null;
     let selectedTapFinish = 'nickel';
     let selectedHatch = null;
+    let selectedSide = null;
+
+    function renderBathSides(bath) {
+      const section = document.getElementById('bathSideSection');
+      const code = bath && (bath.code || bath.id);
+
+      if (!bath || !HANDED_MODELS.includes(code)) {
+        section.classList.add('hidden');
+        selectedSide = null;
+        return;
+      }
+
+      const folder = SIDE_FOLDER.split('/').map(encodeURIComponent).join('/');
+      document.getElementById('bathSideOptions').innerHTML = ['ימין', 'שמאל'].map(side => `
+        <button type="button" onclick="selectBathSide('${side}')" id="bathSideBtn_${side}" class="bath-side-btn relative p-2.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 flex flex-col items-center gap-1.5 transition cursor-pointer">
+          <div class="w-full h-24 flex items-center justify-center overflow-hidden">
+            <img src="./${folder}/${encodeURIComponent(code + ' ' + side)}.png" alt="${code} ${side}" class="max-w-full max-h-full object-contain" />
+          </div>
+          <span class="text-sm font-extrabold text-slate-700">${side}</span>
+          <span onclick="zoomAddonFromButton(event, this, '${code} - כיוון ${side}')" class="absolute top-1 left-1 w-4 h-4 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[8px] shadow-sm transition z-10" title="הגדל תמונה">🔍</span>
+        </button>
+      `).join('');
+
+      section.classList.remove('hidden');
+      selectedSide = null;
+      document.getElementById('selectedSideBadge').innerText = 'טרם נבחר כיוון';
+      document.getElementById('selectedSideBadge').className = 'text-xs md:text-sm font-extrabold text-slate-400';
+    }
+
+    function selectBathSide(side) {
+      selectedSide = side;
+
+      document.querySelectorAll('.bath-side-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/40');
+        btn.classList.add('border-slate-200', 'bg-white');
+        const label = btn.querySelector('.text-blue-700');
+        if (label) label.classList.replace('text-blue-700', 'text-slate-700');
+      });
+
+      const activeBtn = document.getElementById(`bathSideBtn_${side}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-200', 'bg-white');
+        activeBtn.classList.add('border-blue-600', 'bg-blue-50/40');
+        const label = activeBtn.querySelector('.text-slate-700');
+        if (label) label.classList.replace('text-slate-700', 'text-blue-700');
+      }
+
+      const badge = document.getElementById('selectedSideBadge');
+      badge.innerText = `כיוון ${side}`;
+      badge.className = 'text-xs md:text-sm font-extrabold text-blue-600';
+
+      calculateBathPrice();
+    }
 
     function initBathsTab() {
       renderWasteColorPalette();
@@ -1965,10 +2033,12 @@
         previewTitle.innerText = 'בחר דגם אמבטיה לצפייה במפרט';
         previewSpecs.innerText = 'המערכת תציג נתונים טכניים, ליטר מים ומידות פנים וחוץ';
         updateJetCounts(null);
+        renderBathSides(null);
         calculateBathPrice();
         return;
       }
 
+      renderBathSides(bath);
       previewBadge.innerText = bath.code || bath.id;
       previewTitle.innerText = bath.title;
       previewSpecs.innerText = `קיבולת מים: ${bath.liters} ליטר | כולל חיזוק פלדה היקפי ואנטי-סליפ`;
@@ -2159,8 +2229,12 @@
       const priceDisplay = document.getElementById('finalBathPriceDisplay');
       const downloadBtn = document.getElementById('downloadBathPdfBtn');
 
-      if (!bath || !selectedBathSystem) {
-        priceDisplay.innerText = 'יש לבחור דגם אמבטיה ומערכת';
+      const needsSide = bath && HANDED_MODELS.includes(bath.code || bath.id);
+
+      if (!bath || !selectedBathSystem || (needsSide && !selectedSide)) {
+        priceDisplay.innerText = (bath && selectedBathSystem && needsSide && !selectedSide)
+          ? 'יש לבחור כיוון אמבטיה (ימין / שמאל)'
+          : 'יש לבחור דגם אמבטיה ומערכת';
         priceDisplay.className = "font-display text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200";
         downloadBtn.disabled = true;
         downloadBtn.className = "w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg";
@@ -2313,7 +2387,7 @@
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
           <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">דגם ומידה</td>
-          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(bath.title)}</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(bath.title + (selectedSide ? ` | כיוון ${selectedSide}` : ''))}</td>
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
           <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">קיבולת מים</td>
