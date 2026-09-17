@@ -604,11 +604,17 @@
 
         <div class="bg-white/5 border border-white/10 backdrop-blur-sm p-4 rounded-2xl space-y-1.5">
           <div class="flex items-center justify-between text-sm md:text-base font-bold text-amber-400">
-            <span class="flex items-center gap-1.5"><span>🚚</span><span>הובלה ואספקה:</span></span>
-            <span class="text-base font-extrabold">בתיאום סניף</span>
+            <span class="flex items-center gap-1.5"><span>🔧</span><span>התקנה מקצועית:</span></span>
+            <span id="bathInstallPrice" class="text-base font-extrabold">--</span>
           </div>
-          <p class="text-xs text-slate-300 font-medium leading-relaxed">ההתקנה תבוצע ע״י שרברב מוסמך בהתאם להוראות ההתקנה של MTI.</p>
+          <p id="bathInstallNote" class="text-xs text-slate-300 font-medium leading-relaxed">עלות ההתקנה תחושב לאחר בחירת הדגם והמערכת.</p>
+          <div id="bathTotalRow" class="hidden pt-2.5 mt-1 border-t border-white/10 flex items-center justify-between">
+            <span class="text-sm font-bold text-slate-200">סה״כ כולל התקנה:</span>
+            <span id="bathTotalPrice" class="font-display text-lg md:text-xl font-extrabold text-amber-400">--</span>
+          </div>
         </div>
+
+        <p class="text-[11px] text-slate-400 font-medium leading-relaxed -mt-1">🚚 הובלה ואספקה בתיאום הסניף. ההתקנה תבוצע ע״י שרברב מוסמך בהתאם להוראות ההתקנה של MTI.</p>
 
         <button id="downloadBathPdfBtn" onclick="generateBathOrderPDF()" disabled class="w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg">
           <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
@@ -782,6 +788,7 @@
           </td>
           <td style="padding: 18px 20px; text-align: left; vertical-align: middle; width: 220px;">
             <div id="pdfFinalPrice" style="font-size: 26px; font-weight: bold; color: #1d4ed8; text-align: left;"></div>
+            <div id="pdfTotalWithInstall" style="font-size: 12.5px; font-weight: bold; color: #0f172a; text-align: left; margin-top: 6px;"></div>
           </td>
         </tr>
       </table>
@@ -1692,6 +1699,7 @@
       document.getElementById('pdfExtraPriceVal').innerText = toNbsp(installPrice);
       document.getElementById('pdfInstallNote').innerText = toNbsp(installNote);
       document.getElementById('pdfFinalPrice').innerText = toNbsp(finalPrice);
+      document.getElementById('pdfTotalWithInstall').innerText = '';
 
       const dimText = isCurrentCorner 
         ? `רוחב: ${width1} ס"מ | עומק: ${width2} ס"מ | גובה: ${height} ס"מ`
@@ -1880,6 +1888,63 @@
     let selectedHatch = null;
     let selectedSide = null;
     let selectedMotorPosition = null;
+
+    // ==========================================
+    // עלות התקנה - כל המחירים לא כוללים מע״מ
+    // ==========================================
+    const BATH_INSTALL = {
+      oversize: 1500,      // דגם שאחת ממידותיו גדולה מ-190 ס"מ
+      roundOval: 1500,     // עגולה / אובלית - מותקנות חופשי
+      freestanding: 1200,  // אמבטיה פרי סטנדינג
+      bathOnly: 900,       // אמבטיה ללא מערכת ג'קוזי, בכל צורה
+      jacuzziCorner: 1300,
+      jacuzziRect: 1100,
+      tapsSurcharge: 300   // תוספת כשמזמינים גם סט ברזים
+    };
+    const BATH_OVERSIZE_CM = 190;
+
+    // '200X120' / '164Q' -> [200, 120] / [164, 164]
+    function parseBathSize(size) {
+      if (!size) return [];
+      const nums = String(size).toUpperCase().match(/\d+/g);
+      if (!nums) return [];
+      if (String(size).toUpperCase().includes('Q')) return [+nums[0], +nums[0]];
+      return nums.map(Number);
+    }
+
+    function getBathInstall(bath, isJacuzzi) {
+      if (!bath) return null;
+
+      const dims = parseBathSize(bath.size);
+      const oversize = dims.some(d => d > BATH_OVERSIZE_CM);
+      const roundOval = bath.type === 'round' || bath.type === 'oval';
+
+      let price, reason;
+      if (oversize) {
+        price = BATH_INSTALL.oversize;
+        reason = `דגם במידות גדולות מ-${BATH_OVERSIZE_CM}/${BATH_OVERSIZE_CM}`;
+      } else if (roundOval) {
+        price = BATH_INSTALL.roundOval;
+        reason = bath.type === 'round' ? 'אמבטיה עגולה' : 'אמבטיה אובלית';
+      } else if (bath.type === 'freestanding') {
+        price = BATH_INSTALL.freestanding;
+        reason = 'אמבטיה פרי סטנדינג';
+      } else if (!isJacuzzi) {
+        price = BATH_INSTALL.bathOnly;
+        reason = 'אמבטיה ללא מערכת ג\'קוזי';
+      } else if (bath.type === 'corner') {
+        price = BATH_INSTALL.jacuzziCorner;
+        reason = 'ג\'קוזי פינתי';
+      } else {
+        price = BATH_INSTALL.jacuzziRect;
+        reason = 'ג\'קוזי מלבני';
+      }
+
+      const taps = selectedTap ? BATH_INSTALL.tapsSurcharge : 0;
+      if (taps) reason += ` + התקנת סט ברזים (${taps} ₪)`;
+
+      return { price: price + taps, reason };
+    }
 
     const MOTOR_FOLDER = 'אמבטיות/מיקום מנוע';
 
@@ -2435,6 +2500,9 @@
         priceDisplay.className = "font-display text-xl md:text-2xl font-extrabold text-amber-400 mt-1 transition-all duration-200";
         downloadBtn.disabled = true;
         downloadBtn.className = "w-full py-4 bg-slate-800/80 opacity-50 cursor-not-allowed text-slate-300 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-white/5 transition-all text-sm md:text-base shadow-lg";
+        document.getElementById('bathInstallPrice').innerText = '--';
+        document.getElementById('bathInstallNote').innerText = 'עלות ההתקנה תחושב לאחר בחירת הדגם והמערכת.';
+        document.getElementById('bathTotalRow').classList.add('hidden');
         return;
       }
 
@@ -2472,6 +2540,12 @@
 
       priceDisplay.innerText = total.toLocaleString() + ' ₪';
       priceDisplay.className = "font-display text-3xl md:text-4xl font-extrabold text-blue-400 mt-1 transition-all duration-200";
+
+      const install = getBathInstall(bath, isJacuzzi);
+      document.getElementById('bathInstallPrice').innerText = install.price.toLocaleString() + ' ₪';
+      document.getElementById('bathInstallNote').innerText = install.reason;
+      document.getElementById('bathTotalPrice').innerText = (total + install.price).toLocaleString() + ' ₪';
+      document.getElementById('bathTotalRow').classList.remove('hidden');
 
       downloadBtn.disabled = false;
       downloadBtn.className = "w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.98] text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-blue-600/30 border border-blue-400/30 transition-all cursor-pointer text-sm md:text-base";
@@ -2571,11 +2645,15 @@
         document.getElementById('pdfSignatureText').innerText = toNbsp('חתימת הלקוח / אישור הזמנה');
       }
 
+      const install = getBathInstall(bath, selectedBathSystem !== 'body');
+      const totalWithInstall = document.getElementById('bathTotalPrice').innerText;
+
       document.getElementById('pdfSectionHeader').innerText = toNbsp('מפרט טכני של האמבטיה והמערכת');
-      document.getElementById('pdfExtraPriceLabel').innerText = toNbsp('הובלה ואספקה: ');
-      document.getElementById('pdfExtraPriceVal').innerText = toNbsp('בתיאום סניף');
-      document.getElementById('pdfInstallNote').innerText = toNbsp('התקנת אינסטלציה וחשמל ע״י בעל מקצוע מוסמך בהתאם להוראות MTI.');
+      document.getElementById('pdfExtraPriceLabel').innerText = toNbsp('התקנה מקצועית: ');
+      document.getElementById('pdfExtraPriceVal').innerText = toNbsp(`${install.price.toLocaleString()} ₪ - ${install.reason}`);
+      document.getElementById('pdfInstallNote').innerText = toNbsp('הובלה ואספקה בתיאום סניף. ההתקנה תבוצע ע״י שרברב מוסמך בהתאם להוראות ההתקנה של MTI.');
       document.getElementById('pdfFinalPrice').innerText = toNbsp(finalPrice);
+      document.getElementById('pdfTotalWithInstall').innerText = toNbsp(`סה״כ כולל התקנה: ${totalWithInstall}`);
 
       const specsBody = document.getElementById('pdfSpecsBody');
       specsBody.innerHTML = `
@@ -2831,6 +2909,7 @@
       document.getElementById('pdfExtraPriceVal').innerText = toNbsp('בתיאום סניף');
       document.getElementById('pdfInstallNote').innerText = toNbsp('משטח אנטי-סליפ מקורי מובנה נגד החלקה.');
       document.getElementById('pdfFinalPrice').innerText = toNbsp(finalPrice);
+      document.getElementById('pdfTotalWithInstall').innerText = '';
 
       const specsBody = document.getElementById('pdfSpecsBody');
       specsBody.innerHTML = `
