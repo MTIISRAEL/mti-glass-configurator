@@ -117,6 +117,7 @@
         <select id="modelSelect" onchange="onModelChange()" disabled class="w-full p-3.5 bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-400 outline-none text-sm md:text-base transition cursor-not-allowed">
           <option value="" disabled selected>-- יש לבחור סוג מקלחון תחילה --</option>
         </select>
+        <div id="modelCards" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
       </div>
 
       <div id="dimensionsSection" class="border-t pt-5 space-y-4 opacity-50 pointer-events-none transition-opacity">
@@ -732,6 +733,18 @@
     </div>
   </div>
 
+  <!-- חלון הסבר לכפתורי "?" -->
+  <div id="helpModal" class="hidden fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-4" onclick="if (event.target === this) closeHelp()">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 p-6">
+      <div class="flex items-start justify-between gap-4 mb-3">
+        <h3 id="helpTitle" class="text-lg font-bold text-slate-900"></h3>
+        <button type="button" onclick="closeHelp()" class="w-8 h-8 shrink-0 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm" aria-label="סגירה">✕</button>
+      </div>
+      <p id="helpText" class="text-sm md:text-base text-slate-600 leading-relaxed whitespace-pre-line"></p>
+      <button type="button" onclick="closeHelp()" class="mt-5 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl transition">הבנתי</button>
+    </div>
+  </div>
+
   <!-- תבנית PDF נקייה ומבוצרת -->
   <div style="position: absolute; left: -9999px; top: -9999px;">
     <div id="pdfTemplate" style="width: 760px; padding: 32px; background-color: #ffffff; color: #0f172a; direction: rtl; text-align: right;">
@@ -816,6 +829,27 @@
         // \u05D4\u05DE\u05E4\u05E8\u05D9\u05D3 "|" \u05D4\u05D5\u05D0 \u05EA\u05D5 \u05E0\u05D9\u05D8\u05E8\u05DC\u05D9 \u05D5\u05E7\u05D5\u05E4\u05E5 \u05DC\u05DE\u05E7\u05D5\u05DD \u05E9\u05D2\u05D5\u05D9 \u05D1\u05D8\u05E7\u05E1\u05D8 \u05DE\u05D9\u05DE\u05D9\u05DF \u05DC\u05E9\u05DE\u05D0\u05DC -
         // \u05E1\u05D9\u05DE\u05E0\u05D9 RLM \u05DE\u05E9\u05E0\u05D9 \u05E6\u05D3\u05D3\u05D9\u05D5 \u05DE\u05E7\u05D1\u05E2\u05D9\u05DD \u05D0\u05D5\u05EA\u05D5 \u05D1\u05DE\u05E7\u05D5\u05DE\u05D5
         .replace(/\|/g, '\u200F|\u200F');
+    }
+
+    // html2canvas (בתוך html2pdf) מצייר כל קטע טקסט כמחרוזת אחת בלי הגדרת כיווניות, ולכן בספארי/אייפון
+    // מספרים, סימני | ומילים באנגלית קופצים למקום הלא נכון בשורה עברית.
+    // ריווח אותיות זעיר גורם לו לצייר כל תו בנפרד, במיקום שהדפדפן עצמו חישב - כך הסדר תמיד נכון.
+    // תו בודד מצויר משמאל-לימין בלי שיקוף, אז סוגריים בטקסט עברי יוצאים הפוכים. החלפה שלהם משנה את סידור
+    // השורה בדפדפן, ולכן בעותק של ה-PDF בלבד "X (Y)" הופך ל-"X · Y" - סימן סימטרי שנראה אותו דבר בכל כיוון.
+    function preparePdfElement(el) {
+      const clone = el.cloneNode(true);
+      clone.style.letterSpacing = '0.1px';
+      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const s = node.nodeValue;
+        if (!/[()]/.test(s)) continue;
+        node.nodeValue = s
+          .replace(/\s*\(\s*/g, ' · ')
+          .replace(/\s*\)/g, '')
+          .replace(/^ · /, '');
+      }
+      return clone;
     }
 
     function checkStoreParameter() {
@@ -985,12 +1019,12 @@
         { name: "גלינה אקסטרה קליר", cost: 360 }
       ],
       colors: [
-        { name: "ניקל", mult: 1.0, file: "ניקל.png" },
-        { name: "ניקל מוברש", mult: 1.2, file: "ניקל מוברש.png" },
-        { name: "שחור", mult: 1.2, file: "שחור.png" },
-        { name: "ברונזה אדומה", mult: 1.35, file: "ברונזה אדומה.png" },
-        { name: "זהב מוברש", mult: 1.35, file: "זהב מוברש.png" },
-        { name: "גרפיט", mult: 1.35, file: "גרפיט.png" }
+        { name: "ניקל", mult: 1.0, file: "ניקל.jpg" },
+        { name: "ניקל מוברש", mult: 1.2, file: "ניקל מוברש.jpg" },
+        { name: "שחור", mult: 1.2, file: "שחור.jpg" },
+        { name: "ברונזה אדומה", mult: 1.35, file: "ברונזה אדומה.jpg" },
+        { name: "זהב מוברש", mult: 1.35, file: "זהב מוברש.jpg" },
+        { name: "גרפיט", mult: 1.35, file: "גרפיט.jpg" }
       ]
     };
 
@@ -1030,7 +1064,7 @@
       if (glassBox && CATALOG_DATA && CATALOG_DATA.glasses) {
         glassBox.innerHTML = CATALOG_DATA.glasses.map((g, idx) => {
           const baseName = encodeURIComponent(g.name);
-          const imgPath = `./${folderName}/${baseName}.png`;
+          const imgPath = `./${folderName}/${baseName}.jpeg`;
           return `
             <div onclick="selectGlass(${idx})" class="glass-btn bg-white border border-slate-200 p-2.5 rounded-2xl flex flex-col items-center justify-between hover:border-blue-400 active:scale-95 transition shadow-sm group cursor-pointer relative">
               <button type="button" onclick="zoomGlassFromButton(event, this, '${g.name}')" class="absolute top-1.5 left-1.5 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
@@ -1149,8 +1183,11 @@
       modelSelect.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
       modelSelect.classList.add('bg-slate-50', 'text-slate-800');
       
-      modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם מקלחון --</option>' + 
+      modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם מקלחון --</option>' +
         filteredModels.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+      // הרשימה הנפתחת נשארת כמקור הערך, אבל מוצגים כרטיסים: שם דגם ומתחתיו התיאור
+      modelSelect.classList.add('hidden');
+      renderModelCards(filteredModels);
 
       selectedColor = null;
       selectedGlassIndex = null;
@@ -1200,6 +1237,36 @@
       calculateShowerPrice();
     }
 
+    function renderModelCards(models) {
+      const box = document.getElementById('modelCards');
+      box.innerHTML = models.map(m => {
+        const [code, ...rest] = m.name.split(' - ');
+        return `
+          <button type="button" onclick="pickShowerModel('${m.id}')" data-model="${m.id}" class="model-card p-3 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer">
+            <span class="block text-sm md:text-base font-extrabold text-slate-900">${code}</span>
+            <span class="block text-xs md:text-sm text-slate-500 mt-0.5 leading-snug">${rest.join(' - ')}</span>
+          </button>`;
+      }).join('');
+      box.classList.remove('hidden');
+    }
+
+    function pickShowerModel(id) {
+      document.getElementById('modelSelect').value = id;
+      onModelChange();
+    }
+
+    function highlightModelCard(id) {
+      document.querySelectorAll('.model-card').forEach(card => {
+        const on = card.dataset.model === id;
+        card.classList.toggle('border-blue-600', on);
+        card.classList.toggle('bg-blue-50/50', on);
+        card.classList.toggle('ring-2', on);
+        card.classList.toggle('ring-blue-600/20', on);
+        card.classList.toggle('border-slate-200', !on);
+        card.classList.toggle('bg-white', !on);
+      });
+    }
+
     function resetShowerPreview() {
       const render = document.getElementById('showerRender');
       const gif = document.getElementById('showerGif');
@@ -1216,6 +1283,7 @@
       const model = CATALOG_DATA.models.find(m => m.id === modelId);
       if (!model) return;
 
+      highlightModelCard(modelId);
       document.getElementById('currentModelBadge').innerText = model.name;
       document.getElementById('dimensionsSection').classList.remove('opacity-50', 'pointer-events-none');
       document.getElementById('optionsSection').classList.remove('opacity-50', 'pointer-events-none');
@@ -1317,7 +1385,7 @@
         const base = encodeURIComponent(glass.name);
         delete glassImg.dataset.stepIndex;
         glassImg.setAttribute('onerror', `handleGlassImgError(this, '${folder}', '${base}')`);
-        glassImg.src = `./${folder}/${base}.png`;
+        glassImg.src = `./${folder}/${base}.jpeg`;
       }
       document.getElementById('stripGlassName').innerText = glass ? glass.name : 'טרם נבחר';
 
@@ -1594,6 +1662,8 @@
       modelSelect.innerHTML = '<option value="" disabled selected>-- יש לבחור סוג מקלחון תחילה --</option>';
       modelSelect.disabled = true;
       modelSelect.className = "w-full p-3.5 bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-400 outline-none text-sm transition cursor-not-allowed";
+      document.getElementById('modelCards').classList.add('hidden');
+      document.getElementById('modelCards').innerHTML = '';
 
       selectedColor = null;
       selectedGlassIndex = null;
@@ -1732,7 +1802,7 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opt).from(element).save();
+      html2pdf().set(opt).from(preparePdfElement(element)).save();
     }
 
 
@@ -2678,7 +2748,7 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opt).from(element).save();
+      html2pdf().set(opt).from(preparePdfElement(element)).save();
     }
 
     // =========================================================================
@@ -2930,19 +3000,101 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opt).from(element).save();
+      html2pdf().set(opt).from(preparePdfElement(element)).save();
     }
 
     // ==========================================
     // הפעלה מיידית בלתי תלויה של כל המערכת
     // ==========================================
+    // ==========================================
+    // הסברים לכפתורי "?" ליד כל סעיף - לעריכת הנוסח משנים רק כאן
+    // tab + num = סעיף ממוספר; label = כותרת משנה לפי תחילת הטקסט שלה
+    // ==========================================
+    const HELP_TEXTS = [
+      { tab: 'tabContentShowers', num: '1', title: 'סוג מקלחון',
+        text: 'הצורה הכללית של המקלחון לפי המקום בחדר הרחצה.\nחזיתי - זכוכית בקו אחד, בין שני קירות.\nפינתי - שתי דפנות זכוכית שנפגשות בפינה.\nאמבטיון - זכוכית שמותקנת על דופן האמבטיה.\nהזזה - דלתות שנפתחות בהחלקה על מסילה, בלי לתפוס מקום בפתיחה.' },
+      { tab: 'tabContentShowers', num: '2', title: 'דגם מקלחון',
+        text: 'כל דגם הוא שילוב אחר של חלקים:\nקבוע - זכוכית שלא נפתחת.\nדלת - נפתחת על צירים.\nהרמוניקה - נפתחת בקיפול, חוסכת מקום.\nבתצוגה אפשר ללחוץ "פתיחת דלת" כדי לראות איך הדגם נפתח.' },
+      { tab: 'tabContentShowers', num: '3', title: 'מידות',
+        text: 'רוחב - המרחק מקיר לקיר במקום שבו יותקן המקלחון, בס"מ.\nגובה - גובה הזכוכית.\nבמקלחון פינתי בוחרים את שתי הצלעות.\nהמחיר מחושב לפי המידה שנבחרה. המידה הסופית נלקחת במדידה של המתקין במקום.' },
+      { tab: 'tabContentShowers', num: '4', title: 'פרזול וזכוכית',
+        text: 'פרזול - הצירים, הידיות והמחברים של המקלחון. הגוון שנבחר משפיע על המחיר.\nזכוכית - כל הזכוכיות בעובי 8 מ"מ מחוסמת. הסוג קובע את המראה ואת רמת הפרטיות.' },
+      { tab: 'tabContentShowers', label: 'גוון פרזול', title: 'גוון פרזול',
+        text: 'הגוון של הצירים, הידיות והמחברים. כדאי להתאים לגוון הברזים והאביזרים בחדר הרחצה.\nלחיצה על 🔍 מגדילה את התמונה.' },
+      { tab: 'tabContentShowers', label: 'סוג זכוכית', title: 'סוג זכוכית',
+        text: 'שקופה - המראה הקלאסי והנקי.\nאקסטרה קליר - שקופה במיוחד, בלי הגוון הירקרק של זכוכית רגילה.\nזכוכיות מעוצבות ומוחלבות (אסיד, גרניט, פפיטה ועוד) - מסתירות ומוסיפות פרטיות.\nאנטי סאן - זכוכית כהה בגוון אפור או חום.\nלחיצה על 🔍 מגדילה את התמונה.' },
+      { tab: 'tabContentShowers', label: 'ציפוי ננו', title: 'ציפוי ננו דוחה אבנית',
+        text: 'ציפוי שקוף שמורח על הזכוכית ומקשה על אבנית וכתמי מים להיצמד אליה. הזכוכית נשארת נקייה לאורך זמן והניקוי קל יותר.' },
+      { tab: 'tabContentShowers', label: 'חיתוך / גריעה', title: 'חיתוך / גריעה בזכוכית',
+        text: 'חיתוך בפינת הזכוכית כשצריך לעקוף בליטה בקיר או ברצפה - למשל אדן, מדרגה או צינור. אם אין בליטה במקום, בוחרים "ללא".' },
+
+      { tab: 'tabContentBaths', num: '1', title: 'צורת האמבטיה',
+        text: 'מלבנית - צמודה לקיר או בנישה.\nפינתית - מיועדת לפינת החדר.\nעגולה ואובלית - מיועדות להצבה חופשית, ולכן אין להן פאנל חיפוי.' },
+      { tab: 'tabContentBaths', num: '2', title: 'דגם ומידה',
+        text: 'המידה היא האורך והרוחב החיצוניים של האמבטיה בס"מ.\nלרוב יש כמה דגמים באותה מידה - הם נבדלים בצורה הפנימית, בעומק ובעיצוב, והמחיר שלהם בדרך כלל זהה.\nבדגמים פינתיים מסוימים בוחרים גם כיוון - ימין או שמאל.' },
+      { tab: 'tabContentBaths', num: '3', title: "רמת איבזור ומערכת ג'קוזי",
+        text: "גוף אמבטיה בלבד - אמבטיה אקרילית, בלי מערכת עיסוי.\nג'קוזי BASIC - מערכת עיסוי במים.\nג'קוזי TITANIUM - מערכת מתקדמת יותר, עם יותר ג'טים.\nמספר הג'טים המדויק מופיע בכל כרטיס. ג'קוזי כולל תמיד קונסטרוקציה ואביק עם פיית מילוי." },
+      { tab: 'tabContentBaths', num: '4', title: 'קונסטרוקציה',
+        text: 'מיטת תמיכה מפלדה שמונחת מתחת לאמבטיה. היא מחזקת את האמבטיה, מקלה על הפילוס ועל ההתקנה, ושומרת על יציבות ואטימות לאורך שנים.\nבג\'קוזי הקונסטרוקציה כבר כלולה.' },
+      { tab: 'tabContentBaths', num: '5', title: 'אביק ופיית מילוי',
+        text: 'אביק - פתח הניקוז של האמבטיה עם מנגנון הפקק.\nאביק עם פיית מילוי - המים ממלאים את האמבטיה דרך פתח הניקוז, בלי צורך בברז מעל האמבטיה.\nהגוון נבחר לפי שאר האביזרים בחדר.' },
+      { tab: 'tabContentBaths', num: '6', title: 'שדרוגים ותוספות',
+        text: 'תוספות לבחירה: פאנל חיפוי, תאורה, סט ברזים, כרית ראש ועוד.\nאף אחת מהן אינה חובה - אפשר לדלג.\nלחיצה על 🔍 מגדילה את התמונה.' },
+
+      { tab: 'tabContentTrays', num: '1', title: 'סדרת אגניות',
+        text: 'האגניות מחולקות לסדרות לפי סגנון ושיטת ניקוז - סדרה קלאסית, סדרת אורבן, אגניות עם תעלת ניקוז נסתרת, ואגניות מלאות.\nכל סדרה מציגה את הדגמים והמידות שלה.' },
+      { tab: 'tabContentTrays', num: '2', title: 'דגם ומידה',
+        text: 'המידה היא האורך והרוחב של האגנית בס"מ. בוחרים לפי המקום של המקלחת ולפי מידות המקלחון שיותקן עליה.' },
+      { tab: 'tabContentTrays', num: '3', title: 'אביק וסיפון',
+        text: 'סט הניקוז של האגנית. האביק והסיפון המקוריים מותאמים בדיוק לפתח של האגנית.' }
+    ];
+
+    function helpButtonHtml(idx) {
+      return `<button type="button" onclick="openHelp(event, ${idx})" class="help-btn inline-flex items-center justify-center w-5 h-5 mr-1.5 rounded-full border border-blue-200 bg-blue-50 text-blue-600 text-[11px] font-extrabold leading-none hover:bg-blue-600 hover:text-white transition align-middle shrink-0" aria-label="הסבר">?</button>`;
+    }
+
+    function initHelpButtons() {
+      HELP_TEXTS.forEach((h, idx) => {
+        const tab = document.getElementById(h.tab);
+        if (!tab) return;
+        let label = null;
+        if (h.num) {
+          label = [...tab.querySelectorAll('label, h3, div')].find(el => {
+            const badge = el.querySelector(':scope > span.rounded-full.bg-blue-600');
+            return badge && badge.innerText.trim() === h.num;
+          });
+          // הכפתור נכנס לצד הטקסט, לא בסוף שורת ה-flex
+          const textSpan = label && [...label.children].find(c => c.tagName === 'SPAN' && !c.classList.contains('rounded-full'));
+          if (textSpan) { textSpan.insertAdjacentHTML('beforeend', helpButtonHtml(idx)); return; }
+        } else {
+          label = [...tab.querySelectorAll('label')].find(el => el.innerText.trim().startsWith(h.label));
+        }
+        if (label) label.insertAdjacentHTML('beforeend', helpButtonHtml(idx));
+      });
+    }
+
+    function openHelp(e, idx) {
+      e.preventDefault();
+      e.stopPropagation();
+      const h = HELP_TEXTS[idx];
+      document.getElementById('helpTitle').innerText = h.title;
+      document.getElementById('helpText').innerText = h.text;
+      document.getElementById('helpModal').classList.remove('hidden');
+    }
+
+    function closeHelp() {
+      document.getElementById('helpModal').classList.add('hidden');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       try { checkStoreParameter(); } catch (e) { console.warn("Store check error:", e); }
       try { initShowersTab(); } catch (e) { console.error("Showers init error:", e); }
       try { initBathsTab(); } catch (e) { console.error("Baths init error:", e); }
       try { initTraysTab(); } catch (e) { console.error("Trays init error:", e); }
+      try { initHelpButtons(); } catch (e) { console.error("Help init error:", e); }
 
       window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeHelp();
         const modal = document.getElementById('zoomModal');
         if (modal && !modal.classList.contains('hidden')) {
           if (e.key === 'ArrowRight') navigateGallery(-1);
