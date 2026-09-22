@@ -10,10 +10,11 @@
 
 - שם הקובץ: אותיות קטנות בלבד, בלי רווחים (מקף במקום רווח).
 - הפורמט: png / jpg / svg / avif / webp – כולם נתמכים.
-- הכתובת לחנות: `?store=<שם הקובץ בלי הסיומת>`
+- הכתובת לחנות: שם הקובץ בלי הסיומת, בסוף הכתובת.
 
-לדוגמה – הקובץ `oz-ceramica.jpg` נטען מהכתובת:
-`https://mtiisrael.github.io/mti-glass-configurator/?store=oz-ceramica`
+לדוגמה – הקובץ `oz-ceramica.jpg` נטען מכל אחת מהכתובות האלה:
+`https://catalog.mtibath.co.il/oz-ceramica`
+`https://catalog.mtibath.co.il/?store=oz-ceramica`
 
 ## אחרי הוספת קובץ
 

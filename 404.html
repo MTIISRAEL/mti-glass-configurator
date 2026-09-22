@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MTI Bath Gallery</title>
+  <script>
+    // GitHub Pages מגיש את הקובץ הזה לכל כתובת שלא קיימת.
+    // קישור חנות בנוסח catalog.mtibath.co.il/tuboul מועבר לדף הראשי כ- ?store=tuboul
+    (function () {
+      var seg = location.pathname.replace(/^\/+|\/+$/g, '').split('/')[0] || '';
+      var params = new URLSearchParams(location.search);
+      // קטע עם נקודה הוא קובץ חסר (תמונה וכו') ולא שם חנות
+      if (seg && seg.indexOf('.') === -1 && !params.has('store')) {
+        params.set('store', decodeURIComponent(seg));
+      }
+      var qs = params.toString();
+      location.replace('/' + (qs ? '?' + qs : '') + location.hash);
+    })();
+  </script>
+</head>
+<body style="font-family: sans-serif; text-align: center; padding-top: 80px; color: #475569;">
+  <p>מעביר לקטלוג... <a href="/">לחצו כאן אם לא הועברתם</a></p>
+</body>
+</html>
