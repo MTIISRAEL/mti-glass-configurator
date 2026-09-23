@@ -26,9 +26,9 @@
   
   <!-- כותרת עליונה ומיתוג חנות -->
   <header class="bg-white shadow-sm border-b sticky top-0 z-50">
-    <div class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
-      
-      <div class="flex items-center gap-4 md:gap-6">
+    <div class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-4 flex-wrap lg:flex-nowrap">
+
+      <div class="flex items-center gap-4 md:gap-6 lg:flex-1">
         <div id="storeHeaderArea" class="hidden flex items-center gap-4 md:gap-5">
           <div class="flex items-center justify-center p-0.5">
             <img id="storeLogoImg" src="" alt="לוגו חנות" class="h-12 md:h-16 max-w-[180px] md:max-w-[240px] w-auto object-contain mix-blend-multiply" />
@@ -49,7 +49,22 @@
         </div>
       </div>
       
-      <div class="flex items-center gap-3">
+      <!-- מתג 3 לשוניות - במרכז בדסקטופ, בשורה משלו במובייל -->
+      <div class="order-last w-full overflow-x-auto lg:order-none lg:w-auto lg:overflow-visible lg:shrink-0 -mx-1 px-1">
+        <div class="flex items-center justify-start lg:justify-center gap-2 py-0.5 w-max lg:w-auto">
+          <button id="tabBtnShowers" onclick="switchMainTab('showers')" class="px-4 md:px-5 py-2.5 font-bold text-sm md:text-base bg-[#AF9572] text-white border border-[#AF9572] rounded-xl shadow-sm transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
+            <span>🚿</span><span>מקלחונים ומחיצות</span>
+          </button>
+          <button id="tabBtnBaths" onclick="switchMainTab('baths')" class="px-4 md:px-5 py-2.5 font-bold text-sm md:text-base bg-white text-slate-700 border border-slate-200 hover:border-[#AF9572] hover:text-[#8C7454] rounded-xl transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
+            <span>🛁</span><span>אמבטיות וג'קוזי</span>
+          </button>
+          <button id="tabBtnTrays" onclick="switchMainTab('trays')" class="px-4 md:px-5 py-2.5 font-bold text-sm md:text-base bg-white text-slate-700 border border-slate-200 hover:border-[#AF9572] hover:text-[#8C7454] rounded-xl transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
+            <span>◽</span><span>אגניות למקלחון</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 lg:flex-1 lg:justify-end">
         <button onclick="resetCurrentTab()" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-sm font-bold rounded-xl border border-slate-300 transition cursor-pointer shadow-sm">
           <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -63,23 +78,13 @@
       </div>
     </div>
 
-    <!-- מתג 3 לשוניות -->
-    <div class="border-t border-slate-100 px-4 md:px-8 py-2.5">
-      <div class="max-w-[1600px] w-full mx-auto overflow-x-auto">
-      <div class="inline-flex items-center gap-1 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
-        <button id="tabBtnShowers" onclick="switchMainTab('showers')" class="px-4 md:px-5 py-2 font-bold text-sm md:text-base bg-blue-600 text-white rounded-xl shadow-md transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
-          <span>🚿</span><span>מקלחונים ומחיצות</span>
-        </button>
-        <button id="tabBtnBaths" onclick="switchMainTab('baths')" class="px-4 md:px-5 py-2 font-bold text-sm md:text-base text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-xl transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
-          <span>🛁</span><span>אמבטיות וג'קוזי</span>
-        </button>
-        <button id="tabBtnTrays" onclick="switchMainTab('trays')" class="px-4 md:px-5 py-2 font-bold text-sm md:text-base text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-xl transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
-          <span>◽</span><span>אגניות למקלחון</span>
-        </button>
-      </div>
-      </div>
-    </div>
   </header>
+
+  <!-- באנר ראשי -->
+  <section class="relative bg-slate-100">
+    <img src="./hero.jpg" alt="עולם הרחצה של MTI" class="w-full h-36 sm:h-52 lg:h-[300px] object-cover object-center" />
+    <div class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-slate-50 to-transparent pointer-events-none"></div>
+  </section>
 
   <!-- באנר מיתוג עליון -->
   <div id="storeWelcomeBanner" class="hidden bg-gradient-to-r from-blue-600 to-indigo-700 text-white border-b border-blue-700/40 shadow-sm">
@@ -952,10 +957,10 @@
         const content = document.getElementById(`tabContent${t.charAt(0).toUpperCase() + t.slice(1)}`);
         
         if (t === tab) {
-          btn.className = "px-4 md:px-5 py-2 font-bold text-sm md:text-base bg-blue-600 text-white rounded-xl shadow-md transition flex items-center gap-2 whitespace-nowrap cursor-pointer";
+          btn.className = "px-4 md:px-5 py-2.5 font-bold text-sm md:text-base bg-[#AF9572] text-white border border-[#AF9572] rounded-xl shadow-sm transition flex items-center gap-2 whitespace-nowrap cursor-pointer";
           content.classList.remove('hidden');
         } else {
-          btn.className = "px-4 md:px-5 py-2 font-bold text-sm md:text-base text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-xl transition flex items-center gap-2 whitespace-nowrap cursor-pointer";
+          btn.className = "px-4 md:px-5 py-2.5 font-bold text-sm md:text-base bg-white text-slate-700 border border-slate-200 hover:border-[#AF9572] hover:text-[#8C7454] rounded-xl transition flex items-center gap-2 whitespace-nowrap cursor-pointer";
           content.classList.add('hidden');
         }
       });
