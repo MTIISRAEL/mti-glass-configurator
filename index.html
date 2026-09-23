@@ -568,9 +568,17 @@
         </div>
 
         <div class="w-full h-80 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
-          <div class="w-20 h-20 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-4xl mb-3">🛁</div>
-          <h4 id="bathPreviewTitle" class="text-base font-extrabold text-slate-800">בחר דגם אמבטיה לצפייה במפרט</h4>
-          <p id="bathPreviewSpecs" class="text-xs text-slate-400 mt-1">המערכת תציג נתונים טכניים, ליטר מים ומידות פנים וחוץ</p>
+          <img id="bathPreviewImg" src="" alt="" class="hidden absolute inset-0 w-full h-full object-contain p-4 bg-white" />
+          <button type="button" onclick="zoomBathPreview()" id="bathPreviewZoom" class="hidden absolute top-2 left-2 w-7 h-7 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-xs shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
+          <div id="bathPreviewPlaceholder" class="flex flex-col items-center">
+            <div class="w-20 h-20 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-4xl mb-3">🛁</div>
+            <h4 id="bathPreviewTitle" class="text-base font-extrabold text-slate-800">בחר דגם אמבטיה לצפייה במפרט</h4>
+            <p id="bathPreviewSpecs" class="text-xs text-slate-400 mt-1">המערכת תציג נתונים טכניים, ליטר מים ומידות פנים וחוץ</p>
+          </div>
+        </div>
+        <div id="bathPreviewCaption" class="hidden w-full text-center mt-3">
+          <h4 id="bathPreviewTitleImg" class="text-base font-extrabold text-slate-800"></h4>
+          <p id="bathPreviewSpecsImg" class="text-xs text-slate-400 mt-1"></p>
         </div>
       </div>
 
@@ -2367,6 +2375,7 @@
         previewBadge.innerText = 'טרם נבחר דגם';
         previewTitle.innerText = 'בחר דגם אמבטיה לצפייה במפרט';
         previewSpecs.innerText = 'המערכת תציג נתונים טכניים, ליטר מים ומידות פנים וחוץ';
+        updateBathPreviewImage(null);
         updateJetCounts(null);
         renderBathSides(null);
         calculateBathPrice();
@@ -2378,9 +2387,64 @@
       previewBadge.innerText = bath.code || bath.id;
       previewTitle.innerText = bath.title;
       previewSpecs.innerText = `קיבולת מים: ${bath.liters} ליטר | כולל חיזוק פלדה היקפי ואנטי-סליפ`;
+      document.getElementById('bathPreviewTitleImg').innerText = bath.title;
+      document.getElementById('bathPreviewSpecsImg').innerText = previewSpecs.innerText;
+      updateBathPreviewImage(bath);
 
       updateJetCounts(bath);
       calculateBathPrice();
+    }
+
+    // ==========================================
+    // תמונת הדגם: אמבטיה ללא ג'טים, או ג'קוזי בגימור ניקל/גרפיט או לבן
+    // ==========================================
+    const BATH_IMG_FOLDER = 'אמבטיות/תמונות';
+
+    function bathImageVariant() {
+      if (selectedBathSystem !== 'basic' && selectedBathSystem !== 'titanium') return 'body';
+      return selectedJetsFinish === 'white' ? 'white' : 'grey';
+    }
+
+    function updateBathPreviewImage(bath) {
+      const img = document.getElementById('bathPreviewImg');
+      const zoom = document.getElementById('bathPreviewZoom');
+      const placeholder = document.getElementById('bathPreviewPlaceholder');
+      const caption = document.getElementById('bathPreviewCaption');
+
+      const showPlaceholder = () => {
+        img.classList.add('hidden');
+        zoom.classList.add('hidden');
+        caption.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+      };
+
+      if (!bath) { img.src = ''; showPlaceholder(); return; }
+
+      const code = bath.code || bath.id;
+      const folder = encodeURIComponent(BATH_IMG_FOLDER.split('/')[0]) + '/' + encodeURIComponent(BATH_IMG_FOLDER.split('/')[1]);
+      // אם אין תמונה לגימור שנבחר, חוזרים לתמונת האמבטיה הרגילה, ורק אם גם היא חסרה מוצג מלל
+      const tries = [bathImageVariant(), 'body', 'grey', 'white'].filter((v, i, a) => a.indexOf(v) === i);
+      let step = 0;
+
+      const load = () => {
+        if (step >= tries.length) { showPlaceholder(); return; }
+        img.src = `./${folder}/${code}_${tries[step++]}.jpg`;
+      };
+
+      img.onerror = load;
+      img.onload = () => {
+        img.classList.remove('hidden');
+        zoom.classList.remove('hidden');
+        caption.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+      };
+      load();
+    }
+
+    function zoomBathPreview() {
+      const img = document.getElementById('bathPreviewImg');
+      if (!img.src || img.classList.contains('hidden')) return;
+      openSingleZoom(document.getElementById('bathPreviewTitleImg').innerText, img.currentSrc || img.src);
     }
 
     function updateJetCounts(bath) {
@@ -2456,7 +2520,13 @@
         selectWasteColor(selectedJetsFinish === 'white' ? 'white_mat' : 'chrome');
       }
 
+      refreshBathPreviewImage();
       calculateBathPrice();
+    }
+
+    function refreshBathPreviewImage() {
+      const bath = BATHS_CATALOG.find(b => b.id === document.getElementById('bathModelSelect').value);
+      updateBathPreviewImage(bath || null);
     }
 
     function selectConstruction(withConstruction) {
@@ -2498,6 +2568,7 @@
         selectWasteColor(finish === 'white' ? 'white_mat' : 'chrome');
       }
 
+      refreshBathPreviewImage();
       calculateBathPrice();
     }
 
