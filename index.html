@@ -1099,18 +1099,35 @@
       }
     }
 
-    function zoomColorFromButton(e, btn, title) {
-      e.stopPropagation();
-      const parent = btn.closest('.color-btn');
-      const img = parent ? parent.querySelector('img') : null;
-      openSingleZoom(title, img ? (img.currentSrc || img.src) : '');
+    // פתיחת תמונה מוגדלת עם מעבר בין כל האפשרויות באותה קבוצה, כמו בגלריית התמונות מהשטח
+    function openZoomList(items, index) {
+      const clean = items.filter(it => it.src);
+      if (!clean.length) return;
+      currentGalleryImages = clean;
+      openGalleryModal(index >= 0 && index < clean.length ? index : 0);
     }
 
-    function zoomGlassFromButton(e, btn, title) {
+    function zoomFromGroup(e, btn, cardClass, containerId, prefix) {
+      e.preventDefault();
       e.stopPropagation();
-      const parent = btn.closest('.glass-btn');
-      const img = parent ? parent.querySelector('img') : null;
-      openSingleZoom(title, img ? (img.currentSrc || img.src) : '');
+      const cards = [...document.querySelectorAll(`#${containerId} .${cardClass}`)];
+      const items = cards.map(card => {
+        const img = card.querySelector('img');
+        const name = card.querySelector(':scope > span');
+        return {
+          src: img ? (img.currentSrc || img.src) : '',
+          title: `${prefix} - ${name ? name.innerText.trim() : ''}`
+        };
+      });
+      openZoomList(items, cards.indexOf(btn.closest('.' + cardClass)));
+    }
+
+    function zoomColorFromButton(e, btn) {
+      zoomFromGroup(e, btn, 'color-btn', 'colorContainer', 'גוון פרזול');
+    }
+
+    function zoomGlassFromButton(e, btn) {
+      zoomFromGroup(e, btn, 'glass-btn', 'glassContainer', 'סוג זכוכית');
     }
 
     function zoomAddonFromButton(e, btn, title) {
@@ -1500,8 +1517,11 @@
         };
 
         imgWrapper.onclick = function() {
-          const clickedIdx = currentGalleryImages.findIndex(item => item.src === img.src);
-          openGalleryModal(clickedIdx >= 0 ? clickedIdx : 0);
+          const imgs = [...galleryGrid.querySelectorAll('img')];
+          openZoomList(
+            imgs.map(i => ({ src: i.currentSrc || i.src, title: `תמונה מהשטח - ${model.name}` })),
+            imgs.indexOf(img)
+          );
         };
 
         imgWrapper.appendChild(img);
