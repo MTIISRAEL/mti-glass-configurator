@@ -231,7 +231,7 @@
 
     <!-- פנל תצוגה מקלחונים -->
     <section id="showerPreviewHome" class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
-      <div id="showerPreviewCard" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
+      <div id="showerPreviewCard" class="bg-white p-4 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
           <div id="previewTabs" class="inline-flex rounded-xl border border-slate-200 overflow-hidden">
             <button type="button" onclick="setShowerPreview('render')" id="previewTab_render" class="preview-tab px-3 py-1.5 text-xs font-extrabold bg-blue-600 text-white transition">הדמיה</button>
@@ -240,7 +240,7 @@
           <span id="currentModelBadge" class="text-xs md:text-sm px-3 py-1 bg-slate-100 text-slate-700 font-extrabold rounded-lg truncate max-w-[200px]">טרם נבחר דגם</span>
         </div>
 
-        <div class="w-full h-80 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center p-4 relative overflow-hidden">
+        <div class="w-full h-56 lg:h-80 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center p-4 relative overflow-hidden">
           <img id="showerRender" src="" alt="הדמיית מקלחון" class="max-h-full max-w-full object-contain hidden" />
           <img id="showerGif" src="" alt="הדמיית פתיחת דלת" class="max-h-full max-w-full object-contain hidden" />
           <div id="gifPlaceholder" class="flex flex-col items-center justify-center text-slate-400 gap-2">
@@ -570,14 +570,14 @@
 
     <!-- פנל תצוגה אמבטיות -->
     <section id="bathPreviewHome" class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
-      <div id="bathPreviewCard" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
+      <div id="bathPreviewCard" class="bg-white p-4 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
           <span class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider">תצוגת מפרט</span>
           <span id="currentBathBadge" class="text-xs md:text-sm px-3 py-1 bg-slate-100 text-slate-700 font-extrabold rounded-lg truncate max-w-[240px]">טרם נבחר דגם</span>
         </div>
 
-        <div class="w-full h-80 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
-          <img id="bathPreviewImg" src="" alt="" class="hidden absolute inset-0 w-full h-full object-contain p-4 bg-white" />
+        <div class="w-full bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex flex-col items-center justify-center p-3 md:p-4 text-center relative overflow-hidden min-h-[120px] lg:min-h-[260px]">
+          <img id="bathPreviewImg" src="" alt="" class="hidden w-full h-auto max-h-[240px] lg:max-h-[300px] object-contain bg-white rounded-xl" />
           <button type="button" onclick="zoomBathPreview()" id="bathPreviewZoom" class="hidden absolute top-2 left-2 w-7 h-7 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-xs shadow-sm transition z-10" title="הגדל תמונה">🔍</button>
           <div id="bathPreviewPlaceholder" class="flex flex-col items-center">
             <div class="w-20 h-20 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-4xl mb-3">🛁</div>
@@ -694,13 +694,13 @@
 
     <!-- פנל תצוגה אגניות -->
     <section id="trayPreviewHome" class="lg:col-span-5 flex flex-col gap-6 sticky top-24">
-      <div id="trayPreviewCard" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
+      <div id="trayPreviewCard" class="bg-white p-4 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
         <div class="w-full flex justify-between items-center mb-4">
           <span class="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-wider">תצוגת אגנית</span>
           <span id="currentTrayBadge" class="text-xs md:text-sm px-3 py-1 bg-slate-100 text-slate-700 font-extrabold rounded-lg truncate max-w-[240px]">טרם נבחר דגם</span>
         </div>
 
-        <div class="w-full h-80 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+        <div class="w-full h-56 lg:h-80 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
           <div class="w-20 h-20 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-4xl mb-3">◽</div>
           <h4 id="trayPreviewTitle" class="text-base font-extrabold text-slate-800">בחר דגם אגנית לצפייה במפרט</h4>
           <p id="trayPreviewSpecs" class="text-xs text-slate-400 mt-1">אגניות אקריליות איכותיות כולל משטח אנטי-סליפ נגד החלקה</p>
