@@ -2433,9 +2433,15 @@
     // ==========================================
     const BATH_IMG_FOLDER = 'אמבטיות/תמונות';
 
-    function bathImageVariant() {
-      if (selectedBathSystem !== 'basic' && selectedBathSystem !== 'titanium') return 'body';
-      return selectedJetsFinish === 'white' ? 'white' : 'grey';
+    // סדר הניסיונות: רמת האיבזור והגימור שנבחרו, אחר כך גרסה כללית של אותו גימור,
+    // אחר כך רמת איבזור אחרת, ולבסוף הגימור השני ותמונה בלי ג'טים
+    function bathImageTries() {
+      if (selectedBathSystem !== 'basic' && selectedBathSystem !== 'titanium') return ['body'];
+      const fin = selectedJetsFinish === 'white' ? 'white' : 'grey';
+      const other = fin === 'white' ? 'grey' : 'white';
+      const lvl = selectedBathSystem;
+      const alt = lvl === 'basic' ? 'titanium' : 'basic';
+      return [`${lvl}_${fin}`, fin, `${alt}_${fin}`, `${lvl}_${other}`, other, `${alt}_${other}`, 'body'];
     }
 
     function updateBathPreviewImage(bath) {
@@ -2448,6 +2454,7 @@
         img.classList.add('hidden');
         zoom.classList.add('hidden');
         caption.classList.add('hidden');
+        document.getElementById('bathPreviewImgNote').classList.add('hidden');
         placeholder.classList.remove('hidden');
       };
 
@@ -2456,8 +2463,8 @@
       const code = bath.code || bath.id;
       const folder = encodeURIComponent(BATH_IMG_FOLDER.split('/')[0]) + '/' + encodeURIComponent(BATH_IMG_FOLDER.split('/')[1]);
       // אם אין תמונה לגימור שנבחר, חוזרים לתמונת האמבטיה הרגילה, ורק אם גם היא חסרה מוצג מלל
-      const wanted = bathImageVariant();
-      const tries = [wanted, 'body', 'grey', 'white'].filter((v, i, a) => a.indexOf(v) === i);
+      const tries = bathImageTries();
+      const wanted = tries[0];
       let step = 0;
       let loaded = null;
 
@@ -2474,16 +2481,25 @@
         caption.classList.remove('hidden');
         placeholder.classList.add('hidden');
 
-        // אם אין תמונה לגימור שנבחר, מציינים זאת במקום להציג תמונה שנראית "תקועה"
+        // אם אין תמונה בדיוק לבחירה, מציינים זאת במקום להציג תמונה שנראית "תקועה"
         const note = document.getElementById('bathPreviewImgNote');
-        const texts = {
-          body: 'התמונה להמחשה - טרם צולמה תמונה של הדגם הזה עם ג\'טים',
-          grey: 'התמונה להמחשה - מוצגת גרסת הג\'טים בגרפיט/ניקל',
-          white: 'התמונה להמחשה - מוצגת גרסת הג\'טים הלבנים'
-        };
-        const mismatch = loaded !== wanted;
-        note.classList.toggle('hidden', !mismatch);
-        if (mismatch) note.innerText = texts[loaded] || '';
+        let text = '';
+        if (loaded !== wanted) {
+          const wantedFin = wanted.split('_').pop();
+          const loadedFin = loaded.split('_').pop();
+          const loadedLevel = loaded.includes('_') ? loaded.split('_')[0] : null;
+          if (loaded === 'body') {
+            text = 'התמונה להמחשה - טרם צולמה תמונה של הדגם הזה עם ג\'טים';
+          } else if (loadedFin !== wantedFin) {
+            text = loadedFin === 'white'
+              ? 'התמונה להמחשה - מוצגת גרסת הג\'טים הלבנים'
+              : 'התמונה להמחשה - מוצגת גרסת הג\'טים בגרפיט/ניקל';
+          } else if (loadedLevel && loadedLevel !== selectedBathSystem) {
+            text = 'התמונה להמחשה - מספר הג\'טים בתמונה עשוי להיות שונה מהדגם שנבחר';
+          }
+        }
+        note.classList.toggle('hidden', !text);
+        note.innerText = text;
 
         try { updateMiniPreview(); } catch (e) {}
       };
