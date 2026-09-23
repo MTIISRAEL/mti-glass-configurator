@@ -583,6 +583,7 @@
         <div id="bathPreviewCaption" class="hidden w-full text-center mt-3">
           <h4 id="bathPreviewTitleImg" class="text-base font-extrabold text-slate-800"></h4>
           <p id="bathPreviewSpecsImg" class="text-xs text-slate-400 mt-1"></p>
+          <p id="bathPreviewImgNote" class="hidden text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1 mt-2 inline-block"></p>
         </div>
       </div>
 
@@ -2450,12 +2451,15 @@
       const code = bath.code || bath.id;
       const folder = encodeURIComponent(BATH_IMG_FOLDER.split('/')[0]) + '/' + encodeURIComponent(BATH_IMG_FOLDER.split('/')[1]);
       // אם אין תמונה לגימור שנבחר, חוזרים לתמונת האמבטיה הרגילה, ורק אם גם היא חסרה מוצג מלל
-      const tries = [bathImageVariant(), 'body', 'grey', 'white'].filter((v, i, a) => a.indexOf(v) === i);
+      const wanted = bathImageVariant();
+      const tries = [wanted, 'body', 'grey', 'white'].filter((v, i, a) => a.indexOf(v) === i);
       let step = 0;
+      let loaded = null;
 
       const load = () => {
         if (step >= tries.length) { showPlaceholder(); return; }
-        img.src = `./${folder}/${code}_${tries[step++]}.jpg`;
+        loaded = tries[step++];
+        img.src = `./${folder}/${code}_${loaded}.jpg`;
       };
 
       img.onerror = load;
@@ -2464,6 +2468,18 @@
         zoom.classList.remove('hidden');
         caption.classList.remove('hidden');
         placeholder.classList.add('hidden');
+
+        // אם אין תמונה לגימור שנבחר, מציינים זאת במקום להציג תמונה שנראית "תקועה"
+        const note = document.getElementById('bathPreviewImgNote');
+        const texts = {
+          body: 'התמונה להמחשה - טרם צולמה תמונה של הדגם הזה עם ג\'טים',
+          grey: 'התמונה להמחשה - מוצגת גרסת הג\'טים בגרפיט/ניקל',
+          white: 'התמונה להמחשה - מוצגת גרסת הג\'טים הלבנים'
+        };
+        const mismatch = loaded !== wanted;
+        note.classList.toggle('hidden', !mismatch);
+        if (mismatch) note.innerText = texts[loaded] || '';
+
         try { updateMiniPreview(); } catch (e) {}
       };
       load();
