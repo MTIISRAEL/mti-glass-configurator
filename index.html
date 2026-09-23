@@ -749,18 +749,18 @@
   </div>
 
   <!-- פס צף במובייל: מופיע כשתמונת הדגם יוצאת מהמסך -->
-  <div id="miniPreview" class="lg:hidden fixed inset-x-0 z-40 px-3 pointer-events-none opacity-0 -translate-y-3 transition-all duration-300">
-    <button type="button" onclick="scrollToPreviewCard()" class="pointer-events-auto w-full max-w-[640px] mx-auto flex items-center gap-3 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl shadow-slate-900/10 rounded-2xl p-2 pl-3.5 text-right active:scale-[0.99] transition">
-      <span class="w-12 h-12 shrink-0 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center">
+  <div id="miniPreview" class="lg:hidden fixed inset-x-0 bottom-0 z-40 px-3 pb-3 pointer-events-none opacity-0 translate-y-4 transition-all duration-300" style="padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));">
+    <button type="button" onclick="scrollToPreviewCard()" class="pointer-events-auto w-full max-w-[640px] mx-auto flex items-center gap-3 bg-white/95 backdrop-blur-md border border-slate-200 shadow-2xl shadow-slate-900/20 rounded-2xl p-2.5 pl-4 text-right active:scale-[0.99] transition">
+      <span class="w-[76px] h-[76px] shrink-0 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center">
         <img id="miniPreviewImg" src="" alt="" class="w-full h-full object-contain" />
-        <span id="miniPreviewIcon" class="text-xl">🛁</span>
+        <span id="miniPreviewIcon" class="text-3xl">🛁</span>
       </span>
       <span class="min-w-0 flex-1">
-        <span id="miniPreviewName" class="block text-xs font-extrabold text-slate-900 truncate">--</span>
+        <span id="miniPreviewName" class="block text-sm font-extrabold text-slate-900 truncate">--</span>
         <span id="miniPreviewSub" class="block text-[11px] text-slate-400 truncate">--</span>
       </span>
       <span class="shrink-0 text-left">
-        <span id="miniPreviewPrice" class="block text-sm font-extrabold text-blue-600 whitespace-nowrap">--</span>
+        <span id="miniPreviewPrice" class="block text-base font-extrabold text-blue-600 whitespace-nowrap">--</span>
         <span class="block text-[10px] text-slate-400">להצגה ↑</span>
       </span>
     </button>
@@ -3237,7 +3237,6 @@
 
       const header = document.querySelector('header');
       const top = (header ? header.offsetHeight : 64) + 8;
-      document.getElementById('miniPreview').style.top = `${top}px`;
 
       // מוצג רק כשגוללנו מתחת לכרטיס, לא כשהוא עוד לא הגיע
       card.getBoundingClientRect().bottom < top ? showMiniPreview() : hideMiniPreview();
@@ -3245,11 +3244,11 @@
 
     function showMiniPreview() {
       if (!updateMiniPreview()) return;
-      document.getElementById('miniPreview').classList.remove('opacity-0', '-translate-y-3', 'pointer-events-none');
+      document.getElementById('miniPreview').classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
     }
 
     function hideMiniPreview() {
-      document.getElementById('miniPreview').classList.add('opacity-0', '-translate-y-3', 'pointer-events-none');
+      document.getElementById('miniPreview').classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
     }
 
     function updateMiniPreview() {
