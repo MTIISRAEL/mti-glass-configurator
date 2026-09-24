@@ -323,6 +323,31 @@
   <!-- לשונית 2: אמבטיות ומערכות ג'קוזי -->
   <main id="tabContentBaths" class="max-w-[1600px] w-full mx-auto px-4 md:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-1 hidden">
     <section class="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
+
+      <!-- שני עולמות: אמבטיות מובנות מול פרי סטנדינג -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button type="button" onclick="selectBathFamily('builtin')" id="bathFamilyBtn_builtin" class="bath-family-btn p-4 rounded-2xl border-2 border-blue-600 bg-blue-50/50 text-right transition cursor-pointer">
+          <span class="block text-base font-extrabold text-blue-700">אמבטיות מובנות וג'קוזי</span>
+          <span class="block text-xs text-slate-500 mt-0.5">נבנות בנישה או בפינה · אפשרות למערכת ג'קוזי ולשדרוגים</span>
+        </button>
+        <button type="button" onclick="selectBathFamily('freestanding')" id="bathFamilyBtn_freestanding" class="bath-family-btn p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer">
+          <span class="block text-base font-extrabold text-slate-800">אמבטיות פרי סטנדינג</span>
+          <span class="block text-xs text-slate-500 mt-0.5">עומדות חופשי בחלל · מוצר מוגמר הכולל אביק, ללא שדרוגים</span>
+        </button>
+      </div>
+
+      <div id="freestandingFlow" class="hidden space-y-5">
+        <div>
+          <label class="flex items-center gap-2.5 text-base font-bold text-slate-800 mb-2">
+            <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white text-xs font-bold shrink-0 shadow-sm">1</span>
+            <span>בחירת דגם <span class="text-red-500">*</span></span>
+          </label>
+          <p class="text-xs text-slate-500 mb-3">כל הדגמים לבנים ומגיעים כולל אביק. המחירים אינם כוללים מע״מ.</p>
+          <div id="freestandingOptions" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+        </div>
+      </div>
+
+      <div id="builtinBathFlow" class="space-y-6">
       <div>
         <label class="flex items-center gap-2.5 text-base font-bold text-slate-800 mb-2">
           <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white text-xs font-bold shrink-0 shadow-sm">1</span>
@@ -586,6 +611,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -2024,6 +2050,40 @@
 
     const HATCH_FOLDER = 'תוספות אמבטיה/פתח שירות';
 
+    // ==========================================
+    // אמבטיות פרי סטנדינג - מוצר מוגמר: לבן, כולל אביק, בלי שדרוגים
+    // מחירי צרכן מקטלוג 2024, לא כוללים מע״מ
+    // ==========================================
+    const FREESTANDING_CATALOG = [
+      { id: 'MTI-462', size: '150X78', height: 60, price: 6250 },
+      { id: 'MTI-463', size: '178X78', height: 58, price: 6250 },
+      { id: 'MTI-405', size: '157X80', height: 60, price: 8750 },
+      { id: 'MTI-406', size: '168X74', height: 66, price: 8750 },
+      { id: 'MTI-407', size: '170X78', height: 60, price: 8750 },
+      { id: 'MTI-408', size: '170X78', height: 60, price: 8750 },
+      { id: 'MTI-409', size: '170X78', height: 60, price: 8750 },
+      { id: 'MTI-411', size: '170X80', height: 59, price: 8750 },
+      { id: 'MTI-415', size: '165X80', height: 58, price: 8750 },
+      { id: 'MTI-412', size: '180X80', height: 58, price: 8750 },
+      { id: 'MTI-413', size: '180X80', height: 60, price: 8750 },
+      { id: 'MTI-414', size: '180X90', height: 59, price: 8750 },
+      { id: 'MTI-430', size: '170X78', height: 62, price: 8750 },
+      { id: 'MTI-470', size: '160X73', height: 60, price: 8750 },
+      { id: 'MTI-440', size: '170X78', height: 60, price: 8750 },
+      { id: 'MTI-441', size: '170X78', height: 66, price: 8750 },
+      { id: 'MTI-442', size: '170X78', height: 60, price: 8750 },
+      { id: 'MTI-443', size: '168X76', height: 58, price: 8750 },
+      { id: 'MTI-444', size: '170X78', height: 60, price: 8750 },
+      { id: 'MTI-445', size: '178X80', height: 60, price: 8750 },
+      { id: 'MTI-471', size: '170X78', height: 60, price: 11250 },
+      { id: 'MTI-432', size: '170X78', height: 65, price: 11250 },
+      { id: 'MTI-416', size: '150X150', height: 63, price: 11250 }
+    ];
+    const FREESTANDING_FOLDER = 'אמבטיות/פרי סטנדינג';
+
+    let selectedBathFamily = 'builtin';
+    let selectedFreeModel = null;
+
     const SIDE_FOLDER = 'אמבטיות/כיוון';
     // דגמים פינתיים א-סימטריים שמגיעים בכיוון ימין או שמאל
     const HANDED_MODELS = ['MTI-52', 'MTI-53', 'MTI-28', 'MTI-26', 'MTI-59', 'MTI-29'];
@@ -2700,6 +2760,155 @@
       calculateBathPrice();
     }
 
+    // ==========================================
+    // מסלול פרי סטנדינג
+    // ==========================================
+    function selectBathFamily(family) {
+      selectedBathFamily = family;
+
+      document.querySelectorAll('.bath-family-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/50');
+        btn.classList.add('border-slate-200', 'bg-white');
+        const title = btn.querySelector('span');
+        title.classList.remove('text-blue-700');
+        title.classList.add('text-slate-800');
+      });
+      const active = document.getElementById(`bathFamilyBtn_${family}`);
+      if (active) {
+        active.classList.remove('border-slate-200', 'bg-white');
+        active.classList.add('border-blue-600', 'bg-blue-50/50');
+        const title = active.querySelector('span');
+        title.classList.remove('text-slate-800');
+        title.classList.add('text-blue-700');
+      }
+
+      const free = family === 'freestanding';
+      document.getElementById('builtinBathFlow').classList.toggle('hidden', free);
+      document.getElementById('freestandingFlow').classList.toggle('hidden', !free);
+
+      if (free) {
+        renderFreestandingOptions();
+        selectFreeModel(null);
+      } else {
+        selectedFreeModel = null;
+        onBathModelChange();
+      }
+    }
+
+    function renderFreestandingOptions() {
+      const folder = encPath(FREESTANDING_FOLDER);
+      document.getElementById('freestandingOptions').innerHTML = FREESTANDING_CATALOG.map(m => `
+        <button type="button" onclick="selectFreeModel('${m.id}')" id="freeBtn_${m.id}" class="free-btn relative p-2.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-center transition cursor-pointer">
+          <div class="w-full h-24 flex items-center justify-center overflow-hidden rounded-xl bg-slate-50 mb-2">
+            <img src="./${folder}/${m.id}.jpg" alt="${m.id}" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <span class="block text-sm font-extrabold text-slate-900">${m.id}</span>
+          <span class="block text-[11px] text-slate-400">${m.size} · גובה ${m.height} ס"מ</span>
+          <span class="block text-xs font-bold text-blue-600 mt-0.5">${m.price.toLocaleString()} ₪</span>
+        </button>
+      `).join('');
+    }
+
+    function selectFreeModel(id) {
+      selectedFreeModel = id ? FREESTANDING_CATALOG.find(m => m.id === id) : null;
+
+      document.querySelectorAll('.free-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/40', 'ring-2', 'ring-blue-600/20');
+        btn.classList.add('border-slate-200', 'bg-white');
+      });
+      const active = document.getElementById(`freeBtn_${id}`);
+      if (active) {
+        active.classList.remove('border-slate-200', 'bg-white');
+        active.classList.add('border-blue-600', 'bg-blue-50/40', 'ring-2', 'ring-blue-600/20');
+      }
+
+      updateFreePreview();
+      calculateFreestandingPrice();
+    }
+
+    function updateFreePreview() {
+      const m = selectedFreeModel;
+      const img = document.getElementById('bathPreviewImg');
+      const zoom = document.getElementById('bathPreviewZoom');
+      const placeholder = document.getElementById('bathPreviewPlaceholder');
+      const caption = document.getElementById('bathPreviewCaption');
+      const note = document.getElementById('bathPreviewImgNote');
+
+      img.onerror = null;
+      img.onload = null;
+      note.classList.add('hidden');
+
+      if (!m) {
+        img.removeAttribute('src');
+        img.classList.add('hidden');
+        zoom.classList.add('hidden');
+        caption.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        document.getElementById('currentBathBadge').innerText = 'טרם נבחר דגם';
+        document.getElementById('bathPreviewTitle').innerText = 'בחר דגם פרי סטנדינג לצפייה';
+        document.getElementById('bathPreviewSpecs').innerText = 'אמבטיות עומדות חופשי, מוצר מוגמר הכולל אביק';
+        return;
+      }
+
+      const specs = `מידות: ${m.size} ס"מ | גובה: ${m.height} ס"מ | לבן, כולל אביק`;
+      document.getElementById('currentBathBadge').innerText = m.id;
+      document.getElementById('bathPreviewTitleImg').innerText = `${m.id} (${m.size} ס"מ)`;
+      document.getElementById('bathPreviewSpecsImg').innerText = specs;
+
+      img.onload = () => {
+        img.classList.remove('hidden');
+        zoom.classList.remove('hidden');
+        caption.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        try { updateMiniPreview(); } catch (e) {}
+      };
+      img.onerror = () => {
+        img.classList.add('hidden');
+        zoom.classList.add('hidden');
+        caption.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+      };
+      img.src = `./${encPath(FREESTANDING_FOLDER)}/${m.id}.jpg`;
+    }
+
+    function calculateFreestandingPrice() {
+      const priceDisplay = document.getElementById('finalBathPriceDisplay');
+      const downloadBtn = document.getElementById('downloadBathPdfBtn');
+      const installPrice = document.getElementById('bathInstallPrice');
+      const installNote = document.getElementById('bathInstallNote');
+      const totalRow = document.getElementById('bathTotalRow');
+
+      if (!selectedFreeModel) {
+        priceDisplay.innerText = 'יש לבחור דגם';
+        priceDisplay.className = "text-xl md:text-2xl font-extrabold text-slate-400 mt-1 transition-all duration-200";
+        installPrice.innerText = '--';
+        installNote.innerText = 'עלות ההתקנה תחושב לאחר בחירת הדגם.';
+        totalRow.classList.add('hidden');
+        downloadBtn.disabled = true;
+        downloadBtn.className = "w-full py-4 bg-slate-100 cursor-not-allowed text-slate-400 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-slate-200 transition-all text-sm md:text-base";
+        try { updateMiniPreview(); } catch (e) {}
+        return;
+      }
+
+      const total = selectedFreeModel.price;
+      const dims = parseBathSize(selectedFreeModel.size);
+      const oversize = dims.some(d => d > BATH_OVERSIZE_CM);
+      const install = oversize ? BATH_INSTALL.oversize : BATH_INSTALL.freestanding;
+
+      priceDisplay.innerText = total.toLocaleString() + ' ₪';
+      priceDisplay.className = "text-3xl md:text-4xl font-extrabold text-blue-600 mt-1 transition-all duration-200";
+      installPrice.innerText = install.toLocaleString() + ' ₪';
+      installNote.innerText = oversize
+        ? `דגם במידות גדולות מ-${BATH_OVERSIZE_CM}/${BATH_OVERSIZE_CM}`
+        : 'אמבטיה פרי סטנדינג';
+      document.getElementById('bathTotalPrice').innerText = (total + install).toLocaleString() + ' ₪';
+      totalRow.classList.remove('hidden');
+
+      downloadBtn.disabled = false;
+      downloadBtn.className = "w-full py-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-extrabold rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 transition-all cursor-pointer text-sm md:text-base";
+      try { updateMiniPreview(); } catch (e) {}
+    }
+
     function refreshBathPreviewImage() {
       const bath = BATHS_CATALOG.find(b => b.id === document.getElementById('bathModelSelect').value);
       updateBathPreviewImage(bath || null);
@@ -2808,6 +3017,7 @@
     }
 
     function calculateBathPrice() {
+      if (selectedBathFamily === 'freestanding') { calculateFreestandingPrice(); return; }
       const modelId = document.getElementById('bathModelSelect').value;
       const bath = BATHS_CATALOG.find(b => b.id === modelId);
       const priceDisplay = document.getElementById('finalBathPriceDisplay');
@@ -2874,7 +3084,64 @@
       try { updateMiniPreview(); } catch (e) {}
     }
 
+    function generateFreestandingPDF() {
+      const m = selectedFreeModel;
+      if (!m) return;
+
+      const install = document.getElementById('bathInstallPrice').innerText;
+      const now = new Date();
+      document.getElementById('pdfDate').innerText =
+        `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+
+      if (activeStore) {
+        document.getElementById('pdfTitleMain').innerText = toNbsp(activeStore.name);
+        document.getElementById('pdfTitleSub').innerText = toNbsp('טופס מפרט והזמנת אמבטיה פרי סטנדינג (בשיתוף רשמי עם MTI)');
+        document.getElementById('pdfLogoImg').src = activeStore.logo;
+        document.getElementById('pdfSignatureText').innerText = toNbsp(`אישור הזמנה ומפרט - ${activeStore.name}`);
+      } else {
+        document.getElementById('pdfTitleMain').innerText = toNbsp('MTI Bath Gallery');
+        document.getElementById('pdfTitleSub').innerText = toNbsp('טופס מפרט והזמנת אמבטיה פרי סטנדינג');
+        document.getElementById('pdfLogoImg').src = './mtilogo.jpg';
+        document.getElementById('pdfSignatureText').innerText = toNbsp('חתימת הלקוח / אישור הזמנה');
+      }
+
+      document.getElementById('pdfSectionHeader').innerText = toNbsp('מפרט טכני של האמבטיה');
+      document.getElementById('pdfExtraPriceLabel').innerText = toNbsp('התקנה מקצועית: ');
+      document.getElementById('pdfExtraPriceVal').innerText = toNbsp(`${install} - אמבטיה פרי סטנדינג`);
+      document.getElementById('pdfInstallNote').innerText = toNbsp('הובלה ואספקה בתיאום סניף. ההתקנה תבוצע ע״י שרברב מוסמך בהתאם להוראות ההתקנה של MTI.');
+      document.getElementById('pdfFinalPrice').innerText = toNbsp(document.getElementById('finalBathPriceDisplay').innerText);
+      document.getElementById('pdfTotalWithInstall').innerText =
+        toNbsp(`סה״כ כולל התקנה: ${document.getElementById('bathTotalPrice').innerText}`);
+
+      const row = (label, value, shaded) => `
+        <tr style="background-color: ${shaded ? '#f8fafc' : '#ffffff'}; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b; width: 30%;">${toNbsp(label)}</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(value)}</td>
+        </tr>`;
+
+      document.getElementById('pdfSpecsBody').innerHTML =
+        row('סוג מוצר', 'אמבטיה פרי סטנדינג - עומדת חופשי', false) +
+        row('דגם', m.id, true) +
+        row('מידות חוץ', `${m.size} ס"מ`, false) +
+        row('גובה', `${m.height} ס"מ`, true) +
+        row('גוון', 'לבן', false) +
+        row('כלול במחיר', 'אביק מקורי. הדגם מסופק כמוצר מוגמר, ללא מערכות ג\'קוזי ושדרוגים', true);
+
+      const storePrefix = activeStore ? `${activeStore.name}_` : '';
+      const element = document.getElementById('pdfTemplate');
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `הזמנת_אמבטיה_פרי_סטנדינג_${storePrefix}${m.id}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: false, scrollX: 0, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(preparePdfElement(element)).save();
+    }
+
     function resetBathConfigurator() {
+      selectedFreeModel = null;
+      selectBathFamily('builtin');
       selectBathType('rect');
       selectedBathSystem = null;
       document.getElementById('wasteTypeChoice').classList.remove('hidden');
@@ -2909,6 +3176,7 @@
     }
 
     function generateBathOrderPDF() {
+      if (selectedBathFamily === 'freestanding') { generateFreestandingPDF(); return; }
       const modelId = document.getElementById('bathModelSelect').value;
       const bath = BATHS_CATALOG.find(b => b.id === modelId);
       if (!bath || !selectedBathSystem) return;
