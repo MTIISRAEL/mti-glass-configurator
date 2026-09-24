@@ -80,9 +80,18 @@
 
   </header>
 
-  <!-- באנר ראשי -->
-  <section class="relative bg-slate-100">
-    <img src="./hero.jpg" alt="עולם הרחצה של MTI" class="w-full h-36 sm:h-52 lg:h-[300px] object-cover object-center" />
+  <!-- באנר ראשי - הכיתוב הוא טקסט אמיתי מעל התמונה, כדי שיישאר חד וניתן לעריכה -->
+  <section class="relative bg-slate-100 overflow-hidden">
+    <img src="./hero.jpg" alt="עולם הרחצה של MTI" class="w-full h-44 sm:h-60 lg:h-[320px] object-cover object-center" />
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-5">
+      <h2 class="font-bold text-slate-900 leading-tight text-xl sm:text-3xl lg:text-[40px] max-w-[18ch]" style="text-shadow: 0 1px 10px rgba(255,255,255,0.85);">
+        כל עולם הרחצה של MTI במקום אחד
+      </h2>
+      <span class="block w-20 sm:w-32 h-px bg-slate-400/70 my-2 sm:my-3.5"></span>
+      <p class="font-semibold text-slate-700 text-[13px] sm:text-base lg:text-lg" style="text-shadow: 0 1px 8px rgba(255,255,255,0.9);">
+        עיצוב אישי. התאמה מדויקת. תמחור בזמן אמת.
+      </p>
+    </div>
     <div class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-slate-50 to-transparent pointer-events-none"></div>
   </section>
 
@@ -174,6 +183,7 @@
         <div>
           <div class="flex justify-between items-center mb-2.5">
             <label class="block text-sm md:text-base font-bold text-slate-700">גוון פרזול <span class="text-red-500">*</span></label>
+            <p id="colorLimitNote" class="hidden w-full text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1 mt-1.5"></p>
             <span id="selectedColorBadge" class="text-xs md:text-sm font-extrabold text-slate-400">טרם נבחר גוון</span>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 md:gap-3" id="colorContainer"></div>
@@ -1302,6 +1312,39 @@
       calculateShowerPrice();
     }
 
+    // דגמי מסילה מוסתרת מיוצרים במלאי גוונים מצומצם
+    const LIMITED_HARDWARE_COLORS = {
+      '880': ['ניקל', 'שחור'],
+      '881': ['ניקל', 'שחור', 'ניקל מוברש'],
+      '882': ['ניקל', 'שחור', 'ניקל מוברש']
+    };
+
+    function applyColorLimits(modelId) {
+      const allowed = LIMITED_HARDWARE_COLORS[modelId] || null;
+      const note = document.getElementById('colorLimitNote');
+
+      CATALOG_DATA.colors.forEach((col, idx) => {
+        const btn = document.querySelectorAll('#colorContainer .color-btn')[idx];
+        if (!btn) return;
+        const ok = !allowed || allowed.includes(col.name);
+        btn.classList.toggle('hidden', !ok);
+      });
+
+      note.classList.toggle('hidden', !allowed);
+      if (allowed) note.innerText = `דגם זה מיוצר בגוונים: ${allowed.join(' · ')}`;
+
+      // אם הגוון שנבחר קודם אינו זמין בדגם החדש, מנקים את הבחירה
+      if (allowed && selectedColor && !allowed.includes(selectedColor.name)) {
+        selectedColor = null;
+        document.getElementById('selectedColorBadge').innerText = 'טרם נבחר גוון';
+        document.querySelectorAll('.color-btn').forEach(b => {
+          b.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+          b.classList.add('border-slate-200', 'bg-white');
+        });
+        updateSelectionStrip();
+      }
+    }
+
     function renderModelCards(models) {
       const box = document.getElementById('modelCards');
       box.innerHTML = models.map(m => {
@@ -1349,6 +1392,7 @@
       if (!model) return;
 
       highlightModelCard(modelId);
+      applyColorLimits(modelId);
       document.getElementById('currentModelBadge').innerText = model.name;
       document.getElementById('dimensionsSection').classList.remove('opacity-50', 'pointer-events-none');
       document.getElementById('optionsSection').classList.remove('opacity-50', 'pointer-events-none');
