@@ -374,6 +374,7 @@
               <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">אקרילי איכותי כולל חיזוק פלדה היקפי</p>
+            <img id="sysThumb_body" src="" alt="" class="hidden w-full h-20 object-contain mt-2 bg-slate-50 rounded-xl border border-slate-100" />
           </button>
 
           <button type="button" onclick="selectBathSystem('basic')" id="sysCard_basic" class="sys-card p-4 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer">
@@ -382,6 +383,7 @@
               <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
             </div>
             <p id="sysDescBasic" class="text-xs text-slate-500 leading-relaxed">משאבה, גוף חימום מובנה, ג'טים נירוסטה, קונסטרוקציה, אביק ופיית מילוי</p>
+            <img id="sysThumb_basic" src="" alt="" class="hidden w-full h-20 object-contain mt-2 bg-slate-50 rounded-xl border border-slate-100" />
           </button>
 
           <button type="button" onclick="selectBathSystem('titanium')" id="sysCard_titanium" class="sys-card p-4 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer">
@@ -390,6 +392,7 @@
               <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
             </div>
             <p id="sysDescTitanium" class="text-xs text-slate-500 leading-relaxed">מנוע עוצמתי, ריבוי ג'טים, גוף חימום מובנה, קונסטרוקציה, אביק ופיית מילוי</p>
+            <img id="sysThumb_titanium" src="" alt="" class="hidden w-full h-20 object-contain mt-2 bg-slate-50 rounded-xl border border-slate-100" />
           </button>
         </div>
 
@@ -2490,6 +2493,7 @@
         previewSpecs.innerText = 'המערכת תציג נתונים טכניים, ליטר מים ומידות פנים וחוץ';
         updateBathPreviewImage(null);
         updatePanelOption(null);
+        updateSystemThumbs(null);
         updateJetCounts(null);
         renderBathSides(null);
         calculateBathPrice();
@@ -2505,6 +2509,7 @@
       document.getElementById('bathPreviewSpecsImg').innerText = previewSpecs.innerText;
       updateBathPreviewImage(bath);
       updatePanelOption(bath);
+      updateSystemThumbs(bath);
 
       updateJetCounts(bath);
       calculateBathPrice();
@@ -2513,17 +2518,39 @@
     // ==========================================
     // תמונת הדגם: אמבטיה ללא ג'טים, או ג'קוזי בגימור ניקל ואפור בטון (grey) או לבן (white)
     // ==========================================
-    const BATH_IMG_FOLDER = 'אמבטיות/תמונות';
+    const BATH_IMG_FOLDER = 'אמבטיות/תמונות';      // מבט-על עם/בלי ג'טים
+    const BATH_PHOTO_FOLDER = 'אמבטיות/קטלוג';      // תמונת המוצר מהקטלוג - אחידה לכל הדגמים
 
-    // סדר הניסיונות: רמת האיבזור והגימור שנבחרו, אחר כך גרסה כללית של אותו גימור,
-    // אחר כך רמת איבזור אחרת, ולבסוף הגימור השני ותמונה בלי ג'טים
-    function bathImageTries() {
-      if (selectedBathSystem !== 'basic' && selectedBathSystem !== 'titanium') return ['body'];
+    const encPath = folder => folder.split('/').map(encodeURIComponent).join('/');
+
+    // מבט-העל מוצג בכרטיסי רמת האיבזור, כי הוא בעצם מראה את פריסת הג'טים
+    function updateSystemThumbs(bath) {
       const fin = selectedJetsFinish === 'white' ? 'white' : 'grey';
-      const other = fin === 'white' ? 'grey' : 'white';
-      const lvl = selectedBathSystem;
-      const alt = lvl === 'basic' ? 'titanium' : 'basic';
-      return [`${lvl}_${fin}`, fin, `${alt}_${fin}`, `${lvl}_${other}`, other, `${alt}_${other}`, 'body'];
+      // בכוונה בלי נפילה לרמה השנייה - אחרת הכרטיס יראה מספר ג'טים שגוי
+      const sets = {
+        body: ['body'],
+        basic: [`basic_${fin}`, fin],
+        titanium: [`titanium_${fin}`, fin]
+      };
+
+      Object.entries(sets).forEach(([level, tries]) => {
+        const img = document.getElementById(`sysThumb_${level}`);
+        if (!img) return;
+        img.onerror = null;
+        img.onload = null;
+        img.classList.add('hidden');
+        if (!bath) { img.removeAttribute('src'); return; }
+
+        const code = bath.code || bath.id;
+        let step = 0;
+        const load = () => {
+          if (step >= tries.length) { img.classList.add('hidden'); return; }
+          img.src = `./${encPath(BATH_IMG_FOLDER)}/${code}_${tries[step++]}.jpg`;
+        };
+        img.onerror = load;
+        img.onload = () => img.classList.remove('hidden');
+        load();
+      });
     }
 
     function updateBathPreviewImage(bath) {
@@ -2546,17 +2573,16 @@
       if (!bath) { img.removeAttribute('src'); showPlaceholder(); return; }
 
       const code = bath.code || bath.id;
-      const folder = encodeURIComponent(BATH_IMG_FOLDER.split('/')[0]) + '/' + encodeURIComponent(BATH_IMG_FOLDER.split('/')[1]);
-      // אם אין תמונה לגימור שנבחר, חוזרים לתמונת האמבטיה הרגילה, ורק אם גם היא חסרה מוצג מלל
-      const tries = bathImageTries();
-      const wanted = tries[0];
+      // התצוגה הראשית היא תמונת המוצר מהקטלוג, זהה לכל הדגמים; מבט-העל עבר לכרטיסי הג'קוזי
+      const tries = ['catalog'];
+      const wanted = 'catalog';
       let step = 0;
       let loaded = null;
 
       const load = () => {
         if (step >= tries.length) { showPlaceholder(); return; }
         loaded = tries[step++];
-        img.src = `./${folder}/${code}_${loaded}.jpg`;
+        img.src = `./${encPath(BATH_PHOTO_FOLDER)}/${code}.jpg`;
       };
 
       img.onerror = load;
@@ -2718,7 +2744,7 @@
         selectWasteColor(finish === 'white' ? 'white_mat' : 'chrome');
       }
 
-      refreshBathPreviewImage();
+      updateSystemThumbs(BATHS_CATALOG.find(b => b.id === document.getElementById('bathModelSelect').value) || null);
       calculateBathPrice();
     }
 
