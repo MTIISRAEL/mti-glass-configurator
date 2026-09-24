@@ -331,8 +331,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <button type="button" onclick="selectBathType('rect')" id="bathTypeBtn_rect" class="bath-type-btn p-3.5 rounded-2xl border border-blue-600 bg-blue-50/50 text-blue-700 font-extrabold text-sm text-center transition">אמבטיה מלבנית</button>
           <button type="button" onclick="selectBathType('corner')" id="bathTypeBtn_corner" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">אמבטיה פינתית</button>
-          <button type="button" onclick="selectBathType('round')" id="bathTypeBtn_round" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">אמבטיה עגולה</button>
-          <button type="button" onclick="selectBathType('oval')" id="bathTypeBtn_oval" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">אמבטיה אובלית</button>
+          <button type="button" onclick="selectBathType('round')" id="bathTypeBtn_round" class="bath-type-btn p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">עגולה / אובלית</button>
         </div>
       </div>
 
@@ -2458,7 +2457,8 @@
         activeBtn.classList.add('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
       }
 
-      const filtered = BATHS_CATALOG.filter(b => b.type === type);
+      // העגולות והאובליות מוצגות יחד - שתיהן מותקנות חופשי
+      const filtered = BATHS_CATALOG.filter(b => type === 'round' ? (b.type === 'round' || b.type === 'oval') : b.type === type);
       const modelSelect = document.getElementById('bathModelSelect');
       modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם ומידה --</option>' +
         filtered.map(b => `<option value="${b.id}">${b.title}</option>`).join('');
