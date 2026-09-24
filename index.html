@@ -343,7 +343,9 @@
             <span>בחירת דגם <span class="text-red-500">*</span></span>
           </label>
           <p class="text-xs text-slate-500 mb-3">כל הדגמים לבנים ומגיעים כולל אביק. המחירים אינם כוללים מע״מ.</p>
-          <div id="freestandingOptions" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+          <select id="freeModelSelect" onchange="selectFreeModel(this.value)" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm md:text-base transition">
+            <option value="" disabled selected>-- בחר דגם ומידה --</option>
+          </select>
         </div>
       </div>
 
@@ -2796,31 +2798,17 @@
     }
 
     function renderFreestandingOptions() {
-      const folder = encPath(FREESTANDING_FOLDER);
-      document.getElementById('freestandingOptions').innerHTML = FREESTANDING_CATALOG.map(m => `
-        <button type="button" onclick="selectFreeModel('${m.id}')" id="freeBtn_${m.id}" class="free-btn relative p-2.5 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-center transition cursor-pointer">
-          <div class="w-full h-24 flex items-center justify-center overflow-hidden rounded-xl bg-slate-50 mb-2">
-            <img src="./${folder}/${m.id}.jpg" alt="${m.id}" class="w-full h-full object-cover" loading="lazy" />
-          </div>
-          <span class="block text-sm font-extrabold text-slate-900">${m.id}</span>
-          <span class="block text-[11px] text-slate-400">${m.size} · גובה ${m.height} ס"מ</span>
-          <span class="block text-xs font-bold text-blue-600 mt-0.5">${m.price.toLocaleString()} ₪</span>
-        </button>
-      `).join('');
+      const select = document.getElementById('freeModelSelect');
+      if (select.options.length > 1) return;
+      select.innerHTML = '<option value="" disabled selected>-- בחר דגם ומידה --</option>' +
+        FREESTANDING_CATALOG.map(m =>
+          `<option value="${m.id}">${m.id} (${m.size} ס"מ) - ${m.price.toLocaleString()} ₪</option>`).join('');
     }
 
     function selectFreeModel(id) {
       selectedFreeModel = id ? FREESTANDING_CATALOG.find(m => m.id === id) : null;
-
-      document.querySelectorAll('.free-btn').forEach(btn => {
-        btn.classList.remove('border-blue-600', 'bg-blue-50/40', 'ring-2', 'ring-blue-600/20');
-        btn.classList.add('border-slate-200', 'bg-white');
-      });
-      const active = document.getElementById(`freeBtn_${id}`);
-      if (active) {
-        active.classList.remove('border-slate-200', 'bg-white');
-        active.classList.add('border-blue-600', 'bg-blue-50/40', 'ring-2', 'ring-blue-600/20');
-      }
+      const select = document.getElementById('freeModelSelect');
+      if (!id) select.selectedIndex = 0;
 
       updateFreePreview();
       calculateFreestandingPrice();
