@@ -563,6 +563,15 @@
               <span id="selectedPillowBadge" class="text-xs md:text-sm font-extrabold text-slate-400">ללא כרית</span>
             </div>
             <div id="pillowOptions" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+
+            <div id="pillowQtyRow" class="hidden mt-3 flex items-center justify-between gap-3 p-2.5 bg-white border border-slate-200 rounded-2xl">
+              <span class="text-sm font-bold text-slate-700">כמות כריות</span>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="changePillowQty(-1)" class="w-9 h-9 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-lg font-extrabold text-slate-700 leading-none transition" aria-label="פחות">−</button>
+                <span id="pillowQty" class="w-8 text-center text-base font-extrabold text-slate-900">1</span>
+                <button type="button" onclick="changePillowQty(1)" class="w-9 h-9 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-lg font-extrabold text-slate-700 leading-none transition" aria-label="עוד">+</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1999,6 +2008,7 @@
     const JETS_FINISH_WHITE_SURCHARGE = 1250;
     let selectedConstruction = true;
     let selectedPillow = null;
+    let selectedPillowQty = 1;
     let selectedTap = null;
     let selectedTapFinish = 'nickel';
     let selectedHatch = null;
@@ -2342,6 +2352,7 @@
 
     function selectPillow(code) {
       selectedPillow = code ? PILLOWS.find(p => p.code === code) : null;
+      selectedPillowQty = 1;
 
       document.querySelectorAll('.pillow-btn').forEach(btn => {
         btn.classList.remove('border-blue-600', 'bg-blue-50/40');
@@ -2358,12 +2369,36 @@
         if (label) label.classList.replace('text-slate-700', 'text-blue-700');
       }
 
-      document.getElementById('selectedPillowBadge').innerText =
-        selectedPillow ? `${selectedPillow.code} · ${selectedPillow.price} ₪` : 'ללא כרית';
-      document.getElementById('selectedPillowBadge').className =
-        selectedPillow ? 'text-xs md:text-sm font-extrabold text-blue-600' : 'text-xs md:text-sm font-extrabold text-slate-400';
-
+      updatePillowBadge();
       calculateBathPrice();
+    }
+
+    // לקוחות מזמינים לפעמים יותר מכרית אחת - הכמות מוצגת רק אחרי שנבחר דגם
+    function changePillowQty(delta) {
+      if (!selectedPillow) return;
+      selectedPillowQty = Math.min(6, Math.max(1, selectedPillowQty + delta));
+      updatePillowBadge();
+      calculateBathPrice();
+    }
+
+    function updatePillowBadge() {
+      const badge = document.getElementById('selectedPillowBadge');
+      const qtyRow = document.getElementById('pillowQtyRow');
+
+      qtyRow.classList.toggle('hidden', !selectedPillow);
+      document.getElementById('pillowQty').innerText = selectedPillowQty;
+
+      if (!selectedPillow) {
+        badge.innerText = 'ללא כרית';
+        badge.className = 'text-xs md:text-sm font-extrabold text-slate-400';
+        return;
+      }
+
+      const total = selectedPillow.price * selectedPillowQty;
+      badge.innerText = selectedPillowQty > 1
+        ? `${selectedPillow.code} × ${selectedPillowQty} · ${total.toLocaleString()} ₪`
+        : `${selectedPillow.code} · ${selectedPillow.price.toLocaleString()} ₪`;
+      badge.className = 'text-xs md:text-sm font-extrabold text-blue-600';
     }
 
     function selectBathType(type) {
@@ -2384,16 +2419,17 @@
       modelSelect.innerHTML = '<option value="" disabled selected>-- בחר דגם ומידה --</option>' +
         filtered.map(b => `<option value="${b.id}">${b.title}</option>`).join('');
 
-      // אמבטיה עגולה ואובלית מותקנות חופשי - אין להן פאנל חיפוי
-      const optPanelBox = document.getElementById('optPanelBox');
-      if (type === 'round' || type === 'oval') {
-        optPanelBox.classList.add('hidden');
-        document.getElementById('chkPanel').checked = false;
-      } else {
-        optPanelBox.classList.remove('hidden');
-      }
-
       onBathModelChange();
+    }
+
+    // אמבטיה עגולה ואובלית מותקנות חופשי, ולדגמים הזוגיים האלה אין פאנל - בכולם אין מה להציע
+    const NO_PANEL_MODELS = ['MTI-96', 'MTI-21'];
+
+    function updatePanelOption(bath) {
+      const noPanel = selectedBathType === 'round' || selectedBathType === 'oval'
+        || (bath && NO_PANEL_MODELS.includes(bath.code || bath.id));
+      document.getElementById('optPanelBox').classList.toggle('hidden', noPanel);
+      if (noPanel) document.getElementById('chkPanel').checked = false;
     }
 
     function onBathModelChange() {
@@ -2409,6 +2445,7 @@
         previewTitle.innerText = 'בחר דגם אמבטיה לצפייה במפרט';
         previewSpecs.innerText = 'המערכת תציג נתונים טכניים, ליטר מים ומידות פנים וחוץ';
         updateBathPreviewImage(null);
+        updatePanelOption(null);
         updateJetCounts(null);
         renderBathSides(null);
         calculateBathPrice();
@@ -2423,6 +2460,7 @@
       document.getElementById('bathPreviewTitleImg').innerText = bath.title;
       document.getElementById('bathPreviewSpecsImg').innerText = previewSpecs.innerText;
       updateBathPreviewImage(bath);
+      updatePanelOption(bath);
 
       updateJetCounts(bath);
       calculateBathPrice();
@@ -2750,7 +2788,7 @@
       if (document.getElementById('chkLight').checked) total += 600;
       if (selectedTap) total += selectedTap.prices[selectedTapFinish];
       if (isJacuzzi && selectedHatch) total += selectedHatch.price;
-      if (selectedPillow) total += selectedPillow.price;
+      if (selectedPillow) total += selectedPillow.price * selectedPillowQty;
 
       priceDisplay.innerText = total.toLocaleString() + ' ₪';
       priceDisplay.className = "text-3xl md:text-4xl font-extrabold text-blue-600 mt-1 transition-all duration-200";
@@ -2828,7 +2866,7 @@
       }
       if (selectedHatch && selectedBathSystem !== 'body') addonsList.push(`פתח שירות: ${selectedHatch.name}`);
       if (selectedMotorPosition && selectedBathSystem !== 'body') addonsList.push(`מיקום מנוע: ${selectedMotorPosition}`);
-      if (selectedPillow) addonsList.push(`כרית ראש ${selectedPillow.code} (${selectedPillow.kind})`);
+      if (selectedPillow) addonsList.push(`כרית ראש ${selectedPillow.code} (${selectedPillow.kind})${selectedPillowQty > 1 ? ` - ${selectedPillowQty} יחידות` : ''}`);
 
       let systemText = sysNames[selectedBathSystem];
       if (selectedBathSystem === 'body') {
