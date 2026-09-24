@@ -387,11 +387,11 @@
         <div id="jetsFinishSection" class="hidden pt-3 space-y-2">
           <div class="flex justify-between items-center">
             <span class="text-xs md:text-sm font-bold text-slate-700">גימור ג'טים:</span>
-            <span id="selectedJetsFinishBadge" class="text-xs md:text-sm font-extrabold text-blue-600">גרפיט / ניקל</span>
+            <span id="selectedJetsFinishBadge" class="text-xs md:text-sm font-extrabold text-blue-600">ניקל ואפור בטון</span>
           </div>
           <div class="grid grid-cols-2 gap-2.5">
             <button type="button" onclick="selectJetsFinish('standard')" id="jetsFinishBtn_standard" class="jets-finish-btn p-3 rounded-2xl border border-blue-600 bg-blue-50/50 text-blue-700 font-extrabold text-sm text-center transition">
-              גרפיט / ניקל
+              ניקל ואפור בטון
             </button>
             <button type="button" onclick="selectJetsFinish('white')" id="jetsFinishBtn_white" class="jets-finish-btn p-3 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition">
               לבן <span class="text-xs font-bold opacity-80">(+1,250 ₪)</span>
@@ -2429,7 +2429,7 @@
     }
 
     // ==========================================
-    // תמונת הדגם: אמבטיה ללא ג'טים, או ג'קוזי בגימור ניקל/גרפיט או לבן
+    // תמונת הדגם: אמבטיה ללא ג'טים, או ג'קוזי בגימור ניקל ואפור בטון (grey) או לבן (white)
     // ==========================================
     const BATH_IMG_FOLDER = 'אמבטיות/תמונות';
 
@@ -2496,7 +2496,7 @@
           } else if (loadedFin !== wantedFin) {
             text = loadedFin === 'white'
               ? 'התמונה להמחשה - מוצגת גרסת הג\'טים הלבנים'
-              : 'התמונה להמחשה - מוצגת גרסת הג\'טים בגרפיט/ניקל';
+              : 'התמונה להמחשה - מוצגת גרסת הג\'טים בניקל ואפור בטון';
           } else if (loadedLevel && loadedLevel !== selectedBathSystem) {
             text = 'התמונה להמחשה - מספר הג\'טים בתמונה עשוי להיות שונה מהדגם שנבחר';
           }
@@ -2630,7 +2630,7 @@
         activeBtn.classList.add('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
       }
 
-      document.getElementById('selectedJetsFinishBadge').innerText = finish === 'white' ? `לבן (+${JETS_FINISH_WHITE_SURCHARGE.toLocaleString()} ₪)` : 'גרפיט / ניקל';
+      document.getElementById('selectedJetsFinishBadge').innerText = finish === 'white' ? `לבן (+${JETS_FINISH_WHITE_SURCHARGE.toLocaleString()} ₪)` : 'ניקל ואפור בטון';
 
       if (selectedBathSystem === 'basic' || selectedBathSystem === 'titanium') {
         selectWasteColor(finish === 'white' ? 'white_mat' : 'chrome');
@@ -2834,7 +2834,7 @@
       if (selectedBathSystem === 'body') {
         systemText += selectedConstruction ? ` | כולל קונסטרוקציה (מיטת תמיכה)` : ` | ללא קונסטרוקציה`;
       } else {
-        systemText += selectedJetsFinish === 'white' ? ` | גימור ג'טים: לבן (+${JETS_FINISH_WHITE_SURCHARGE.toLocaleString()} ₪)` : ` | גימור ג'טים: גרפיט/ניקל`;
+        systemText += selectedJetsFinish === 'white' ? ` | גימור ג'טים: לבן (+${JETS_FINISH_WHITE_SURCHARGE.toLocaleString()} ₪)` : ` | גימור ג'טים: ניקל ואפור בטון`;
       }
 
       let wasteText = 'ללא אביק נוסף';
