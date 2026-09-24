@@ -2458,7 +2458,10 @@
         placeholder.classList.remove('hidden');
       };
 
-      if (!bath) { img.src = ''; showPlaceholder(); return; }
+      // מנתקים קודם את המאזינים, אחרת ניקוי ה-src מפעיל את onerror של הבחירה הקודמת ומחזיר את התמונה
+      img.onerror = null;
+      img.onload = null;
+      if (!bath) { img.removeAttribute('src'); showPlaceholder(); return; }
 
       const code = bath.code || bath.id;
       const folder = encodeURIComponent(BATH_IMG_FOLDER.split('/')[0]) + '/' + encodeURIComponent(BATH_IMG_FOLDER.split('/')[1]);
@@ -2793,7 +2796,8 @@
       document.getElementById('jetsFinishSection').classList.add('hidden');
       selectJetsFinish('standard');
 
-      calculateBathPrice();
+      // מנקה גם את תצוגת הדגם: תמונה, כותרת ומספרי הג'טים
+      onBathModelChange();
     }
 
     function generateBathOrderPDF() {
@@ -3082,7 +3086,7 @@
       document.getElementById('trayModelSelect').selectedIndex = 0;
       document.getElementById('chkClassicWaste').checked = false;
       document.getElementById('chkTrayLegs').checked = false;
-      calculateTrayPrice();
+      onTrayModelChange();
     }
 
     function generateTrayOrderPDF() {
