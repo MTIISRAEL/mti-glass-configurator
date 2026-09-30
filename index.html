@@ -191,7 +191,24 @@
 
         <div>
           <div class="flex justify-between items-center mb-2.5">
-            <label class="block text-sm md:text-base font-bold text-slate-700">סוג זכוכית (8 מ"מ) <span class="text-red-500">*</span></label>
+            <label class="block text-sm md:text-base font-bold text-slate-700">עובי זכוכית <span class="text-red-500">*</span></label>
+            <span id="selectedThicknessBadge" class="text-xs md:text-sm font-extrabold text-blue-600">8 מ"מ</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2.5 md:gap-3">
+            <button type="button" onclick="selectThickness(8)" id="thicknessBtn_8" class="thickness-btn p-3 rounded-2xl border border-blue-600 bg-blue-50/50 text-blue-700 font-extrabold text-sm text-center transition cursor-pointer">
+              8 מ"מ מחוסמת
+              <span class="block text-[11px] font-bold text-slate-400 mt-0.5">כל סוגי הזכוכית</span>
+            </button>
+            <button type="button" onclick="selectThickness(10)" id="thicknessBtn_10" class="thickness-btn p-3 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-slate-700 font-extrabold text-sm text-center transition cursor-pointer">
+              10 מ"מ מחוסמת
+              <span class="block text-[11px] font-bold text-slate-400 mt-0.5">בשקופה בלבד · בהזמנה מיוחדת</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-2.5">
+            <label class="block text-sm md:text-base font-bold text-slate-700">סוג זכוכית <span id="glassThicknessLabel" class="text-slate-400 font-bold">(8 מ"מ)</span> <span class="text-red-500">*</span></label>
             <span id="selectedGlassBadge" class="text-xs md:text-sm font-extrabold text-slate-400">טרם נבחר סוג זכוכית</span>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3" id="glassContainer"></div>
@@ -1116,6 +1133,13 @@
       ]
     };
 
+    // זכוכית 10 מ"מ מגיעה מהספק בשקופה בלבד, בהזמנה מיוחדת. העלות היא לכל מ"ר, כמו בשאר הזכוכיות
+    const GLASSES_10MM = [
+      { name: "שקופה", cost: 170 }
+    ];
+    const glassList = () => selectedThickness === 10 ? GLASSES_10MM : CATALOG_DATA.glasses;
+
+    let selectedThickness = 8;
     let selectedColor = null;
     let selectedGlassIndex = null;
     let selectedNano = null;
@@ -1147,10 +1171,14 @@
         }).join('');
       }
 
+      renderGlassOptions();
+    }
+
+    function renderGlassOptions() {
       const glassBox = document.getElementById('glassContainer');
       const folderName = encodeURIComponent("סוגי זכוכיות");
-      if (glassBox && CATALOG_DATA && CATALOG_DATA.glasses) {
-        glassBox.innerHTML = CATALOG_DATA.glasses.map((g, idx) => {
+      if (glassBox) {
+        glassBox.innerHTML = glassList().map((g, idx) => {
           const baseName = encodeURIComponent(g.name);
           const imgPath = `./${folderName}/${baseName}.jpeg`;
           return `
@@ -1164,6 +1192,31 @@
           `;
         }).join('');
       }
+    }
+
+    function selectThickness(mm) {
+      selectedThickness = mm;
+
+      document.querySelectorAll('.thickness-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+        btn.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
+      });
+      const active = document.getElementById(`thicknessBtn_${mm}`);
+      if (active) {
+        active.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
+        active.classList.add('border-blue-600', 'bg-blue-50/50', 'text-blue-700');
+      }
+
+      document.getElementById('selectedThicknessBadge').innerText = `${mm} מ"מ`;
+      document.getElementById('glassThicknessLabel').innerText = `(${mm} מ"מ)`;
+
+      // רשימת הזכוכיות משתנה לפי העובי, ולכן הבחירה הקודמת מתאפסת
+      selectedGlassIndex = null;
+      document.getElementById('selectedGlassBadge').innerText = 'טרם נבחר סוג זכוכית';
+      document.getElementById('selectedGlassBadge').className = 'text-xs md:text-sm font-extrabold text-slate-400';
+      renderGlassOptions();
+      updateSelectionStrip();
+      calculateShowerPrice();
     }
 
     function handleGlassImgError(img, folder, name) {
@@ -1511,7 +1564,7 @@
 
     function updateSelectionStrip() {
       const strip = document.getElementById('selectionStrip');
-      const glass = selectedGlassIndex !== null ? CATALOG_DATA.glasses[selectedGlassIndex] : null;
+      const glass = selectedGlassIndex !== null ? glassList()[selectedGlassIndex] : null;
 
       if (!glass && !selectedColor) {
         strip.classList.add('hidden');
@@ -1670,7 +1723,7 @@
 
     function selectGlass(index) {
       selectedGlassIndex = index;
-      const glass = CATALOG_DATA.glasses[index];
+      const glass = glassList()[index];
       document.getElementById('selectedGlassBadge').innerText = glass.name;
 
       document.querySelectorAll('.glass-btn').forEach((btn, idx) => {
@@ -1764,7 +1817,7 @@
       const width1 = parseFloat(valW1);
       const width2 = isCurrentCorner ? parseFloat(valW2) : 0;
       const height = parseFloat(valH);
-      const glassCostPerM2 = CATALOG_DATA.glasses[selectedGlassIndex].cost;
+      const glassCostPerM2 = glassList()[selectedGlassIndex].cost;
       const nanoCost = selectedNano;
       const cutCost = selectedCut;
 
@@ -1808,6 +1861,7 @@
       modelSelect.className = "w-full p-3.5 bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-400 outline-none text-sm transition cursor-not-allowed";
       document.getElementById('modelCards').classList.add('hidden');
       document.getElementById('modelCards').innerHTML = '';
+      selectThickness(8);
 
       selectedColor = null;
       selectedGlassIndex = null;
@@ -1869,7 +1923,7 @@
       const width1 = document.getElementById('widthSelect1').value;
       const width2 = document.getElementById('widthSelect2').value;
       const height = document.getElementById('heightSelect').value;
-      const glass = CATALOG_DATA.glasses[selectedGlassIndex].name;
+      const glass = glassList()[selectedGlassIndex].name;
       const nano = selectedNano === 150 ? 'כולל ציפוי ננו דוחה אבנית' : 'ללא ציפוי';
       const cut = selectedCut === 0 ? 'ללא חיתוכים' : (selectedCut === 50 ? 'חיתוך 1' : '2 חיתוכים');
       const colorName = selectedColor.name;
@@ -1924,7 +1978,7 @@
         </tr>
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
           <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('סוג ועובי זכוכית')}</td>
-          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(glass + ' | 8 מ"מ מחוסמת')}</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(glass + ' | ' + selectedThickness + ' מ"מ מחוסמת')}</td>
         </tr>
         <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
           <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('ציפוי ננו דוחה אבנית')}</td>
