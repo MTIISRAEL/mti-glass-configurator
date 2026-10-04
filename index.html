@@ -3687,11 +3687,15 @@
 
     function showMiniPreview() {
       if (!updateMiniPreview()) return;
-      document.getElementById('miniPreview').classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      const bar = document.getElementById('miniPreview');
+      bar.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      // מפנה מקום בתחתית הדף כדי שהפס הצף לא יכסה את כפתור הורדת ההצעה
+      document.body.style.paddingBottom = `${bar.offsetHeight + 12}px`;
     }
 
     function hideMiniPreview() {
       document.getElementById('miniPreview').classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+      document.body.style.paddingBottom = '';
     }
 
     function updateMiniPreview() {
