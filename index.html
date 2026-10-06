@@ -418,7 +418,10 @@
               <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">אקרילי איכותי כולל חיזוק פלדה היקפי</p>
-            <img id="sysThumb_body" src="" alt="" class="hidden w-full h-20 object-contain mt-auto pt-2 bg-slate-50 rounded-xl border border-slate-100" />
+            <span id="sysThumbBox_body" class="hidden relative block mt-auto pt-2">
+              <img id="sysThumb_body" src="" alt="" class="w-full h-20 object-contain bg-slate-50 rounded-xl border border-slate-100" />
+              <span onclick="zoomSysThumb(event, 'body')" class="absolute top-3 left-1 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10 cursor-pointer" title="הגדל תמונה">🔍</span>
+            </span>
           </button>
 
           <button type="button" onclick="selectBathSystem('basic')" id="sysCard_basic" class="sys-card p-4 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer flex flex-col h-full">
@@ -427,7 +430,10 @@
               <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
             </div>
             <p id="sysDescBasic" class="text-xs text-slate-500 leading-relaxed">משאבה, גוף חימום מובנה, ג'טים נירוסטה, קונסטרוקציה, אביק ופיית מילוי</p>
-            <img id="sysThumb_basic" src="" alt="" class="hidden w-full h-20 object-contain mt-auto pt-2 bg-slate-50 rounded-xl border border-slate-100" />
+            <span id="sysThumbBox_basic" class="hidden relative block mt-auto pt-2">
+              <img id="sysThumb_basic" src="" alt="" class="w-full h-20 object-contain bg-slate-50 rounded-xl border border-slate-100" />
+              <span onclick="zoomSysThumb(event, 'basic')" class="absolute top-3 left-1 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10 cursor-pointer" title="הגדל תמונה">🔍</span>
+            </span>
           </button>
 
           <button type="button" onclick="selectBathSystem('titanium')" id="sysCard_titanium" class="sys-card p-4 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer flex flex-col h-full">
@@ -436,7 +442,10 @@
               <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
             </div>
             <p id="sysDescTitanium" class="text-xs text-slate-500 leading-relaxed">מנוע עוצמתי, ריבוי ג'טים, גוף חימום מובנה, קונסטרוקציה, אביק ופיית מילוי</p>
-            <img id="sysThumb_titanium" src="" alt="" class="hidden w-full h-20 object-contain mt-auto pt-2 bg-slate-50 rounded-xl border border-slate-100" />
+            <span id="sysThumbBox_titanium" class="hidden relative block mt-auto pt-2">
+              <img id="sysThumb_titanium" src="" alt="" class="w-full h-20 object-contain bg-slate-50 rounded-xl border border-slate-100" />
+              <span onclick="zoomSysThumb(event, 'titanium')" class="absolute top-3 left-1 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10 cursor-pointer" title="הגדל תמונה">🔍</span>
+            </span>
           </button>
         </div>
 
@@ -2651,22 +2660,41 @@
 
       Object.entries(sets).forEach(([level, tries]) => {
         const img = document.getElementById(`sysThumb_${level}`);
-        if (!img) return;
+        const box = document.getElementById(`sysThumbBox_${level}`);
+        if (!img || !box) return;
         img.onerror = null;
         img.onload = null;
-        img.classList.add('hidden');
+        box.classList.add('hidden');
         if (!bath) { img.removeAttribute('src'); return; }
 
         const code = bath.code || bath.id;
         let step = 0;
         const load = () => {
-          if (step >= tries.length) { img.classList.add('hidden'); return; }
+          if (step >= tries.length) { box.classList.add('hidden'); return; }
           img.src = `./${encPath(BATH_IMG_FOLDER)}/${code}_${tries[step++]}.jpg`;
         };
         img.onerror = load;
-        img.onload = () => img.classList.remove('hidden');
+        img.onload = () => box.classList.remove('hidden');
         load();
       });
+    }
+
+    // הגדלה של פריסת הג'טים, עם מעבר בין רמות האיבזור שיש להן תמונה
+    function zoomSysThumb(e, level) {
+      e.preventDefault();
+      e.stopPropagation();
+      const titles = { body: 'ללא ג\'טים', basic: 'ג\'קוזי BASIC', titanium: 'ג\'קוזי TITANIUM' };
+      const model = document.getElementById('currentBathBadge').innerText;
+      const items = [];
+      let index = 0;
+      ['body', 'basic', 'titanium'].forEach(lvl => {
+        const box = document.getElementById(`sysThumbBox_${lvl}`);
+        const img = document.getElementById(`sysThumb_${lvl}`);
+        if (!box || box.classList.contains('hidden') || !img.src) return;
+        if (lvl === level) index = items.length;
+        items.push({ src: img.currentSrc || img.src, title: `${model} · ${titles[lvl]}` });
+      });
+      openZoomList(items, index);
     }
 
     function updateBathPreviewImage(bath) {
