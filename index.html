@@ -253,6 +253,39 @@
             </div>
           </div>
         </div>
+
+        <!-- מתלה מגבת / ידית מוארכת: תוספת אופציונלית, בגוון הפרזול שנבחר -->
+        <div class="pt-3 border-t border-slate-100">
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-sm font-bold text-slate-700">מתלה מגבת / ידית מוארכת</label>
+            <span id="selectedAccessoryBadge" class="text-xs font-bold text-slate-400">ללא</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectAccessory(null)" id="accBtn_none" class="acc-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex flex-col items-center justify-center gap-1.5 hover:border-blue-400 transition cursor-pointer min-h-[96px]">
+              <span class="text-xs md:text-sm font-bold text-slate-700">ללא</span>
+            </button>
+            <button type="button" onclick="selectAccessory('towel')" id="accBtn_towel" class="acc-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex flex-col items-center gap-1.5 hover:border-blue-400 transition cursor-pointer">
+              <span class="acc-img-box w-full h-14 flex items-center justify-center overflow-hidden">
+                <img src="./%D7%9E%D7%A7%D7%9C%D7%97%D7%95%D7%A0%D7%99%D7%9D/%D7%9E%D7%AA%D7%9C%D7%94%20%D7%9E%D7%92%D7%91%D7%AA/%D7%9E%D7%AA%D7%9C%D7%94%20%D7%9E%D7%92%D7%91%D7%AA.jpg" alt="מתלה מגבת" class="max-w-full max-h-full object-contain mix-blend-multiply" onerror="this.closest('.acc-img-box').classList.add('hidden')" />
+              </span>
+              <span class="text-xs md:text-sm font-bold text-slate-700">מתלה מגבת</span>
+            </button>
+            <button type="button" onclick="selectAccessory('handle')" id="accBtn_handle" class="acc-card bg-slate-50 border border-slate-200 p-2.5 rounded-2xl flex flex-col items-center gap-1.5 hover:border-blue-400 transition cursor-pointer">
+              <span class="acc-img-box w-full h-14 flex items-center justify-center overflow-hidden">
+                <img src="./%D7%9E%D7%A7%D7%9C%D7%97%D7%95%D7%A0%D7%99%D7%9D/%D7%9E%D7%AA%D7%9C%D7%94%20%D7%9E%D7%92%D7%91%D7%AA/%D7%99%D7%93%D7%99%D7%AA%20%D7%9E%D7%95%D7%90%D7%A8%D7%9B%D7%AA.jpg" alt="ידית מוארכת" class="max-w-full max-h-full object-contain mix-blend-multiply" onerror="this.closest('.acc-img-box').classList.add('hidden')" />
+              </span>
+              <span class="text-xs md:text-sm font-bold text-slate-700">ידית מוארכת</span>
+            </button>
+          </div>
+
+          <div id="accQtyRow" class="hidden mt-2.5 flex items-center justify-between gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-2xl">
+            <span class="text-sm font-bold text-slate-700">כמות</span>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="selectAccessoryQty(1)" id="accQty_1" class="acc-qty px-5 py-2 rounded-xl border text-sm font-extrabold transition cursor-pointer">1</button>
+              <button type="button" onclick="selectAccessoryQty(2)" id="accQty_2" class="acc-qty px-5 py-2 rounded-xl border text-sm font-extrabold transition cursor-pointer">2</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1787,6 +1820,64 @@
       calculateShowerPrice();
     }
 
+    // ==========================================
+    // מתלה מגבת / ידית מוארכת - שני מוצרים שונים, הלקוח בוחר אחד מהם, 1 או 2 יחידות
+    // עלות 50 ₪ ליחידה, מוכפלת במקדם גוון הפרזול ואז במכפיל הרגיל כמו שאר העלויות
+    // ==========================================
+    const SHOWER_ACCESSORIES = {
+      towel: { name: 'מתלה מגבת', cost: 50 },
+      handle: { name: 'ידית מוארכת', cost: 50 }
+    };
+    let selectedAccessory = null;
+    let selectedAccessoryQty = 1;
+
+    function selectAccessory(key) {
+      selectedAccessory = key;
+      selectedAccessoryQty = 1;
+      document.querySelectorAll('.acc-card').forEach(card => {
+        card.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+        card.classList.add('border-slate-200', 'bg-slate-50');
+      });
+      const active = document.getElementById(`accBtn_${key || 'none'}`);
+      if (active) {
+        active.classList.remove('border-slate-200', 'bg-slate-50');
+        active.classList.add('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
+      }
+      updateAccessoryUi();
+      calculateShowerPrice();
+    }
+
+    function selectAccessoryQty(qty) {
+      if (!selectedAccessory) return;
+      selectedAccessoryQty = qty;
+      updateAccessoryUi();
+      calculateShowerPrice();
+    }
+
+    function updateAccessoryUi() {
+      document.getElementById('accQtyRow').classList.toggle('hidden', !selectedAccessory);
+      [1, 2].forEach(q => {
+        const btn = document.getElementById(`accQty_${q}`);
+        const on = q === selectedAccessoryQty;
+        btn.className = `acc-qty px-5 py-2 rounded-xl border text-sm font-extrabold transition cursor-pointer ${on
+          ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 bg-white text-slate-700 hover:border-blue-400'}`;
+      });
+      const badge = document.getElementById('selectedAccessoryBadge');
+      badge.innerText = accessoryText();
+      badge.className = selectedAccessory ? 'text-xs font-bold text-blue-600' : 'text-xs font-bold text-slate-400';
+    }
+
+    function accessoryText() {
+      if (!selectedAccessory) return 'ללא';
+      const name = SHOWER_ACCESSORIES[selectedAccessory].name;
+      return selectedAccessoryQty > 1 ? `${name} × ${selectedAccessoryQty}` : name;
+    }
+
+    function accessoryCost() {
+      if (!selectedAccessory || !selectedColor) return 0;
+      return SHOWER_ACCESSORIES[selectedAccessory].cost * selectedAccessoryQty * selectedColor.mult;
+    }
+
     function resetRadioCards() {
       document.querySelectorAll('.nano-card, .cut-card').forEach(card => {
         card.classList.remove('ring-2', 'ring-blue-600', 'border-blue-600', 'bg-blue-50/40');
@@ -1834,7 +1925,7 @@
       let areaM2 = isCurrentCorner ? (((width1 + width2) * height) / 10000) : ((width1 * height) / 10000);
       let glassCost = areaM2 * glassCostPerM2;
       let hardwareCost = model.cost * selectedColor.mult;
-      let totalCost = hardwareCost + glassCost + nanoCost + cutCost;
+      let totalCost = hardwareCost + glassCost + nanoCost + cutCost + accessoryCost();
       let extraRetail = model.extraRetail || 0;
       let catalogRetailPrice = Math.round(totalCost * (2.1 / 0.4)) + extraRetail;
 
@@ -1872,6 +1963,7 @@
       document.getElementById('modelCards').classList.add('hidden');
       document.getElementById('modelCards').innerHTML = '';
       selectThickness(8);
+      selectAccessory(null);
 
       selectedColor = null;
       selectedGlassIndex = null;
@@ -1997,6 +2089,10 @@
         <tr style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
           <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('חיתוך / גריעה')}</td>
           <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(cut)}</td>
+        </tr>
+        <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-weight: bold; color: #64748b;">${toNbsp('מתלה מגבת / ידית מוארכת')}</td>
+          <td style="padding: 10px 12px; font-weight: bold; color: #0f172a;">${toNbsp(selectedAccessory ? `${accessoryText()} | גוון ${colorName}` : 'ללא')}</td>
         </tr>
       `;
 
@@ -3634,6 +3730,8 @@
         text: 'שקופה - המראה הקלאסי והנקי.\nאקסטרה קליר - שקופה במיוחד, בלי הגוון הירקרק של זכוכית רגילה.\nזכוכיות מעוצבות ומוחלבות (אסיד, גרניט, פפיטה ועוד) - מסתירות ומוסיפות פרטיות.\nאנטי סאן - זכוכית כהה בגוון אפור או חום.\nלחיצה על 🔍 מגדילה את התמונה.' },
       { tab: 'tabContentShowers', label: 'ציפוי ננו', title: 'ציפוי ננו דוחה אבנית',
         text: 'ציפוי שקוף שמורח על הזכוכית ומקשה על אבנית וכתמי מים להיצמד אליה. הזכוכית נשארת נקייה לאורך זמן והניקוי קל יותר.' },
+      { tab: 'tabContentShowers', label: 'מתלה מגבת', title: 'מתלה מגבת / ידית מוארכת',
+        text: 'תוספת שמותקנת על הזכוכית ומגיעה בגוון הפרזול שנבחר.\nמתלה מגבת - מוט לתליית מגבת על דלת המקלחון.\nידית מוארכת - ידית ארוכה לאחיזה נוחה בפתיחת הדלת.\nאפשר להזמין יחידה אחת או שתיים.' },
       { tab: 'tabContentShowers', label: 'חיתוך / גריעה', title: 'חיתוך / גריעה בזכוכית',
         text: 'חיתוך בפינת הזכוכית כשצריך לעקוף בליטה בקיר או ברצפה - למשל אדן, מדרגה או צינור. אם אין בליטה במקום, בוחרים "ללא".' },
 
@@ -3801,6 +3899,7 @@
       try { initBathsTab(); } catch (e) { console.error("Baths init error:", e); }
       try { initTraysTab(); } catch (e) { console.error("Trays init error:", e); }
       try { initHelpButtons(); } catch (e) { console.error("Help init error:", e); }
+      try { selectAccessory(null); } catch (e) { console.error("Accessory init error:", e); }
       try {
         layoutPreviewPanels();
         const mql = window.matchMedia('(max-width: 1023px)');
