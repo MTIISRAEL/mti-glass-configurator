@@ -1698,7 +1698,14 @@
               img.src = fileSrc;
               img.alt = `תמונה מהשטח - ${model.name}`;
 
-              imgWrapper.onclick = function() { openGalleryModal(index); };
+              // בונים את הרשימה מחדש בכל לחיצה - הגדלת גוון או זכוכית מחליפה את הרשימה המשותפת
+              imgWrapper.onclick = function() {
+                const imgs = [...galleryGrid.querySelectorAll('img')];
+                openZoomList(
+                  imgs.map(i => ({ src: i.currentSrc || i.src, title: `תמונה מהשטח - ${model.name}` })),
+                  imgs.indexOf(img)
+                );
+              };
               imgWrapper.appendChild(img);
               galleryGrid.appendChild(imgWrapper);
             });
