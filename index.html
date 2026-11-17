@@ -447,7 +447,7 @@
           <span id="selectedSystemBadge" class="text-xs md:text-sm font-bold text-blue-600">--</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div id="sysCardsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <button type="button" onclick="selectBathSystem('body')" id="sysCard_body" class="sys-card p-4 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer flex flex-col h-full">
             <div class="flex items-center justify-between mb-1">
               <span class="font-extrabold text-slate-800 text-sm md:text-base">גוף אמבטיה בלבד</span>
@@ -469,6 +469,18 @@
             <span id="sysThumbBox_basic" class="hidden relative block mt-auto pt-2">
               <img id="sysThumb_basic" src="" alt="" class="w-full h-20 object-contain bg-slate-50 rounded-xl border border-slate-100" />
               <span onclick="zoomSysThumb(event, 'basic')" class="absolute top-3 left-1 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10 cursor-pointer" title="הגדל תמונה">🔍</span>
+            </span>
+          </button>
+
+          <button type="button" onclick="selectBathSystem('gold')" id="sysCard_gold" class="hidden sys-card p-4 rounded-2xl border border-slate-200 bg-white hover:border-blue-400 text-right transition cursor-pointer flex flex-col h-full">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-extrabold text-slate-800 text-sm md:text-base">ג'קוזי GOLD</span>
+              <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center bg-white check-dot"><span class="w-2 h-2 rounded-full bg-blue-600 hidden"></span></span>
+            </div>
+            <p id="sysDescGold" class="text-xs text-slate-500 leading-relaxed">מנוע משודרג, ג'טים נירוסטה, גוף חימום מובנה, קונסטרוקציה, אביק ופיית מילוי</p>
+            <span id="sysThumbBox_gold" class="hidden relative block mt-auto pt-2">
+              <img id="sysThumb_gold" src="" alt="" class="w-full h-20 object-contain bg-slate-50 rounded-xl border border-slate-100" />
+              <span onclick="zoomSysThumb(event, 'gold')" class="absolute top-3 left-1 w-5 h-5 bg-white/90 hover:bg-blue-600 hover:text-white text-slate-500 rounded-full flex items-center justify-center text-[10px] shadow-sm transition z-10 cursor-pointer" title="הגדל תמונה">🔍</span>
             </span>
           </button>
 
@@ -2201,15 +2213,15 @@
       { type: 'corner', id: 'MTI-39', size: '145X145', title: 'MTI-39 פינתית (145X145 ס"מ)', liters: 155, body: 2475, basic: 8000, titanium: 9375, jetsBasic: 8, jetsTitanium: 12, motorPositions: [1, 2, 3, 4, 5, 6] },
       { type: 'corner', id: 'MTI-35', size: '150X150', title: 'MTI-35 פינתית (150X150 ס"מ)', liters: 165, body: 2475, basic: 8200, titanium: 9575, jetsBasic: 10, jetsTitanium: 14, motorPositions: [1, 2, 3, 4, 5, 6] },
       { type: 'corner', id: 'MTI-43', size: '150X150', title: 'MTI-43 פינתית (150X150 ס"מ)', liters: 165, body: 2475, basic: 8200, titanium: 9575, jetsBasic: 10, jetsTitanium: 14, motorPositions: [1, 2, 3, 4, 5, 6] },
-      { type: 'round', id: 'MTI-50', size: '150Q', title: 'MTI-50 עגולה (קוטר 150 ס"מ)', liters: 185, body: 5000, basic: 12175, titanium: 16600, jetsBasic: 8, jetsTitanium: 16, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] },
-      { type: 'round', id: 'MTI-95', size: '150Q', title: 'MTI-95 עגולה (קוטר 150 ס"מ)', liters: 170, body: 5000, basic: 10200, titanium: 16800, jetsBasic: 8, jetsTitanium: 16, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] },
-      { type: 'round', id: 'MTI-66', size: '164Q', title: 'MTI-66 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14925, titanium: 21200, jetsBasic: 8, jetsTitanium: 16, motorPositions: [1, 2, 3, 6, 7, 8] },
-      { type: 'round', id: 'MTI-67', size: '164Q', title: 'MTI-67 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14125, titanium: 21200, jetsBasic: 8, jetsTitanium: 16, motorPositions: [1, 2] },
-      { type: 'round', id: 'MTI-51', size: '180Q', title: 'MTI-51 עגולה (קוטר 180 ס"מ)', liters: 200, body: 9000, basic: 13875, titanium: 21200, jetsBasic: 10, jetsTitanium: 18, motorPositions: [1, 2] },
-      { type: 'round', id: 'MTI-99', size: '180Q', title: 'MTI-99 עגולה (קוטר 180 ס"מ)', liters: 230, body: 9000, basic: 16625, titanium: 22760, jetsBasic: 10, jetsTitanium: 18, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] },
-      { type: 'round', id: 'MTI-100', size: '200Q', title: 'MTI-100 עגולה (קוטר 200 ס"מ)', liters: 450, body: 9250, basic: 18075, titanium: 24550, jetsBasic: 10, jetsTitanium: 18, motorPositions: [1, 2] },
-      { type: 'oval', id: 'MTI-27', size: '180X110', title: 'MTI-27 אובלית (180X110 ס"מ)', liters: 180, body: 3750, basic: 10250, titanium: 16500, jetsBasic: 8, jetsTitanium: 16, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] },
-      { type: 'oval', id: 'MTI-97', size: '200X140', title: 'MTI-97 אובלית (200X140 ס"מ)', liters: 400, body: 9000, basic: 12500, titanium: 20500, jetsBasic: 10, jetsTitanium: 18, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] }
+      { type: 'round', id: 'MTI-50', size: '150Q', title: 'MTI-50 עגולה (קוטר 150 ס"מ)', liters: 185, body: 5000, basic: 12175, gold: 12500, titanium: 16600, jetsBasic: 8, jetsGold: 12, jetsTitanium: 16, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] },
+      { type: 'round', id: 'MTI-95', size: '150Q', title: 'MTI-95 עגולה (קוטר 150 ס"מ)', liters: 170, body: 5000, basic: 10200, gold: 12800, titanium: 16800, jetsBasic: 8, jetsGold: 12, jetsTitanium: 16, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] },
+      { type: 'round', id: 'MTI-66', size: '164Q', title: 'MTI-66 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14925, gold: 17550, titanium: 21200, jetsBasic: 8, jetsGold: 12, jetsTitanium: 16, motorPositions: [1, 2, 3, 6, 7, 8] },
+      { type: 'round', id: 'MTI-67', size: '164Q', title: 'MTI-67 עגולה (קוטר 164 ס"מ)', liters: 190, body: 8000, basic: 14125, gold: 17550, titanium: 21200, jetsBasic: 8, jetsGold: 12, jetsTitanium: 16, motorPositions: [1, 2] },
+      { type: 'round', id: 'MTI-51', size: '180Q', title: 'MTI-51 עגולה (קוטר 180 ס"מ)', liters: 200, body: 9000, basic: 13875, gold: 17550, titanium: 21200, jetsBasic: 10, jetsGold: 14, jetsTitanium: 18, motorPositions: [1, 2] },
+      { type: 'round', id: 'MTI-99', size: '180Q', title: 'MTI-99 עגולה (קוטר 180 ס"מ)', liters: 230, body: 9000, basic: 16625, gold: 18875, titanium: 22760, jetsBasic: 10, jetsGold: 14, jetsTitanium: 18, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] },
+      { type: 'round', id: 'MTI-100', size: '200Q', title: 'MTI-100 עגולה (קוטר 200 ס"מ)', liters: 450, body: 9250, basic: 18075, gold: 20050, titanium: 24550, jetsBasic: 10, jetsGold: 14, jetsTitanium: 18, motorPositions: [1, 2] },
+      { type: 'oval', id: 'MTI-27', size: '180X110', title: 'MTI-27 אובלית (180X110 ס"מ)', liters: 180, body: 3750, basic: 10250, gold: 12500, titanium: 16500, jetsBasic: 8, jetsGold: 12, jetsTitanium: 16, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] },
+      { type: 'oval', id: 'MTI-97', size: '200X140', title: 'MTI-97 אובלית (200X140 ס"מ)', liters: 400, body: 9000, basic: 12500, gold: 16500, titanium: 20500, jetsBasic: 10, jetsGold: 14, jetsTitanium: 18, motorPositions: [1, 2, 3, 4, 5, 6, 7, 8] }
     ];
 
     const PILLOWS = [
@@ -2298,6 +2310,14 @@
 
     let selectedBathType = 'rect';
     let selectedBathSystem = null;
+    // GOLD קיים בקטלוג רק בדגמים העגולים והאובליים
+    const BATH_SYSTEM_NAMES = {
+      'body': 'אמבטיה בלבד (ללא ג\'קוזי)',
+      'basic': 'מערכת ג\'קוזי BASIC',
+      'gold': 'מערכת ג\'קוזי GOLD',
+      'titanium': 'מערכת ג\'קוזי TITANIUM'
+    };
+    const isJacuzziSystem = sys => sys === 'basic' || sys === 'gold' || sys === 'titanium';
     let selectedWasteOption = 'none';
     let selectedWasteColor = 'chrome';
     let selectedJetsFinish = 'standard';
@@ -2373,7 +2393,7 @@
 
     function renderMotorPositions(bath) {
       const section = document.getElementById('motorSection');
-      const isJacuzzi = selectedBathSystem === 'basic' || selectedBathSystem === 'titanium';
+      const isJacuzzi = isJacuzziSystem(selectedBathSystem);
 
       if (!bath || !bath.motorPositions || !isJacuzzi) {
         section.classList.add('hidden');
@@ -2781,6 +2801,7 @@
       const sets = {
         body: ['body'],
         basic: [`basic_${fin}`, fin],
+        gold: [`gold_${fin}`],
         titanium: [`titanium_${fin}`, fin]
       };
 
@@ -2809,11 +2830,11 @@
     function zoomSysThumb(e, level) {
       e.preventDefault();
       e.stopPropagation();
-      const titles = { body: 'ללא ג\'טים', basic: 'ג\'קוזי BASIC', titanium: 'ג\'קוזי TITANIUM' };
+      const titles = { body: 'ללא ג\'טים', basic: 'ג\'קוזי BASIC', gold: 'ג\'קוזי GOLD', titanium: 'ג\'קוזי TITANIUM' };
       const model = document.getElementById('currentBathBadge').innerText;
       const items = [];
       let index = 0;
-      ['body', 'basic', 'titanium'].forEach(lvl => {
+      ['body', 'basic', 'gold', 'titanium'].forEach(lvl => {
         const box = document.getElementById(`sysThumbBox_${lvl}`);
         const img = document.getElementById(`sysThumb_${lvl}`);
         if (!box || box.classList.contains('hidden') || !img.src) return;
@@ -2898,6 +2919,17 @@
       document.getElementById('sysDescBasic').innerText =
         `משאבה, גוף חימום מובנה, ${basicJets}, קונסטרוקציה, אביק ופיית מילוי`;
 
+      const goldJets = bath && bath.jetsGold ? `${bath.jetsGold} ג'טים נירוסטה` : "ג'טים נירוסטה";
+      document.getElementById('sysDescGold').innerText =
+        `מנוע משודרג, ${goldJets}, גוף חימום מובנה, קונסטרוקציה, אביק ופיית מילוי`;
+
+      // GOLD רק בדגמים שיש להם מחיר GOLD בקטלוג; עם ארבעה כרטיסים עוברים לפריסה של 2x2
+      const hasGold = !!(bath && bath.gold);
+      document.getElementById('sysCard_gold').classList.toggle('hidden', !hasGold);
+      document.getElementById('sysCardsGrid').classList.toggle('sm:grid-cols-3', !hasGold);
+      document.getElementById('sysCardsGrid').classList.toggle('sm:grid-cols-2', hasGold);
+      if (!hasGold && selectedBathSystem === 'gold') selectBathSystem('basic');
+
       const titaniumJets = bath && bath.jetsTitanium ? `${bath.jetsTitanium} ג'טים נירוסטה` : "ריבוי ג'טים";
       document.getElementById('sysDescTitanium').innerText =
         `מנוע עוצמתי, ${titaniumJets}, גוף חימום מובנה, קונסטרוקציה, אביק ופיית מילוי`;
@@ -2929,12 +2961,7 @@
         if (dot) dot.classList.remove('hidden');
       }
 
-      const sysNames = {
-        'body': 'אמבטיה בלבד (ללא ג\'קוזי)',
-        'basic': 'מערכת ג\'קוזי BASIC',
-        'titanium': 'מערכת ג\'קוזי TITANIUM'
-      };
-      document.getElementById('selectedSystemBadge').innerText = sysNames[sys] || '--';
+      document.getElementById('selectedSystemBadge').innerText = BATH_SYSTEM_NAMES[sys] || '--';
 
       const constructionSection = document.getElementById('constructionSection');
       const jetsFinishSection = document.getElementById('jetsFinishSection');
@@ -2958,7 +2985,7 @@
         constructionSection.classList.add('hidden');
         jetsFinishSection.classList.remove('hidden');
 
-        // ג'קוזי (BASIC/TITANIUM) תמיד כולל קונסטרוקציה ואביק עם פיית מילוי בגימור ניקל -
+        // ג'קוזי (BASIC/GOLD/TITANIUM) תמיד כולל קונסטרוקציה ואביק עם פיית מילוי בגימור ניקל -
         // אין בחירה, אפשר רק לשדרג את הגוון
         wasteTypeChoice.classList.add('hidden');
         wasteIncludedNote.classList.remove('hidden');
@@ -3145,7 +3172,7 @@
 
       document.getElementById('selectedJetsFinishBadge').innerText = finish === 'white' ? `לבן (+${JETS_FINISH_WHITE_SURCHARGE.toLocaleString()} ₪)` : 'ניקל ואפור בטון';
 
-      if (selectedBathSystem === 'basic' || selectedBathSystem === 'titanium') {
+      if (isJacuzziSystem(selectedBathSystem)) {
         selectWasteColor(finish === 'white' ? 'white_mat' : 'chrome');
       }
 
@@ -3237,9 +3264,10 @@
       let total = 0;
       if (selectedBathSystem === 'body') total = bath.body;
       else if (selectedBathSystem === 'basic') total = bath.basic;
+      else if (selectedBathSystem === 'gold') total = bath.gold;
       else if (selectedBathSystem === 'titanium') total = bath.titanium;
 
-      const isJacuzzi = selectedBathSystem === 'basic' || selectedBathSystem === 'titanium';
+      const isJacuzzi = isJacuzziSystem(selectedBathSystem);
 
       // באמבטיה בלבד האביק הוא תוספת בחירה; בג'קוזי הוא כלול תמיד (S-95, גימור ניקל כברירת מחדל)
       if (!isJacuzzi) {
@@ -3378,11 +3406,6 @@
       if (!bath || !selectedBathSystem) return;
 
       const finalPrice = document.getElementById('finalBathPriceDisplay').innerText;
-      const sysNames = {
-        'body': 'אמבטיה בלבד (ללא ג\'קוזי)',
-        'basic': 'מערכת ג\'קוזי BASIC',
-        'titanium': 'מערכת ג\'קוזי TITANIUM'
-      };
 
       const typeHebrew = {
         'rect': 'אמבטיה מלבנית',
@@ -3402,7 +3425,7 @@
       if (selectedMotorPosition && selectedBathSystem !== 'body') addonsList.push(`מיקום מנוע: ${selectedMotorPosition}`);
       if (selectedPillow) addonsList.push(`כרית ראש ${selectedPillow.code} (${selectedPillow.kind})${selectedPillowQty > 1 ? ` - ${selectedPillowQty} יחידות` : ''}`);
 
-      let systemText = sysNames[selectedBathSystem];
+      let systemText = BATH_SYSTEM_NAMES[selectedBathSystem];
       if (selectedBathSystem === 'body') {
         systemText += selectedConstruction ? ` | כולל קונסטרוקציה (מיטת תמיכה)` : ` | ללא קונסטרוקציה`;
       } else {
@@ -3413,7 +3436,7 @@
       if (selectedWasteOption !== 'none') {
         const wasteName = selectedWasteOption === 'drain' ? 'אביק דריכה S-160' : 'אביק משולב פיית מילוי S-95';
         const col = WASTE_COLORS.find(c => c.id === selectedWasteColor);
-        const includedSuffix = (selectedBathSystem === 'basic' || selectedBathSystem === 'titanium') ? ' - כלול במערכת הג\'קוזי' : '';
+        const includedSuffix = isJacuzziSystem(selectedBathSystem) ? ' - כלול במערכת הג\'קוזי' : '';
         wasteText = `${wasteName} (גוון: ${col ? col.name : 'כרום/ניקל'})${includedSuffix}`;
       }
 
@@ -3769,7 +3792,7 @@
       { tab: 'tabContentBaths', num: '2', title: 'דגם ומידה',
         text: 'המידה היא האורך והרוחב החיצוניים של האמבטיה בס"מ.\nלרוב יש כמה דגמים באותה מידה - הם נבדלים בצורה הפנימית, בעומק ובעיצוב, והמחיר שלהם בדרך כלל זהה.\nבדגמים פינתיים מסוימים בוחרים גם כיוון - ימין או שמאל.' },
       { tab: 'tabContentBaths', num: '3', title: "רמת איבזור ומערכת ג'קוזי",
-        text: "גוף אמבטיה בלבד - אמבטיה אקרילית, בלי מערכת עיסוי.\nג'קוזי BASIC - מערכת עיסוי במים.\nג'קוזי TITANIUM - מערכת מתקדמת יותר, עם יותר ג'טים.\nמספר הג'טים המדויק מופיע בכל כרטיס. ג'קוזי כולל תמיד קונסטרוקציה ואביק עם פיית מילוי." },
+        text: "גוף אמבטיה בלבד - אמבטיה אקרילית, בלי מערכת עיסוי.\nג'קוזי BASIC - מערכת עיסוי במים.\nג'קוזי GOLD - דרגת ביניים, עם יותר ג'טים מ-BASIC (רק בדגמים העגולים והאובליים).\nג'קוזי TITANIUM - מערכת מתקדמת יותר, עם יותר ג'טים.\nמספר הג'טים המדויק מופיע בכל כרטיס. ג'קוזי כולל תמיד קונסטרוקציה ואביק עם פיית מילוי." },
       { tab: 'tabContentBaths', num: '4', title: 'קונסטרוקציה',
         text: 'מיטת תמיכה מפלדה שמונחת מתחת לאמבטיה. היא מחזקת את האמבטיה, מקלה על הפילוס ועל ההתקנה, ושומרת על יציבות ואטימות לאורך שנים.\nבג\'קוזי הקונסטרוקציה כבר כלולה.' },
       { tab: 'tabContentBaths', num: '5', title: 'אביק ופיית מילוי',
