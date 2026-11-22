@@ -1102,15 +1102,24 @@
 
     // אותו דגם נבחר שוב בכל איפוס או מעבר בין סוגים - סופרים רק החלפה אמיתית
     const lastTrackedModel = {};
+    // מתי נבחר הדגם בכל לשונית - כדי למדוד כמה זמן לוקח להגיע להצעת מחיר
+    const modelPickedAt = {};
     function trackModel(category, model) {
       if (!model || lastTrackedModel[category] === model) return;
       lastTrackedModel[category] = model;
+      modelPickedAt[category] = Date.now();
       track('select_model', { category, model });
     }
 
     function trackQuote(category, model, priceText) {
       const value = parseInt(String(priceText || '').replace(/[^\d]/g, ''), 10);
-      track('generate_quote', { category, model, ...(value ? { value, currency: 'ILS' } : {}) });
+      const params = { category, model, ...(value ? { value, currency: 'ILS' } : {}) };
+      if (modelPickedAt[category]) {
+        params.seconds_to_quote = Math.round((Date.now() - modelPickedAt[category]) / 1000);
+      }
+      // הצעה נוספת על אותו דגם נמדדת מההצעה הקודמת, לא מהבחירה המקורית
+      modelPickedAt[category] = Date.now();
+      track('generate_quote', params);
     }
 
     function switchMainTab(tab) {
