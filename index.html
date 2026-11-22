@@ -6,6 +6,24 @@
   <title>פורטל קטלוג והזמנות - MTI Bath Gallery</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- Google Analytics: נטען רק באתר עצמו, כדי שבדיקות מקומיות לא ייספרו -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    (function () {
+      // כל פעולה נרשמת עם החנות שדרכה נכנסו (store=tuboul וכו'), או direct
+      const store = (new URLSearchParams(location.search).get('store') || 'direct').toLowerCase().trim();
+      gtag('js', new Date());
+      gtag('set', { store: store });
+      gtag('config', 'G-5WG3WNFEH9');
+      if (location.hostname === 'catalog.mtibath.co.il') {
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5WG3WNFEH9';
+        document.head.appendChild(s);
+      }
+    })();
+  </script>
   <style>
     body { font-size: 16px; }
     .gallery-scroll-x::-webkit-scrollbar { height: 6px; }
@@ -863,6 +881,8 @@
     </section>
   </main>
 
+  <p class="text-center text-[11px] text-slate-400 px-4 pb-5">האתר אוסף נתוני שימוש אנונימיים באמצעות Google Analytics, לצורך שיפור הקטלוג.</p>
+
   <!-- חלון הגדלת תמונות -->
   <div id="zoomModal" onclick="closeZoomModal()" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-8 hidden transition-all duration-200 select-none">
     <div onclick="event.stopPropagation()" class="bg-white rounded-3xl p-5 md:p-6 max-w-4xl w-full max-h-[92vh] shadow-2xl flex flex-col items-center gap-3 text-center relative border border-slate-100">
@@ -1075,7 +1095,26 @@
       }
     }
 
+    // ספירת פעולות ב-Google Analytics (ההגדרה עצמה ב-head)
+    function track(name, params) {
+      try { gtag('event', name, params); } catch (e) {}
+    }
+
+    // אותו דגם נבחר שוב בכל איפוס או מעבר בין סוגים - סופרים רק החלפה אמיתית
+    const lastTrackedModel = {};
+    function trackModel(category, model) {
+      if (!model || lastTrackedModel[category] === model) return;
+      lastTrackedModel[category] = model;
+      track('select_model', { category, model });
+    }
+
+    function trackQuote(category, model, priceText) {
+      const value = parseInt(String(priceText || '').replace(/[^\d]/g, ''), 10);
+      track('generate_quote', { category, model, ...(value ? { value, currency: 'ILS' } : {}) });
+    }
+
     function switchMainTab(tab) {
+      if (tab !== activeMainTab) track('open_tab', { tab });
       activeMainTab = tab;
       setTimeout(() => { try { layoutPreviewPanels(); } catch (e) {} }, 0);
       const tabs = ['showers', 'baths', 'trays'];
@@ -1535,6 +1574,7 @@
       const modelId = document.getElementById('modelSelect').value;
       const model = CATALOG_DATA.models.find(m => m.id === modelId);
       if (!model) return;
+      trackModel('showers', model.name.split(' - ')[0]);
 
       highlightModelCard(modelId);
       applyColorLimits(modelId);
@@ -2076,6 +2116,7 @@
       const finalPrice = document.getElementById('finalPriceDisplay').innerText;
       const installPrice = document.getElementById('installPriceDisplay').innerText;
       const installNote = document.getElementById('installNoteDisplay').innerText;
+      trackQuote('showers', modelName.split(' - ')[0], finalPrice);
 
       const now = new Date();
       const formattedDate = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
@@ -2756,6 +2797,7 @@
     function onBathModelChange() {
       const modelId = document.getElementById('bathModelSelect').value;
       const bath = BATHS_CATALOG.find(b => b.id === modelId);
+      if (bath) trackModel('baths', bath.id);
 
       const previewBadge = document.getElementById('currentBathBadge');
       const previewTitle = document.getElementById('bathPreviewTitle');
@@ -3045,6 +3087,7 @@
 
     function selectFreeModel(id) {
       selectedFreeModel = id ? FREESTANDING_CATALOG.find(m => m.id === id) : null;
+      if (selectedFreeModel) trackModel('freestanding', selectedFreeModel.id);
       const select = document.getElementById('freeModelSelect');
       if (!id) select.selectedIndex = 0;
 
@@ -3314,6 +3357,7 @@
     function generateFreestandingPDF() {
       const m = selectedFreeModel;
       if (!m) return;
+      trackQuote('freestanding', m.id, m.price);
 
       const install = document.getElementById('bathInstallPrice').innerText;
       const now = new Date();
@@ -3409,6 +3453,7 @@
       if (!bath || !selectedBathSystem) return;
 
       const finalPrice = document.getElementById('finalBathPriceDisplay').innerText;
+      trackQuote('baths', bath.id, finalPrice);
 
       const typeHebrew = {
         'rect': 'אמבטיה מלבנית',
@@ -3614,6 +3659,7 @@
     function onTrayModelChange() {
       const modelId = document.getElementById('trayModelSelect').value;
       const tray = TRAYS_CATALOG.find(t => t.id === modelId);
+      if (tray) trackModel('trays', tray.id);
 
       const previewBadge = document.getElementById('currentTrayBadge');
       const previewTitle = document.getElementById('trayPreviewTitle');
@@ -3693,6 +3739,7 @@
       if (!tray) return;
 
       const finalPrice = document.getElementById('finalTrayPriceDisplay').innerText;
+      trackQuote('trays', tray.id, finalPrice);
       const seriesNames = {
         'classic': 'סדרה קלאסית',
         'urban': 'סדרת אורבן (URBAN)',
@@ -4016,6 +4063,7 @@
         const choose = i => {
           const hit = results[i];
           if (!hit) return;
+          track('search', { search_term: input.value.trim(), category: scope, model: hit.code });
           input.value = '';
           close();
           input.blur();
