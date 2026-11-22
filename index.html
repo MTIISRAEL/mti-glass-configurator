@@ -1231,7 +1231,10 @@
         { name: "אסיד", cost: 210 },
         { name: "אסיד אקסטרה קליר", cost: 340 },
         { name: "פסים בהתזת חול", cost: 230 },
-        { name: "גלינה אקסטרה קליר", cost: 360 }
+        { name: "גלינה", cost: 320 },
+        { name: "גלינה אקסטרה קליר", cost: 360 },
+        { name: "גלינה אפורה", cost: 360 },
+        { name: "גלינה חומה", cost: 360 }
       ],
       colors: [
         { name: "ניקל", mult: 1.0, file: "ניקל.jpg" },
@@ -1335,6 +1338,9 @@
       if (currentStep < steps.length) {
         img.src = `./${folder}/${name}.${steps[currentStep]}`;
         img.dataset.stepIndex = currentStep + 1;
+      } else {
+        // זכוכית שעוד אין לה תמונה - ריבוע אפור במקום אייקון של תמונה שבורה
+        img.style.visibility = 'hidden';
       }
     }
 
@@ -1689,6 +1695,7 @@
         const folder = encodeURIComponent('סוגי זכוכיות');
         const base = encodeURIComponent(glass.name);
         delete glassImg.dataset.stepIndex;
+        glassImg.style.visibility = '';
         glassImg.setAttribute('onerror', `handleGlassImgError(this, '${folder}', '${base}')`);
         glassImg.src = `./${folder}/${base}.jpeg`;
       }
