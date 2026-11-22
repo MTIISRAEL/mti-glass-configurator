@@ -1243,7 +1243,9 @@
         { name: "שחור", mult: 1.2, file: "שחור.jpg" },
         { name: "ברונזה אדומה", mult: 1.35, file: "ברונזה אדומה.jpg" },
         { name: "זהב מוברש", mult: 1.35, file: "זהב מוברש.jpg" },
-        { name: "גרפיט", mult: 1.35, file: "גרפיט.jpg" }
+        { name: "גרפיט", mult: 1.35, file: "גרפיט.jpg" },
+        // cats = הקטגוריות שבהן הגוון זמין (בלי cats = בכל הקטגוריות)
+        { name: "קפה", mult: 1.35, file: "קפה.jpg", cats: ["front", "corner", "bath_partial", "bath_full_front", "bath_full_corner", "slide_pipe_front"] }
       ]
     };
 
@@ -1534,19 +1536,22 @@
     function applyColorLimits(modelId) {
       const allowed = LIMITED_HARDWARE_COLORS[modelId] || null;
       const note = document.getElementById('colorLimitNote');
+      const model = CATALOG_DATA.models.find(m => m.id === modelId);
+      const catObj = model && CATALOG_DATA.categories.find(c => c.name === model.cat);
+      const catId = catObj ? catObj.id : null;
+      const colorOk = col => (!allowed || allowed.includes(col.name)) && (!col.cats || col.cats.includes(catId));
 
       CATALOG_DATA.colors.forEach((col, idx) => {
         const btn = document.querySelectorAll('#colorContainer .color-btn')[idx];
         if (!btn) return;
-        const ok = !allowed || allowed.includes(col.name);
-        btn.classList.toggle('hidden', !ok);
+        btn.classList.toggle('hidden', !colorOk(col));
       });
 
       note.classList.toggle('hidden', !allowed);
       if (allowed) note.innerText = `דגם זה מיוצר בגוונים: ${allowed.join(' · ')}`;
 
       // אם הגוון שנבחר קודם אינו זמין בדגם החדש, מנקים את הבחירה
-      if (allowed && selectedColor && !allowed.includes(selectedColor.name)) {
+      if (selectedColor && !colorOk(selectedColor)) {
         selectedColor = null;
         document.getElementById('selectedColorBadge').innerText = 'טרם נבחר גוון';
         document.querySelectorAll('.color-btn').forEach(b => {
