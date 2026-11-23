@@ -38,6 +38,13 @@
       unicode-bidi: embed !important;
     }
     #pdfTemplate * { box-sizing: border-box; }
+    .customer-field {
+      width: 100%; padding: 0.6rem 0.75rem; font-size: 0.875rem; color: #1e293b;
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .customer-field::placeholder { color: #94a3b8; }
+    .customer-field:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px #dbeafe; background: #fff; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
@@ -383,6 +390,17 @@
             <span id="installPriceDisplay" class="text-base font-extrabold">--</span>
           </div>
           <p id="installNoteDisplay" class="text-xs text-slate-500 font-medium leading-relaxed">המחיר וההתקנה יחושבו במלואם לאחר בחירת כל הפרמטרים.</p>
+        </div>
+
+        <!-- פרטי לקוח: לא חובה, מודפסים בראש טופס ה-PDF ובשם הקובץ. נשארים בין תמחור לתמחור עד שמשנים אותם -->
+        <div class="space-y-2">
+          <div class="text-xs md:text-sm font-extrabold text-slate-800">פרטי לקוח <span class="font-medium text-slate-400">(לא חובה, יופיעו בטופס)</span></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <input id="custStore" type="text" autocomplete="off" placeholder="שם החנות" class="customer-field" />
+            <input id="custName" type="text" autocomplete="off" placeholder="שם הלקוח" class="customer-field" />
+            <input id="custPhone" type="tel" autocomplete="off" placeholder="טלפון" class="customer-field" />
+            <input id="custAddress" type="text" autocomplete="off" placeholder="כתובת" class="customer-field" />
+          </div>
         </div>
 
         <button id="downloadPdfBtn" onclick="generateOrderPDF()" disabled class="w-full py-4 bg-slate-100 cursor-not-allowed text-slate-400 font-extrabold rounded-2xl flex items-center justify-center gap-2 border border-slate-200 transition-all text-sm md:text-base">
@@ -950,6 +968,11 @@
         </tr>
       </table>
 
+      <div id="pdfCustomerBlock" style="display: none; margin-bottom: 20px;">
+        <div style="background-color: #f1f5f9; border-right: 4px solid #0f172a; padding: 10px 14px; font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 8px;">פרטי&nbsp;לקוח</div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;"><tbody id="pdfCustomerBody"></tbody></table>
+      </div>
+
       <div style="background-color: #f1f5f9; border-right: 4px solid #2563eb; padding: 10px 14px; font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 16px;" id="pdfSectionHeader">
         מפרט&nbsp;טכני&nbsp;של&nbsp;המוצר
       </div>
@@ -1022,6 +1045,31 @@
     // ריווח אותיות זעיר גורם לו לצייר כל תו בנפרד, במיקום שהדפדפן עצמו חישב - כך הסדר תמיד נכון.
     // תו בודד מצויר משמאל-לימין בלי שיקוף, אז סוגריים בטקסט עברי יוצאים הפוכים. החלפה שלהם משנה את סידור
     // השורה בדפדפן, ולכן בעותק של ה-PDF בלבד "X (Y)" הופך ל-"X · Y" - סימן סימטרי שנראה אותו דבר בכל כיוון.
+    // פרטי לקוח שהוזנו בסיכום המקלחון (רק שדות שמולאו)
+    const CUSTOMER_FIELDS = [['custStore', 'חנות'], ['custName', 'שם הלקוח'], ['custPhone', 'טלפון'], ['custAddress', 'כתובת']];
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function customerDetails() {
+      return CUSTOMER_FIELDS
+        .map(([id, label]) => ({ id, label, value: (document.getElementById(id)?.value || '').trim() }))
+        .filter(r => r.value);
+    }
+    // מציג את בלוק פרטי הלקוח בטופס ה-PDF, או מסתיר אותו כשאין פרטים (התבנית משותפת לכל סוגי המוצרים)
+    function fillPdfCustomer(rows) {
+      document.getElementById('pdfCustomerBlock').style.display = rows.length ? '' : 'none';
+      document.getElementById('pdfCustomerBody').innerHTML = rows.map((r, i) => `
+        <tr style="background-color: ${i % 2 ? '#f8fafc' : '#ffffff'}; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 8px 12px; font-weight: bold; color: #64748b; width: 30%;">${toNbsp(r.label)}</td>
+          <td style="padding: 8px 12px; font-weight: bold; color: #0f172a;">${escapeHtml(toNbsp(r.value))}</td>
+        </tr>`).join('');
+    }
+    // חלק לשם הקובץ: חנות ולקוח, בלי תווים שאסורים בשמות קבצים
+    function customerFilePart(rows) {
+      const part = rows.filter(r => r.id === 'custStore' || r.id === 'custName').map(r => r.value).join('_');
+      return part ? part.replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, '_') + '_' : '';
+    }
+
     function preparePdfElement(el) {
       const clone = el.cloneNode(true);
       clone.style.letterSpacing = '0.1px';
@@ -2215,11 +2263,14 @@
         </tr>
       `;
 
+      const customer = customerDetails();
+      fillPdfCustomer(customer);
+
       const storePrefix = activeStore ? `${activeStore.name}_` : '';
       const element = document.getElementById('pdfTemplate');
       const opt = {
         margin: [10, 10, 10, 10],
-        filename: `הזמנת_מקלחון_${storePrefix}MTI_${modelName.replace(/\s+/g, '_')}.pdf`,
+        filename: `הזמנת_מקלחון_${storePrefix}${customerFilePart(customer)}MTI_${modelName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, letterRendering: false, scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -3433,6 +3484,7 @@
         row('כלול במחיר', 'אביק מקורי. הדגם מסופק כמוצר מוגמר, ללא מערכות ג\'קוזי ושדרוגים', true);
 
       const storePrefix = activeStore ? `${activeStore.name}_` : '';
+      fillPdfCustomer([]);
       const element = document.getElementById('pdfTemplate');
       const opt = {
         margin: [10, 10, 10, 10],
@@ -3577,6 +3629,7 @@
       `;
 
       const storePrefix = activeStore ? `${activeStore.name}_` : '';
+      fillPdfCustomer([]);
       const element = document.getElementById('pdfTemplate');
       const opt = {
         margin: [10, 10, 10, 10],
@@ -3832,6 +3885,7 @@
       `;
 
       const storePrefix = activeStore ? `${activeStore.name}_` : '';
+      fillPdfCustomer([]);
       const element = document.getElementById('pdfTemplate');
       const opt = {
         margin: [10, 10, 10, 10],
