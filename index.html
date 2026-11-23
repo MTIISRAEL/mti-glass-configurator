@@ -394,12 +394,16 @@
 
         <!-- פרטי לקוח: לא חובה, מודפסים בראש טופס ה-PDF ובשם הקובץ. נשארים בין תמחור לתמחור עד שמשנים אותם -->
         <div class="space-y-2">
-          <div class="text-xs md:text-sm font-extrabold text-slate-800">פרטי לקוח <span class="font-medium text-slate-400">(לא חובה, יופיעו בטופס)</span></div>
+          <div class="flex items-baseline gap-2">
+            <span class="text-base md:text-lg font-bold text-slate-800">פרטי לקוח</span>
+            <span class="text-xs font-medium text-slate-400">(לא חובה, יופיעו בטופס)</span>
+          </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <input id="custStore" type="text" autocomplete="off" placeholder="שם החנות" class="customer-field" />
+            <input id="custOrder" type="text" autocomplete="off" placeholder="מספר רכש" class="customer-field" />
             <input id="custName" type="text" autocomplete="off" placeholder="שם הלקוח" class="customer-field" />
             <input id="custPhone" type="tel" autocomplete="off" placeholder="טלפון" class="customer-field" />
-            <input id="custAddress" type="text" autocomplete="off" placeholder="כתובת" class="customer-field" />
+            <input id="custAddress" type="text" autocomplete="off" placeholder="כתובת" class="customer-field sm:col-span-2" />
           </div>
         </div>
 
@@ -1046,7 +1050,7 @@
     // תו בודד מצויר משמאל-לימין בלי שיקוף, אז סוגריים בטקסט עברי יוצאים הפוכים. החלפה שלהם משנה את סידור
     // השורה בדפדפן, ולכן בעותק של ה-PDF בלבד "X (Y)" הופך ל-"X · Y" - סימן סימטרי שנראה אותו דבר בכל כיוון.
     // פרטי לקוח שהוזנו בסיכום המקלחון (רק שדות שמולאו)
-    const CUSTOMER_FIELDS = [['custStore', 'חנות'], ['custName', 'שם הלקוח'], ['custPhone', 'טלפון'], ['custAddress', 'כתובת']];
+    const CUSTOMER_FIELDS = [['custStore', 'חנות'], ['custOrder', 'מספר רכש'], ['custName', 'שם הלקוח'], ['custPhone', 'טלפון'], ['custAddress', 'כתובת']];
     function escapeHtml(s) {
       return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
@@ -1064,9 +1068,9 @@
           <td style="padding: 8px 12px; font-weight: bold; color: #0f172a;">${escapeHtml(toNbsp(r.value))}</td>
         </tr>`).join('');
     }
-    // חלק לשם הקובץ: חנות ולקוח, בלי תווים שאסורים בשמות קבצים
+    // חלק לשם הקובץ: חנות, מספר רכש ולקוח, בלי תווים שאסורים בשמות קבצים
     function customerFilePart(rows) {
-      const part = rows.filter(r => r.id === 'custStore' || r.id === 'custName').map(r => r.value).join('_');
+      const part = rows.filter(r => ['custStore', 'custOrder', 'custName'].includes(r.id)).map(r => r.value).join('_');
       return part ? part.replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, '_') + '_' : '';
     }
 
